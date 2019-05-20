@@ -4,6 +4,7 @@ import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -120,7 +121,7 @@ public class CreateGameActivity extends AppCompatActivity {
         return null;
     }
 
-    private void writeGameData(GameData gameData) {
+    private void writeGameData(@NonNull GameData gameData) {
         FirebaseDB.getGames().document().set(gameData);
     }
 }

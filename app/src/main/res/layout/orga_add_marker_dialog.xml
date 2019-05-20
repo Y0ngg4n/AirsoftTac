@@ -29,7 +29,7 @@
                 android:inputType="numberDecimal"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toTopOf="parent"/>
 
             <EditText
                 android:id="@+id/orgaaddmarkerdialoglongitude"
@@ -43,20 +43,6 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/orgaaddmarkerdialoglatitude" />
 
-
-            <EditText
-                android:id="@+id/orgaaddmarkerteamname"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="25dp"
-                android:ems="10"
-                android:hint="Team-Name"
-                android:inputType="textPersonName"
-                android:visibility="invisible"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/orgaaddmarkerdialoglongitude" />
-
             <Button
                 android:id="@+id/orgaaddmarkerdialogcurrentlocation"
                 android:layout_width="wrap_content"
@@ -66,7 +52,6 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/orgaaddmarkerdialogtype" />
-
 
             <Switch
                 android:id="@+id/orgaaddmarkerdialogown"
@@ -97,7 +82,6 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/orgaaddmarkerdialogcurrentlocation" />
-            />
 
             <EditText
                 android:id="@+id/orgaaddmarkerdialogtitle"
@@ -109,7 +93,7 @@
                 android:inputType="textPersonName"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/orgaaddmarkerteamname" />
+                app:layout_constraintTop_toBottomOf="@id/orgaaddmarkerdialoglongitude"/>
 
             <EditText
                 android:id="@+id/orgaaddmarkerdialogdescription"
@@ -122,6 +106,7 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/orgaaddmarkerdialogtitle" />
+
         </android.support.constraint.ConstraintLayout>
     </ScrollView>
 

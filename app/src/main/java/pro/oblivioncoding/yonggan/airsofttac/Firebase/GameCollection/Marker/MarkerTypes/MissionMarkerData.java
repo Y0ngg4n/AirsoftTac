@@ -4,16 +4,15 @@ public class MissionMarkerData {
 
     private double latitude, longitude;
 
-    private String title, desription, team;
+    private String title, description;
 
     public MissionMarkerData(){}
 
-    public MissionMarkerData(double latitude, double longitude, String title, String desription, String team) {
+    public MissionMarkerData(double latitude, double longitude, String title, String description) {
         this.latitude = latitude;
         this.longitude = longitude;
         this.title = title;
-        this.desription = desription;
-        this.team = team;
+        this.description = description;
     }
 
     public double getLatitude() {
@@ -40,19 +39,12 @@ public class MissionMarkerData {
         this.title = title;
     }
 
-    public String getDesription() {
-        return desription;
+    public String getDescription() {
+        return description;
     }
 
-    public void setDesription(String desription) {
-        this.desription = desription;
+    public void setDesription(String description) {
+        this.description = description;
     }
 
-    public String getTeam() {
-        return team;
-    }
-
-    public void setTeam(String team) {
-        this.team = team;
-    }
 }

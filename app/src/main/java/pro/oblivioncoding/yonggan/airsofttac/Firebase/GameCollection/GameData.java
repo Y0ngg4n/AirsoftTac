@@ -1,5 +1,7 @@
 package pro.oblivioncoding.yonggan.airsofttac.Firebase.GameCollection;
 
+import android.support.annotation.Nullable;
+
 import com.google.firebase.Timestamp;
 
 import java.util.ArrayList;
@@ -27,6 +29,7 @@ public class GameData {
     private ArrayList<RespawnMarkerData> respawnMarkerData;
     private ArrayList<TacticalMarkerData> tacticalMarkerData;
 
+    @Nullable
     public UserData getOwnUserData(String email){
         for (UserData user : users) {
             if(user.getEmail().equals(email)) return user;
@@ -96,6 +99,7 @@ public class GameData {
     }
 
     public ArrayList<UserData> getUsers() {
+        if(users == null) users = new ArrayList<>();
         return users;
     }
 
@@ -104,6 +108,7 @@ public class GameData {
     }
 
     public ArrayList<FlagMarkerData> getFlagMarkerData() {
+        if(flagMarkerData == null) flagMarkerData = new ArrayList<>();
         return flagMarkerData;
     }
 
@@ -112,6 +117,7 @@ public class GameData {
     }
 
     public ArrayList<HQMarkerData> getHqMarkerData() {
+        if(hqMarkerData == null) hqMarkerData = new ArrayList<>();
         return hqMarkerData;
     }
 
@@ -120,6 +126,7 @@ public class GameData {
     }
 
     public ArrayList<MissionMarkerData> getMissionMarkerData() {
+        if(missionMarkerData == null) missionMarkerData = new ArrayList<>();
         return missionMarkerData;
     }
 
@@ -128,6 +135,7 @@ public class GameData {
     }
 
     public ArrayList<RespawnMarkerData> getRespawnMarkerData() {
+        if(respawnMarkerData == null) respawnMarkerData = new ArrayList<>();
         return respawnMarkerData;
     }
 
@@ -136,6 +144,7 @@ public class GameData {
     }
 
     public ArrayList<TacticalMarkerData> getTacticalMarkerData() {
+        if(tacticalMarkerData == null) tacticalMarkerData = new ArrayList<>();
         return tacticalMarkerData;
     }
 

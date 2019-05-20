@@ -1,6 +1,7 @@
 package pro.oblivioncoding.yonggan.airsofttac.Fragments.Dialog;
 
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentTransaction;
@@ -12,6 +13,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -43,15 +45,15 @@ public class OrgaAddMarkerDialogFragment extends DialogFragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         return inflater.inflate(R.layout.orga_add_marker_dialog, container);
     }
 
     @Override
-    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        final Spinner spinner = (Spinner) getView().findViewById(R.id.orgaaddmarkerdialogtype);
+        final Spinner spinner = getView().findViewById(R.id.orgaaddmarkerdialogtype);
         ArrayList<String> spinnerItems = new ArrayList<String>(Arrays.asList("Tactical Marker", "Mission Marker", "Respawn Marker", "HQ Marker", "Flag Marker"));
         ArrayAdapter<CharSequence> adapter = new ArrayAdapter(getContext(), android.R.layout.simple_spinner_item, spinnerItems);
 
@@ -62,13 +64,10 @@ public class OrgaAddMarkerDialogFragment extends DialogFragment {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 Log.i("Spinner", position + " selected");
-                if (position == 0) {
-                    getView().findViewById(R.id.orgaaddmarkerteamname).setVisibility(View.VISIBLE);
-                } else if (position == 2 || position == 3 || position == 4) {
-                    getView().findViewById(R.id.orgaaddmarkerteamname).setVisibility(View.INVISIBLE);
+
+                if (position == 2 || position == 3 || position == 4) {
                     getView().findViewById(R.id.orgaaddmarkerdialogown).setVisibility(View.VISIBLE);
                 } else {
-                    getView().findViewById(R.id.orgaaddmarkerteamname).setVisibility(View.INVISIBLE);
                     getView().findViewById(R.id.orgaaddmarkerdialogown).setVisibility(View.INVISIBLE);
                 }
             }
@@ -88,62 +87,50 @@ public class OrgaAddMarkerDialogFragment extends DialogFragment {
             longitudeTextView.setText(String.valueOf(FirebaseDB.getGameData().getOwnUserData(FirebaseAuthentication.getFirebaseUser().getEmail()).getPositionLong()));
         });
 
-        (getView().findViewById(R.id.orgaaddmarkerdialogaddmarker)).setOnClickListener(view1 ->
+        getView().findViewById(R.id.orgaaddmarkerdialogaddmarker).setOnClickListener(view1 ->
         {
-            switch (spinner.getSelectedItemPosition()) {
-                case 0:
-                    FirebaseDB.getGameData().getTacticalMarkerData().add(new TacticalMarkerData(
-                            Double.valueOf(((EditText)getView().findViewById(R.id.orgaaddmarkerdialoglatitude)).getText().toString()),
-                            Double.valueOf(((EditText)getView().findViewById(R.id.orgaaddmarkerdialoglongitude)).getText().toString()),
-                            ((EditText)getView().findViewById(R.id.orgaaddmarkerdialogtitle)).getText().toString(),
-                            ((EditText)getView().findViewById(R.id.orgaaddmarkerdialogdescription)).getText().toString(),
-                            ((EditText)getView().findViewById(R.id.orgaaddmarkerteamname)).getText().toString()
-                    ));
-                    break;
-                case 1:
-                    FirebaseDB.getGameData().getMissionMarkerData().add(new MissionMarkerData(
-                            Double.valueOf(((EditText)getView().findViewById(R.id.orgaaddmarkerdialoglatitude)).getText().toString()),
-                            Double.valueOf(((EditText)getView().findViewById(R.id.orgaaddmarkerdialoglongitude)).getText().toString()),
-                            ((EditText)getView().findViewById(R.id.orgaaddmarkerdialogtitle)).getText().toString(),
-                            ((EditText)getView().findViewById(R.id.orgaaddmarkerdialogdescription)).getText().toString(),
-                            ((EditText)getView().findViewById(R.id.orgaaddmarkerteamname)).getText().toString()
-                    ));
-                    break;
-                case 2:
-                    FirebaseDB.getGameData().getRespawnMarkerData().add(new RespawnMarkerData(
-                            Double.valueOf(((EditText)getView().findViewById(R.id.orgaaddmarkerdialoglatitude)).getText().toString()),
-                            Double.valueOf(((EditText)getView().findViewById(R.id.orgaaddmarkerdialoglongitude)).getText().toString()),
-                            ((EditText)getView().findViewById(R.id.orgaaddmarkerdialogtitle)).getText().toString(),
-                            ((EditText)getView().findViewById(R.id.orgaaddmarkerdialogdescription)).getText().toString(),
-                            ((EditText)getView().findViewById(R.id.orgaaddmarkerteamname)).getText().toString()
-                    ));
-                    break;
-                case 3:
-                    FirebaseDB.getGameData().getHqMarkerData().add(new HQMarkerData(
-                            Double.valueOf(((EditText)getView().findViewById(R.id.orgaaddmarkerdialoglatitude)).getText().toString()),
-                            Double.valueOf(((EditText)getView().findViewById(R.id.orgaaddmarkerdialoglongitude)).getText().toString()),
-                            ((EditText)getView().findViewById(R.id.orgaaddmarkerdialogtitle)).getText().toString(),
-                            ((EditText)getView().findViewById(R.id.orgaaddmarkerdialogdescription)).getText().toString(),
-                            ((EditText)getView().findViewById(R.id.orgaaddmarkerteamname)).getText().toString()
-                    ));
-                    break;
-                case 4:
-                    FirebaseDB.getGameData().getFlagMarkerData().add(new FlagMarkerData(
-                            Double.valueOf(((EditText)getView().findViewById(R.id.orgaaddmarkerdialoglatitude)).getText().toString()),
-                            Double.valueOf(((EditText)getView().findViewById(R.id.orgaaddmarkerdialoglongitude)).getText().toString()),
-                            ((EditText)getView().findViewById(R.id.orgaaddmarkerdialogtitle)).getText().toString(),
-                            ((EditText)getView().findViewById(R.id.orgaaddmarkerdialogdescription)).getText().toString(),
-                            ((EditText)getView().findViewById(R.id.orgaaddmarkerteamname)).getText().toString()
-                    ));
-                    break;
-            }
             FirebaseDB.getGames().whereEqualTo("gameID", FirebaseDB.getGameData().getGameID())
                     .get().addOnCompleteListener(task -> {
                 if (task.isSuccessful()) {
                     if (task.getResult().size() > 0) {
                         final DocumentSnapshot documentSnapshot = task.getResult().getDocuments().get(0);
                         if (documentSnapshot != null && documentSnapshot.exists()) {
-                            FirebaseDB.updateObject(documentSnapshot, "flagMarkerData", FirebaseDB.getGameData().getTacticalMarkerData());
+                            final Double latitude = Double.valueOf(((EditText) view.findViewById(R.id.orgaaddmarkerdialoglatitude)).getText().toString());
+                            final Double longitude = Double.valueOf(((EditText) view.findViewById(R.id.orgaaddmarkerdialoglongitude)).getText().toString());
+                            final String title = ((EditText) view.findViewById(R.id.orgaaddmarkerdialogtitle)).getText().toString();
+                            final String description = ((EditText) view.findViewById(R.id.orgaaddmarkerdialogdescription)).getText().toString();
+                            final boolean own = view.findViewById(R.id.orgaaddmarkerdialogown).isSelected();
+                            switch (spinner.getSelectedItemPosition()) {
+                                case 0:
+                                    FirebaseDB.getGameData().getTacticalMarkerData().add(new TacticalMarkerData(
+
+                                            ));
+                                    FirebaseDB.updateObject(documentSnapshot, "tacticalMarkerData", FirebaseDB.getGameData().getTacticalMarkerData());
+                                    break;
+                                case 1:
+                                    FirebaseDB.getGameData().getMissionMarkerData().add(new MissionMarkerData(
+                                            latitude, longitude, title, description));
+                                    FirebaseDB.updateObject(documentSnapshot, "missionMarkerData", FirebaseDB.getGameData().getMissionMarkerData());
+                                    break;
+                                case 2:
+                                    FirebaseDB.getGameData().getRespawnMarkerData().add(new RespawnMarkerData(
+                                            latitude, longitude, title, description, own
+                                    ));
+                                    FirebaseDB.updateObject(documentSnapshot, "respawnMarkerData", FirebaseDB.getGameData().getRespawnMarkerData());
+                                    break;
+                                case 3:
+                                    FirebaseDB.getGameData().getHqMarkerData().add(new HQMarkerData(
+                                            latitude, longitude, title, description, own
+                                    ));
+                                    FirebaseDB.updateObject(documentSnapshot, "hqMarkerData", FirebaseDB.getGameData().getHqMarkerData());
+                                    break;
+                                case 4:
+                                    FirebaseDB.getGameData().getFlagMarkerData().add(new FlagMarkerData(
+                                            latitude, longitude, title, description, own
+                                    ));
+                                    FirebaseDB.updateObject(documentSnapshot, "flagMarkerData", FirebaseDB.getGameData().getFlagMarkerData());
+                                    break;
+                            }
                         } else {
                             Log.d("UpdateDB", "Current data: null");
                         }
