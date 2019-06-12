@@ -10,52 +10,45 @@ import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.NavigationView;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.GravityCompat;
-import android.support.v7.app.ActionBarDrawerToggle;
-import android.util.Log;
-import android.view.MenuItem;
-import android.support.design.widget.NavigationView;
 import android.support.v4.widget.DrawerLayout;
-
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.widget.Toast;
 
-import com.google.firebase.firestore.CollectionReference;
-import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
-
-import java.util.Timer;
-import java.util.TimerTask;
-import java.util.function.Consumer;
 
 import pro.oblivioncoding.yonggan.airsofttac.Firebase.FirebaseAuthentication;
 import pro.oblivioncoding.yonggan.airsofttac.Firebase.FirebaseDB;
 import pro.oblivioncoding.yonggan.airsofttac.Firebase.GameCollection.GameData;
-import pro.oblivioncoding.yonggan.airsofttac.Firebase.GameCollection.User.UserData;
-import pro.oblivioncoding.yonggan.airsofttac.Fragments.Dialog.OrgaAddMarkerDialogFragment;
 import pro.oblivioncoding.yonggan.airsofttac.Fragments.MapFragment;
 import pro.oblivioncoding.yonggan.airsofttac.Fragments.PlayerFragment;
+import pro.oblivioncoding.yonggan.airsofttac.Fragments.TeamFragment;
 import pro.oblivioncoding.yonggan.airsofttac.R;
 import pro.oblivioncoding.yonggan.airsofttac.Services.GoogleLocationService;
 
 public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener, MapFragment.OnFragmentInteractionListener, PlayerFragment.OnFragmentInteractionListener {
+        implements NavigationView.OnNavigationItemSelectedListener, MapFragment.OnFragmentInteractionListener, PlayerFragment.OnFragmentInteractionListener, TeamFragment.OnFragmentInteractionListener {
 
     private Fragment currentFragment;
     private MapFragment mapFragment;
     private PlayerFragment playerFragment;
+    private static MainActivity instance;
 
     private static LocationManager locationManager;
     private static LocationListener locationListener;
     private Criteria locationManagerCriteria;
+    private TeamFragment teamFragment;
 
     public static LocationListener getLocationListener() {
         return locationListener;
@@ -76,12 +69,14 @@ public class MainActivity extends AppCompatActivity
         return minDistance;
     }
 
+    private Menu menu;
+
+    public static MainActivity getInstance() {
+        return instance;
+    }
+
     @NonNull
     private GoogleLocationService googleLocationService = new GoogleLocationService();
-
-    private static FloatingActionButton hitfb, underfirefb, supportfb, missionfb;
-
-    private static FloatingActionButton reloadfb, setMarkerfb, removeMarkerfb, swapFlagfb;
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
@@ -98,6 +93,7 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        instance = this;
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         Toolbar toolbar = findViewById(R.id.toolbar);
@@ -114,18 +110,65 @@ public class MainActivity extends AppCompatActivity
         //Create new Object of Fragment
         mapFragment = new MapFragment();
         playerFragment = new PlayerFragment();
+        teamFragment = new TeamFragment();
 
         FragmentManager fragmentManager = getSupportFragmentManager();
+
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
 
         fragmentTransaction.add(R.id.content_main, mapFragment);
         fragmentTransaction.add(R.id.content_main, playerFragment);
+        fragmentTransaction.add(R.id.content_main, teamFragment);
 
         fragmentTransaction.detach(playerFragment);
+        fragmentTransaction.detach(teamFragment);
         fragmentTransaction.commit();
 
         currentFragment = mapFragment;
 
+        addSnapshotListener();
+        if (FirebaseDB.getGameData().getOwnUserData(FirebaseAuthentication.getFirebaseUser().getEmail()).isOrga()) {
+            navigationView.getMenu().getItem(1).setVisible(true);
+        }
+        requestLocationPermissions();
+
+        locationManager = (LocationManager) this.
+
+                getSystemService(Context.LOCATION_SERVICE);
+
+        locationManagerCriteria = new Criteria();
+        locationManagerCriteria.setAccuracy(Criteria.ACCURACY_FINE);
+        locationManager.getBestProvider(locationManagerCriteria, true);
+        locationListener = googleLocationService;
+
+        startService(new Intent(getApplicationContext(), googleLocationService.getClass()));
+
+
+    }
+
+    public void queryUpdateData() {
+        FirebaseDB.getGames().whereEqualTo("gameID", FirebaseDB.getGameData().getGameID())
+                .get().addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                if (task.getResult().size() > 0) {
+                    final DocumentSnapshot documentSnapshot = task.getResult().getDocuments().get(0);
+                    if (documentSnapshot != null && documentSnapshot.exists()) {
+                        updateData(documentSnapshot);
+                    } else {
+                        Log.d("UpdateDB", "Current data: null");
+                    }
+                } else {
+                    Toast.makeText(getApplicationContext(), "Couldn´t find Document with GameID!",
+                            Toast.LENGTH_LONG).show();
+                }
+            } else {
+                Toast.makeText(getApplicationContext(), "Couldn´t query Database!",
+                        Toast.LENGTH_LONG).show();
+            }
+        });
+    }
+
+    public void addSnapshotListener() {
         FirebaseDB.getGames().whereEqualTo("gameID", FirebaseDB.getGameData().getGameID())
                 .get().addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
@@ -141,221 +184,16 @@ public class MainActivity extends AppCompatActivity
                     }
                 } else {
                     Toast.makeText(getApplicationContext(), "Couldn´t find Document with GameID!",
-                            Toast.LENGTH_LONG);
+                            Toast.LENGTH_LONG).show();
                 }
             } else {
                 Toast.makeText(getApplicationContext(), "Couldn´t query Database!",
-                        Toast.LENGTH_LONG);
+                        Toast.LENGTH_LONG).show();
             }
         });
-
-        requestLocationPermissions();
-
-        locationManager = (LocationManager) this.
-
-                getSystemService(Context.LOCATION_SERVICE);
-
-        locationManagerCriteria = new Criteria();
-        locationManagerCriteria.setAccuracy(Criteria.ACCURACY_FINE);
-        locationManager.getBestProvider(locationManagerCriteria, true);
-        locationListener = googleLocationService;
-
-        startService(new Intent(getApplicationContext(), googleLocationService.getClass()));
-
-        hitfb = findViewById(R.id.hitfb);
-        underfirefb = findViewById(R.id.underfirefb);
-        supportfb = findViewById(R.id.supportfb);
-        missionfb = findViewById(R.id.missionfb);
-
-        reloadfb = findViewById(R.id.reloadfb);
-        setMarkerfb = findViewById(R.id.setMarker);
-        removeMarkerfb = findViewById(R.id.removeMarker);
-        swapFlagfb = findViewById(R.id.swapFlagMarker);
-
-        hitfb.setOnClickListener(v -> {
-            FirebaseDB.getGames().whereEqualTo("gameID", FirebaseDB.getGameData().getGameID())
-                    .get().addOnCompleteListener(task -> {
-                if (task.isSuccessful()) {
-                    if (task.getResult().size() > 0) {
-                        final DocumentReference documentReference = FirebaseDB.getGames().document(task.getResult().getDocuments().get(0).getId());
-                        FirebaseDB.getGameData().getOwnUserData(FirebaseAuthentication.getFirebaseUser().getEmail()).setAlive(!FirebaseDB.getGameData().getOwnUserData(FirebaseAuthentication.getFirebaseUser().getEmail()).isAlive());
-                        FirebaseDB.updateObject(documentReference, "users",
-                                FirebaseDB.getGameData().getUsers());
-                        if (FirebaseDB.getGameData().getOwnUserData(FirebaseAuthentication.getFirebaseUser().getEmail()).isAlive()) {
-                            missionfb.show();
-                            supportfb.show();
-                            underfirefb.show();
-                            hitfb.setImageResource(R.drawable.ic_fb_hit);
-                            hitfb.hide();
-                            hitfb.show();
-                        } else {
-                            missionfb.hide();
-                            supportfb.hide();
-                            underfirefb.hide();
-                            hitfb.setImageResource(R.drawable.ic_fb_healed);
-                            hitfb.hide();
-                            hitfb.show();
-                        }
-                    } else {
-                        Toast.makeText(getApplicationContext(), "Couldn´t find Document with GameID!",
-                                Toast.LENGTH_LONG);
-                    }
-                } else {
-                    Toast.makeText(getApplicationContext(), "Couldn´t query Database!",
-                            Toast.LENGTH_LONG);
-                }
-            });
-        });
-
-        underfirefb.setOnClickListener(v -> {
-            FirebaseDB.getGames().whereEqualTo("gameID", FirebaseDB.getGameData().getGameID())
-                    .get().addOnCompleteListener(task -> {
-                if (task.isSuccessful()) {
-                    if (task.getResult().size() > 0) {
-                        final DocumentReference documentReference = FirebaseDB.getGames().document(task.getResult().getDocuments().get(0).getId());
-                        FirebaseDB.getGameData().getOwnUserData(FirebaseAuthentication.getFirebaseUser().getEmail()).setUnderfire(!FirebaseDB.getGameData().getOwnUserData(FirebaseAuthentication.getFirebaseUser().getEmail()).isUnderfire());
-                        FirebaseDB.updateObject(documentReference, "users",
-                                FirebaseDB.getGameData().getUsers());
-                        if (FirebaseDB.getGameData().getOwnUserData(FirebaseAuthentication.getFirebaseUser().getEmail()).isUnderfire()) {
-                            missionfb.hide();
-                            underfirefb.setImageResource(R.drawable.ic_fb_not_underfire);
-                            underfirefb.hide();
-                            underfirefb.show();
-                        } else {
-                            missionfb.show();
-                            underfirefb.setImageResource(R.drawable.ic_fb_under_fire);
-                            underfirefb.hide();
-                            underfirefb.show();
-                        }
-                    } else {
-                        Toast.makeText(getApplicationContext(), "Couldn´t find Document with GameID!",
-                                Toast.LENGTH_LONG);
-                    }
-                } else {
-                    Toast.makeText(getApplicationContext(), "Couldn´t query Database!",
-                            Toast.LENGTH_LONG);
-                }
-            });
-        });
-
-        supportfb.setOnClickListener(v -> {
-            FirebaseDB.getGames().whereEqualTo("gameID", FirebaseDB.getGameData().getGameID())
-                    .get().addOnCompleteListener(task -> {
-                if (task.isSuccessful()) {
-                    if (task.getResult().size() > 0) {
-                        final DocumentReference documentReference = FirebaseDB.getGames().document(task.getResult().getDocuments().get(0).getId());
-                        FirebaseDB.getGameData().getOwnUserData(FirebaseAuthentication.getFirebaseUser().getEmail()).setSupport(!FirebaseDB.getGameData().getOwnUserData(FirebaseAuthentication.getFirebaseUser().getEmail()).isSupport());
-                        FirebaseDB.updateObject(documentReference, "users",
-                                FirebaseDB.getGameData().getUsers());
-                        if (FirebaseDB.getGameData().getOwnUserData(FirebaseAuthentication.getFirebaseUser().getEmail()).isSupport()) {
-                            missionfb.hide();
-                            supportfb.setImageResource(R.drawable.ic_fb_no_support);
-                            supportfb.hide();
-                            supportfb.show();
-                        } else {
-                            missionfb.show();
-                            supportfb.setImageResource(R.drawable.ic_fb_support);
-                            supportfb.hide();
-                            supportfb.show();
-                        }
-                    } else {
-                        Toast.makeText(getApplicationContext(), "Couldn´t find Document with GameID!",
-                                Toast.LENGTH_LONG);
-                    }
-                } else {
-                    Toast.makeText(getApplicationContext(), "Couldn´t query Database!",
-                            Toast.LENGTH_LONG);
-                }
-            });
-        });
-
-        missionfb.setOnClickListener(v -> {
-            FirebaseDB.getGames().whereEqualTo("gameID", FirebaseDB.getGameData().getGameID())
-                    .get().addOnCompleteListener(task -> {
-                if (task.isSuccessful()) {
-                    if (task.getResult().size() > 0) {
-                        final DocumentReference documentReference = FirebaseDB.getGames().document(task.getResult().getDocuments().get(0).getId());
-                        FirebaseDB.getGameData().getOwnUserData(FirebaseAuthentication.getFirebaseUser().getEmail()).setMission(!FirebaseDB.getGameData().getOwnUserData(FirebaseAuthentication.getFirebaseUser().getEmail()).isMission());
-                        FirebaseDB.updateObject(documentReference, "users",
-                                FirebaseDB.getGameData().getUsers());
-                        if (FirebaseDB.getGameData().getOwnUserData(FirebaseAuthentication.getFirebaseUser().getEmail()).isMission()) {
-                            underfirefb.hide();
-                            supportfb.hide();
-                            hitfb.hide();
-                            missionfb.setImageResource(R.drawable.ic_fb_mission_success);
-                            missionfb.hide();
-                            missionfb.show();
-                        } else {
-                            underfirefb.show();
-                            supportfb.show();
-                            hitfb.show();
-                            missionfb.setImageResource(R.drawable.ic_fb_mission);
-                            missionfb.hide();
-                            missionfb.show();
-                        }
-                    } else {
-                        Toast.makeText(getApplicationContext(), "Couldn´t find Document with GameID!",
-                                Toast.LENGTH_LONG);
-                    }
-                } else {
-                    Toast.makeText(getApplicationContext(), "Couldn´t query Database!",
-                            Toast.LENGTH_LONG);
-                }
-            });
-        });
-
-        reloadfb.setOnClickListener(v -> {
-            reloadfb.setEnabled(false);
-            FirebaseDB.getGames().whereEqualTo("gameID", FirebaseDB.getGameData().getGameID())
-                    .get().addOnCompleteListener(task -> {
-                if (task.isSuccessful()) {
-                    if (task.getResult().size() > 0) {
-                        final DocumentSnapshot documentSnapshot = task.getResult().getDocuments().get(0);
-                        if (documentSnapshot != null && documentSnapshot.exists()) {
-                            updateData(documentSnapshot);
-                        } else {
-                            Log.d("UpdateDB", "Current data: null");
-                        }
-                    } else {
-                        Toast.makeText(getApplicationContext(), "Couldn´t find Document with GameID!",
-                                Toast.LENGTH_LONG);
-                    }
-                } else {
-                    Toast.makeText(getApplicationContext(), "Couldn´t query Database!",
-                            Toast.LENGTH_LONG);
-                }
-            });
-            new Timer().schedule(new TimerTask() {
-                @Override
-                public void run() {
-                    runOnUiThread(() -> {
-                        reloadfb.setEnabled(true);
-                    });
-                }
-            }, 30000L);
-        });
-
-        if(FirebaseDB.getGameData().getOwnUserData(FirebaseAuthentication.getFirebaseUser().getEmail()).isOrga()) {
-            setMarkerfb.setOnClickListener(v -> {
-                OrgaAddMarkerDialogFragment orgaAddMarkerDialogFragment = OrgaAddMarkerDialogFragment.newInstance("New Marker");
-                orgaAddMarkerDialogFragment.show(fragmentManager, "orga_add_marker_dialog");
-            });
-
-            removeMarkerfb.setOnClickListener(v -> {
-
-            });
-
-            swapFlagfb.setOnClickListener(v -> {
-
-            });
-        }else{
-            setMarkerfb.setEnabled(false);
-            removeMarkerfb.setEnabled(false);
-            swapFlagfb.setEnabled(false);
-        }
     }
 
-    private void updateData(DocumentSnapshot documentSnapshot) {
+    public void updateData(DocumentSnapshot documentSnapshot) {
         Log.d("UpdateDB", "Current data: " + documentSnapshot.getData());
         FirebaseDB.setGameData(documentSnapshot.toObject(GameData.class));
         mapFragment.setMarker();
@@ -373,18 +211,14 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void onBackPressed() {
-        DrawerLayout drawer = findViewById(R.id.drawer_layout);
-        if (drawer.isDrawerOpen(GravityCompat.START)) {
-            drawer.closeDrawer(GravityCompat.START);
-        } else {
-            super.onBackPressed();
-        }
+        super.onBackPressed();
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.main, menu);
+        this.menu = menu;
+        getMenuInflater().inflate(R.menu.map, menu);
         return true;
     }
 
@@ -395,12 +229,27 @@ public class MainActivity extends AppCompatActivity
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
+        switch (id) {
+            default:
+                return super.onOptionsItemSelected(item);
+            case R.id.settings_show_all_player:
+                item.setChecked(true);
+                mapFragment.showSettings = MapFragment.ShowSettings.AllPlayer;
+                break;
+            case R.id.settings_show_own_team_only:
+                item.setChecked(true);
+                mapFragment.showSettings = MapFragment.ShowSettings.ShowTeamOnly;
+                break;
+            case R.id.settings_show_not_assigned:
+                item.setChecked(true);
+                mapFragment.showSettings = MapFragment.ShowSettings.ShowOnlyNotAssigned;
+                break;
         }
+        mapFragment.setMarker();
+        return true;
 
-        return super.onOptionsItemSelected(item);
+        //noinspection SimplifiableIfStatement
+
     }
 
     @SuppressWarnings("StatementWithEmptyBody")
@@ -415,11 +264,23 @@ public class MainActivity extends AppCompatActivity
         if (currentFragment != null) fragmentTransaction.detach(currentFragment);
 
         if (mapFragment == null) mapFragment = new MapFragment();
-
+        if (playerFragment == null) playerFragment = new PlayerFragment();
+        menu.clear();
         if (id == R.id.nav_map) {
+            if (menu != null)
+                getMenuInflater().inflate(R.menu.map, menu);
             fragmentTransaction.attach(mapFragment);
             currentFragment = mapFragment;
-            Log.i("Nav", "Map selected");
+        } else if (id == R.id.nav_player) {
+            if (menu != null)
+                getMenuInflater().inflate(R.menu.main, menu);
+            fragmentTransaction.attach(playerFragment);
+            currentFragment = playerFragment;
+        } else if (id == R.id.nav_team) {
+            if (menu != null)
+                getMenuInflater().inflate(R.menu.main, menu);
+            fragmentTransaction.attach(teamFragment);
+            currentFragment = teamFragment;
         } else if (id == R.id.nav_settings) {
 
         } else if (id == R.id.nav_share) {
@@ -427,7 +288,8 @@ public class MainActivity extends AppCompatActivity
         } else if (id == R.id.nav_send) {
 
         }
-
+        fragmentTransaction.commit();
+        queryUpdateData();
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;

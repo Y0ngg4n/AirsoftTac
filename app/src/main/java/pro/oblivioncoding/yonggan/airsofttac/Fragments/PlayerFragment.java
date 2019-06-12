@@ -6,10 +6,20 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
+import java.util.ArrayList;
+
+import pro.oblivioncoding.yonggan.airsofttac.Adapter.RecyclerViewPlayerListAdapter;
+import pro.oblivioncoding.yonggan.airsofttac.Firebase.FirebaseDB;
+import pro.oblivioncoding.yonggan.airsofttac.Firebase.GameCollection.User.UserData;
 import pro.oblivioncoding.yonggan.airsofttac.R;
 
 
@@ -25,6 +35,7 @@ public class PlayerFragment extends Fragment {
 
     @Nullable
     private OnFragmentInteractionListener mListener;
+    private View rootView;
 
     public PlayerFragment() {
         // Required empty public constructor
@@ -47,7 +58,35 @@ public class PlayerFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_player, container, false);
+        rootView = inflater.inflate(R.layout.fragment_player, container, false);
+        final RecyclerView recyclerView = rootView.findViewById(R.id.playerList);
+        final TextView searchPlayerList = rootView.findViewById(R.id.searchPlayerList);
+        searchPlayerList.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                ArrayList<UserData> userDataArrayList = FirebaseDB.getGameData().getUsers();
+                if (!s.toString().isEmpty()) {
+                    userDataArrayList = new ArrayList<>();
+                    for (UserData userData : FirebaseDB.getGameData().getUsers()) {
+                        if (userData.getEmail().toLowerCase().contains(s.toString().toLowerCase())
+                                || userData.getNickname().toLowerCase().contains(s.toString().toLowerCase())) {
+                            userDataArrayList.add(userData);
+                        }
+                    }
+                }
+                setRecyclerView(userDataArrayList, recyclerView);
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+            }
+        });
+        setRecyclerView(FirebaseDB.getGameData().getUsers(), recyclerView);
+        return rootView;
     }
 
     // TODO: Rename method, update argument and hook method into UI event
@@ -86,5 +125,11 @@ public class PlayerFragment extends Fragment {
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
+    }
+
+    private void setRecyclerView(ArrayList<UserData> userData, RecyclerView recyclerView) {
+        RecyclerViewPlayerListAdapter recyclerViewPlayerListAdapter = new RecyclerViewPlayerListAdapter(userData, rootView.getContext());
+        recyclerView.setAdapter(recyclerViewPlayerListAdapter);
+        recyclerView.setLayoutManager(new LinearLayoutManager(rootView.getContext()));
     }
 }

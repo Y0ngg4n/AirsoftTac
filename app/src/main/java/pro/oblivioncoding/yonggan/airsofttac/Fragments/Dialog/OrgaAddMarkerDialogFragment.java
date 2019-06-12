@@ -4,7 +4,6 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
-import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -24,7 +23,6 @@ import java.util.Arrays;
 
 import pro.oblivioncoding.yonggan.airsofttac.Firebase.FirebaseAuthentication;
 import pro.oblivioncoding.yonggan.airsofttac.Firebase.FirebaseDB;
-import pro.oblivioncoding.yonggan.airsofttac.Firebase.GameCollection.GameData;
 import pro.oblivioncoding.yonggan.airsofttac.Firebase.GameCollection.Marker.MarkerTypes.FlagMarkerData;
 import pro.oblivioncoding.yonggan.airsofttac.Firebase.GameCollection.Marker.MarkerTypes.HQMarkerData;
 import pro.oblivioncoding.yonggan.airsofttac.Firebase.GameCollection.Marker.MarkerTypes.MissionMarkerData;
@@ -87,24 +85,23 @@ public class OrgaAddMarkerDialogFragment extends DialogFragment {
             longitudeTextView.setText(String.valueOf(FirebaseDB.getGameData().getOwnUserData(FirebaseAuthentication.getFirebaseUser().getEmail()).getPositionLong()));
         });
 
-        getView().findViewById(R.id.orgaaddmarkerdialogaddmarker).setOnClickListener(view1 ->
-        {
-            FirebaseDB.getGames().whereEqualTo("gameID", FirebaseDB.getGameData().getGameID())
-                    .get().addOnCompleteListener(task -> {
-                if (task.isSuccessful()) {
-                    if (task.getResult().size() > 0) {
-                        final DocumentSnapshot documentSnapshot = task.getResult().getDocuments().get(0);
-                        if (documentSnapshot != null && documentSnapshot.exists()) {
+        FirebaseDB.getGames().whereEqualTo("gameID", FirebaseDB.getGameData().getGameID())
+                .get().addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                if (task.getResult().size() > 0) {
+                    final DocumentSnapshot documentSnapshot = task.getResult().getDocuments().get(0);
+                    if (documentSnapshot != null && documentSnapshot.exists()) {
+                        getView().findViewById(R.id.orgaaddmarkerdialogaddmarker).setOnClickListener(view1 ->
+                        {
                             final Double latitude = Double.valueOf(((EditText) view.findViewById(R.id.orgaaddmarkerdialoglatitude)).getText().toString());
                             final Double longitude = Double.valueOf(((EditText) view.findViewById(R.id.orgaaddmarkerdialoglongitude)).getText().toString());
                             final String title = ((EditText) view.findViewById(R.id.orgaaddmarkerdialogtitle)).getText().toString();
                             final String description = ((EditText) view.findViewById(R.id.orgaaddmarkerdialogdescription)).getText().toString();
-                            final boolean own = view.findViewById(R.id.orgaaddmarkerdialogown).isSelected();
+                            final boolean own = ((Switch) view.findViewById(R.id.orgaaddmarkerdialogown)).isChecked();
+                            Log.i("Owned", String.valueOf(own));
                             switch (spinner.getSelectedItemPosition()) {
                                 case 0:
-                                    FirebaseDB.getGameData().getTacticalMarkerData().add(new TacticalMarkerData(
-
-                                            ));
+                                    FirebaseDB.getGameData().getTacticalMarkerData().add(new TacticalMarkerData(latitude, longitude, title, description));
                                     FirebaseDB.updateObject(documentSnapshot, "tacticalMarkerData", FirebaseDB.getGameData().getTacticalMarkerData());
                                     break;
                                 case 1:
@@ -131,20 +128,20 @@ public class OrgaAddMarkerDialogFragment extends DialogFragment {
                                     FirebaseDB.updateObject(documentSnapshot, "flagMarkerData", FirebaseDB.getGameData().getFlagMarkerData());
                                     break;
                             }
-                        } else {
-                            Log.d("UpdateDB", "Current data: null");
-                        }
+                            getFragmentManager().beginTransaction().remove(this).commit();
+                        });
                     } else {
-                        Toast.makeText(getContext(), "Couldn´t find Document with GameID!",
-                                Toast.LENGTH_LONG);
+                        Log.d("UpdateDB", "Current data: null");
                     }
                 } else {
-                    Toast.makeText(getContext(), "Couldn´t query Database!",
+                    Toast.makeText(getContext(), "Couldn´t find Document with GameID!",
                             Toast.LENGTH_LONG);
                 }
-            });
+            } else {
+                Toast.makeText(getContext(), "Couldn´t query Database!",
+                        Toast.LENGTH_LONG);
+            }
 
-            getFragmentManager().beginTransaction().remove(this).commit();
         });
     }
 }

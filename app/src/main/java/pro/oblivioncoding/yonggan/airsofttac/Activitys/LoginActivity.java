@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.text.Editable;
 import android.util.Log;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -27,7 +26,7 @@ public class LoginActivity extends AppCompatActivity {
             final String email = ((EditText) findViewById(R.id.email)).getText().toString();
             final String password = ((EditText) findViewById(R.id.password)).getText().toString();
 
-            if(email.isEmpty() || password.isEmpty()) return;
+            if (email.isEmpty() || password.isEmpty()) return;
 
             FirebaseAuthentication.getFirebaseAuth().signInWithEmailAndPassword(email, password)
                     .addOnCompleteListener(this, task -> {
@@ -45,13 +44,9 @@ public class LoginActivity extends AppCompatActivity {
                         }
                     });
         });
-
-//            findViewById(R.id.google).setOnClickListener(v -> {
-//
-//            });
     }
 
-    private void loadScanGameActivity(){
+    private void loadScanGameActivity() {
         LoginActivity.this.startActivity(new Intent(LoginActivity.this, JoinGameActivity.class));
     }
 }

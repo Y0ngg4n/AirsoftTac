@@ -1,15 +1,15 @@
 package pro.oblivioncoding.yonggan.airsofttac.Firebase.GameCollection.User;
 
 
-import com.google.android.gms.maps.model.LatLng;
-
 public class UserData {
 
-    private String email;
+    private String email, nickname;
 
     private boolean orga, alive = true, support, mission, underfire;
 
     private double positionLat, positionLong;
+
+    private String team;
 
     public UserData() {
     }
@@ -17,6 +17,12 @@ public class UserData {
     public UserData(String email, boolean orga) {
         this.email = email;
         this.orga = orga;
+    }
+
+    public UserData(String email, boolean orga, String nickname) {
+        this.email = email;
+        this.orga = orga;
+        this.nickname = nickname;
     }
 
     public String getEmail() {
@@ -81,5 +87,21 @@ public class UserData {
 
     public void setPositionLong(double positionLong) {
         this.positionLong = positionLong;
+    }
+
+    public String getNickname() {
+        return nickname;
+    }
+
+    public void setNickname(String nickname) {
+        this.nickname = nickname;
+    }
+
+    public String getTeam() {
+        return team;
+    }
+
+    public void setTeam(String team) {
+        this.team = team;
     }
 }

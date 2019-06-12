@@ -1,10 +1,8 @@
 package pro.oblivioncoding.yonggan.airsofttac.Firebase.GameCollection.Marker.MarkerTypes;
 
-public class RespawnMarkerData {
+import pro.oblivioncoding.yonggan.airsofttac.Firebase.GameCollection.Marker.MarkerType;
 
-    private double latitude, longitude;
-
-    private String title, description;
+public class RespawnMarkerData extends MarkerType {
 
     private boolean own;
 

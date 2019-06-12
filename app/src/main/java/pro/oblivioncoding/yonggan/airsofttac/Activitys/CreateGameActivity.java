@@ -12,11 +12,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.Timestamp;
-import com.google.firebase.firestore.CollectionReference;
-import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.QuerySnapshot;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -73,26 +69,26 @@ public class CreateGameActivity extends AppCompatActivity {
                     dHour, dMinute, true).show();
         });
 
-        (findViewById(R.id.createGame)).setOnClickListener(v -> {
+        FirebaseDB.getGames().whereEqualTo("gameID", ((TextView) findViewById(R.id.gameID)).getText().toString())
+                .get().addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                if (task == null || task.getResult().size() <= 0) {
+                    (findViewById(R.id.createGame)).setOnClickListener(v -> {
 
-            FirebaseDB.getGames().whereEqualTo("gameID", ((TextView) findViewById(R.id.gameID)).getText().toString())
-                    .get().addOnCompleteListener(task -> {
-                if (task.isSuccessful()) {
-                    if (task == null || task.getResult().size() <= 0) {
                         final GameData gameData = createGame();
                         writeGameData(gameData);
                         FirebaseDB.setGameData(gameData);
                         CreateGameActivity.this.startActivity(new Intent(
                                 CreateGameActivity.this, MainActivity.class));
-                    } else {
-                        Toast.makeText(getApplicationContext(), "GameID allready existing!",
-                                Toast.LENGTH_LONG);
-                    }
+                    });
                 } else {
-                    Toast.makeText(getApplicationContext(), "Couldn´t query Database!",
+                    Toast.makeText(getApplicationContext(), "GameID allready existing!",
                             Toast.LENGTH_LONG);
                 }
-            });
+            } else {
+                Toast.makeText(getApplicationContext(), "Couldn´t query Database!",
+                        Toast.LENGTH_LONG).show();
+            }
         });
     }
 
@@ -116,7 +112,7 @@ public class CreateGameActivity extends AppCompatActivity {
 
         } catch (ParseException e) {
             Log.i("CreateGame", "Could not parse Date");
-            Toast.makeText(getApplicationContext(), "Could not parse Date", Toast.LENGTH_LONG);
+            Toast.makeText(getApplicationContext(), "Could not parse Date", Toast.LENGTH_LONG).show();
         }
         return null;
     }

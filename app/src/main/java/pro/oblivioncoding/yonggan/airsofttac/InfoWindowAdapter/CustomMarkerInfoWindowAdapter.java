@@ -1,12 +1,8 @@
 package pro.oblivioncoding.yonggan.airsofttac.InfoWindowAdapter;
 
 import android.content.Context;
-import android.net.Uri;
-import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.google.android.gms.maps.GoogleMap;
@@ -47,8 +43,8 @@ public class CustomMarkerInfoWindowAdapter implements GoogleMap.InfoWindowAdapte
 
     private void renderWindowText(Marker marker, View view) {
         ((TextView) view.findViewById(R.id.title)).setText(title);
-        ((TextView) view.findViewById(R.id.latitude)).setText("Lat: " + String.valueOf(latitude));
-        ((TextView) view.findViewById(R.id.longitude)).setText("Long: " + String.valueOf(longitude));
-        ((TextView) view.findViewById(R.id.description)).setText("Description: " + description);
+        ((TextView) view.findViewById(R.id.latitudeLabel)).setText(String.valueOf(latitude));
+        ((TextView) view.findViewById(R.id.longitude)).setText(String.valueOf(longitude));
+        ((TextView) view.findViewById(R.id.description)).setText(description);
     }
 }

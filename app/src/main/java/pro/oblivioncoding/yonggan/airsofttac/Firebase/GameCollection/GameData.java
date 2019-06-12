@@ -11,6 +11,7 @@ import pro.oblivioncoding.yonggan.airsofttac.Firebase.GameCollection.Marker.Mark
 import pro.oblivioncoding.yonggan.airsofttac.Firebase.GameCollection.Marker.MarkerTypes.MissionMarkerData;
 import pro.oblivioncoding.yonggan.airsofttac.Firebase.GameCollection.Marker.MarkerTypes.RespawnMarkerData;
 import pro.oblivioncoding.yonggan.airsofttac.Firebase.GameCollection.Marker.MarkerTypes.TacticalMarkerData;
+import pro.oblivioncoding.yonggan.airsofttac.Firebase.GameCollection.Teams.TeamData;
 import pro.oblivioncoding.yonggan.airsofttac.Firebase.GameCollection.User.UserData;
 
 public class GameData {
@@ -22,6 +23,7 @@ public class GameData {
     private Timestamp endTime;
 
     private ArrayList<UserData> users;
+    private ArrayList<TeamData> teams;
 
     private ArrayList<FlagMarkerData> flagMarkerData;
     private ArrayList<HQMarkerData> hqMarkerData;
@@ -30,9 +32,11 @@ public class GameData {
     private ArrayList<TacticalMarkerData> tacticalMarkerData;
 
     @Nullable
-    public UserData getOwnUserData(String email){
-        for (UserData user : users) {
-            if(user.getEmail().equals(email)) return user;
+    public UserData getOwnUserData(String email) {
+        if (users != null) {
+            for (UserData user : users) {
+                if (user.getEmail().equals(email)) return user;
+            }
         }
         return null;
     }
@@ -99,7 +103,7 @@ public class GameData {
     }
 
     public ArrayList<UserData> getUsers() {
-        if(users == null) users = new ArrayList<>();
+        if (users == null) users = new ArrayList<>();
         return users;
     }
 
@@ -108,7 +112,7 @@ public class GameData {
     }
 
     public ArrayList<FlagMarkerData> getFlagMarkerData() {
-        if(flagMarkerData == null) flagMarkerData = new ArrayList<>();
+        if (flagMarkerData == null) flagMarkerData = new ArrayList<>();
         return flagMarkerData;
     }
 
@@ -117,7 +121,7 @@ public class GameData {
     }
 
     public ArrayList<HQMarkerData> getHqMarkerData() {
-        if(hqMarkerData == null) hqMarkerData = new ArrayList<>();
+        if (hqMarkerData == null) hqMarkerData = new ArrayList<>();
         return hqMarkerData;
     }
 
@@ -126,7 +130,7 @@ public class GameData {
     }
 
     public ArrayList<MissionMarkerData> getMissionMarkerData() {
-        if(missionMarkerData == null) missionMarkerData = new ArrayList<>();
+        if (missionMarkerData == null) missionMarkerData = new ArrayList<>();
         return missionMarkerData;
     }
 
@@ -135,7 +139,7 @@ public class GameData {
     }
 
     public ArrayList<RespawnMarkerData> getRespawnMarkerData() {
-        if(respawnMarkerData == null) respawnMarkerData = new ArrayList<>();
+        if (respawnMarkerData == null) respawnMarkerData = new ArrayList<>();
         return respawnMarkerData;
     }
 
@@ -144,12 +148,22 @@ public class GameData {
     }
 
     public ArrayList<TacticalMarkerData> getTacticalMarkerData() {
-        if(tacticalMarkerData == null) tacticalMarkerData = new ArrayList<>();
+        if (tacticalMarkerData == null) tacticalMarkerData = new ArrayList<>();
         return tacticalMarkerData;
+    }
+
+    public ArrayList<TeamData> getTeams() {
+        if (teams == null) teams = new ArrayList<>();
+        return teams;
+    }
+
+    public void setTeams(ArrayList<TeamData> teams) {
+        this.teams = teams;
     }
 
     public void setTacticalMarkerData(ArrayList<TacticalMarkerData> tacticalMarkerData) {
         this.tacticalMarkerData = tacticalMarkerData;
     }
 }
+
 
