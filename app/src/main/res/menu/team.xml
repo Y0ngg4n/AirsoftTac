@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <group
+        android:id="@+id/teamSettings"
+        android:checkableBehavior="single">
+        <item
+            android:id="@+id/settings_show_all_player_team"
+            android:orderInCategory="100"
+            android:title="Show all Player"
+            app:showAsAction="never" />
+        <item
+            android:id="@+id/settings_show_own_team_only_team"
+            android:orderInCategory="100"
+            android:title="Show only own Team"
+            app:showAsAction="never" />
+        <item
+            android:id="@+id/settings_show_not_assigned_team"
+            android:orderInCategory="100"
+            android:title="Show only not assigned"
+            app:showAsAction="never" />
+    </group>
+</menu>

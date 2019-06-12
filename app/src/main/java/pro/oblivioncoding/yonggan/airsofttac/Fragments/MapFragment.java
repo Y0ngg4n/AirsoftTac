@@ -82,6 +82,10 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
     private HashMap<Marker, UserData> userMarkerDataHashMap = new HashMap<>();
     private HashMap<UserData, Polyline> userMarkerPolyline = new HashMap<>();
 
+    public enum ShowSettings {
+        AllPlayer, ShowTeamOnly, ShowOnlyNotAssigned
+    }
+
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -665,9 +669,6 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         }
     }
 
-    public enum ShowSettings {
-        AllPlayer, ShowTeamOnly, ShowOnlyNotAssigned
-    }
 
     /**
      * This interface must be implemented by activities that contain this

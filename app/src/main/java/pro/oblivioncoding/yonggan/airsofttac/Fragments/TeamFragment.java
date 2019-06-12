@@ -45,6 +45,56 @@ public class TeamFragment extends Fragment {
     private OnFragmentInteractionListener mListener;
     private View rootView;
 
+    public TeamFragment.ShowSettings showSettings = TeamFragment.ShowSettings.AllPlayer;
+    private RecyclerView recyclerView;
+
+    public RecyclerView getRecyclerView() {
+        return recyclerView;
+    }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        // Inflate the layout for this fragment
+        rootView = inflater.inflate(R.layout.fragment_team, container, false);
+        recyclerView = rootView.findViewById(R.id.teamList);
+        final TextView searchTeamList = rootView.findViewById(R.id.teamListSearch);
+        final FloatingActionButton teamListAddFB = rootView.findViewById(R.id.teamListAddTeamFB);
+        teamListAddFB.setOnClickListener(v -> {
+            CreateTeamDialogFragment createTeamDialogFragment = CreateTeamDialogFragment.newInstance("New Team", this, recyclerView);
+            createTeamDialogFragment.show(getFragmentManager(), "create_team_dialog");
+            setRecyclerView(FirebaseDB.getGameData().getTeams(), recyclerView);
+        });
+        final UserData ownUserData = FirebaseDB.getGameData().getOwnUserData(FirebaseAuthentication.getFirebaseUser().getEmail());
+        if (ownUserData.getTeam() != null && !ownUserData.isOrga())
+            teamListAddFB.hide();
+        searchTeamList.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                ArrayList<TeamData> teamDataArrayList = FirebaseDB.getGameData().getTeams();
+                if (!s.toString().isEmpty()) {
+                    teamDataArrayList = new ArrayList<>();
+                    for (TeamData teamData : FirebaseDB.getGameData().getTeams()) {
+                        if (teamData.getTeamName().toLowerCase().contains(s.toString().toLowerCase())) {
+                            teamDataArrayList.add(teamData);
+                        }
+                    }
+                }
+                setRecyclerView(teamDataArrayList, recyclerView);
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+            }
+        });
+        setRecyclerView(FirebaseDB.getGameData().getTeams(), recyclerView);
+        return rootView;
+    }
+
     public TeamFragment() {
         // Required empty public constructor
     }
@@ -76,46 +126,33 @@ public class TeamFragment extends Fragment {
         }
     }
 
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        rootView = inflater.inflate(R.layout.fragment_team, container, false);
-        final RecyclerView recyclerView = rootView.findViewById(R.id.teamList);
-        final TextView searchTeamList = rootView.findViewById(R.id.teamListSearch);
-        final FloatingActionButton teamListAddFB = rootView.findViewById(R.id.teamListAddTeamFB);
-        teamListAddFB.setOnClickListener(v -> {
-            CreateTeamDialogFragment orgaAddMarkerDialogFragment = CreateTeamDialogFragment.newInstance("New Team");
-            orgaAddMarkerDialogFragment.show(getFragmentManager(), "create_team_dialog");
-        });
-        final UserData ownUserData = FirebaseDB.getGameData().getOwnUserData(FirebaseAuthentication.getFirebaseUser().getEmail());
-        if (ownUserData.getTeam() != null)
-            teamListAddFB.hide();
-        searchTeamList.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                ArrayList<TeamData> teamDataArrayList = FirebaseDB.getGameData().getTeams();
-                if (!s.toString().isEmpty()) {
-                    teamDataArrayList = new ArrayList<>();
-                    for (TeamData teamData : FirebaseDB.getGameData().getTeams()) {
-                        if (teamData.getTeamName().toLowerCase().contains(s.toString().toLowerCase())) {
-                            teamDataArrayList.add(teamData);
-                        }
+    public void setRecyclerView(ArrayList<TeamData> teamData, RecyclerView recyclerView) {
+        UserData ownUserData = FirebaseDB.getGameData().getOwnUserData(FirebaseAuthentication.getFirebaseUser().getEmail());
+        ArrayList<TeamData> teamDataBuffer = new ArrayList<>();
+        if (showSettings.equals(ShowSettings.ShowTeamOnly)) {
+            for (TeamData team : teamData) {
+                if (!ownUserData.getTeam().isEmpty()) {
+                    if (ownUserData.getTeam().equals(team.getTeamName())) {
+                        teamDataBuffer.add(team);
                     }
                 }
-                setRecyclerView(teamDataArrayList, recyclerView);
             }
+        } else if (showSettings.equals(ShowSettings.ShowOnlyNotAssigned)) {
+            for (TeamData team : teamData) {
+                if (team.getFlagMarkerData() == null && team.getHqMarkerData() == null
+                        && team.getMissionMarkerData() == null && team.getRespawnMarkerData() == null
+                        && team.getTacticalMarkerData() == null) {
+                    teamDataBuffer.add(team);
+                }
+            }
+        } else if (showSettings.equals(ShowSettings.AllPlayer)) {
+            teamDataBuffer = teamData;
+        }
 
-            @Override
-            public void afterTextChanged(Editable s) {
-            }
-        });
-        setRecyclerView(FirebaseDB.getGameData().getTeams(), recyclerView);
-        return rootView;
+
+        RecyclerViewTeamListAdapter recyclerViewTeamListAdapter = new RecyclerViewTeamListAdapter(getFragmentManager(), teamDataBuffer, rootView.getContext());
+        recyclerView.setAdapter(recyclerViewTeamListAdapter);
+        recyclerView.setLayoutManager(new LinearLayoutManager(rootView.getContext()));
     }
 
     // TODO: Rename method, update argument and hook method into UI event
@@ -142,10 +179,8 @@ public class TeamFragment extends Fragment {
         mListener = null;
     }
 
-    private void setRecyclerView(ArrayList<TeamData> teamData, RecyclerView recyclerView) {
-        RecyclerViewTeamListAdapter recyclerViewTeamListAdapter = new RecyclerViewTeamListAdapter(getFragmentManager(), teamData, rootView.getContext());
-        recyclerView.setAdapter(recyclerViewTeamListAdapter);
-        recyclerView.setLayoutManager(new LinearLayoutManager(rootView.getContext()));
+    public enum ShowSettings {
+        AllPlayer, ShowTeamOnly, ShowOnlyNotAssigned
     }
 
     /**

@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,21 +14,24 @@ import android.widget.Toast;
 
 import com.google.firebase.firestore.DocumentSnapshot;
 
-import pro.oblivioncoding.yonggan.airsofttac.Firebase.FirebaseAuthentication;
 import pro.oblivioncoding.yonggan.airsofttac.Firebase.FirebaseDB;
 import pro.oblivioncoding.yonggan.airsofttac.Firebase.GameCollection.Teams.TeamData;
-import pro.oblivioncoding.yonggan.airsofttac.Firebase.GameCollection.User.UserData;
+import pro.oblivioncoding.yonggan.airsofttac.Fragments.TeamFragment;
 import pro.oblivioncoding.yonggan.airsofttac.R;
 
 public class CreateTeamDialogFragment extends DialogFragment {
 
+    private static TeamFragment teamFragment;
+    private static RecyclerView recyclerView;
     public CreateTeamDialogFragment() {
         // Empty constructor is required for DialogFragment
         // Make sure not to add arguments to the constructor
         // Use `newInstance` instead as shown below
     }
 
-    public static CreateTeamDialogFragment newInstance(String title) {
+    public static CreateTeamDialogFragment newInstance(String title, TeamFragment pTeamFragment, RecyclerView pRecyclerView) {
+        teamFragment = pTeamFragment;
+        recyclerView = pRecyclerView;
         return new CreateTeamDialogFragment();
     }
 
@@ -64,14 +68,10 @@ public class CreateTeamDialogFragment extends DialogFragment {
                             }
 
                             final TeamData teamData = new TeamData(teamname.getText().toString());
-                            final UserData ownUserData = FirebaseDB.getGameData().getOwnUserData(FirebaseAuthentication.getFirebaseUser().getEmail());
-                            teamData.getUsers().add(ownUserData.getEmail());
                             FirebaseDB.getGameData().getTeams().add(teamData);
-                            ownUserData.setTeam(teamData.getTeamName());
                             FirebaseDB.updateObject(documentSnapshot, "teams",
                                     FirebaseDB.getGameData().getTeams());
-                            FirebaseDB.updateObject(documentSnapshot, "users",
-                                    FirebaseDB.getGameData().getUsers());
+                            teamFragment.setRecyclerView(FirebaseDB.getGameData().getTeams(), recyclerView);
                             getFragmentManager().beginTransaction().remove(this).commit();
                         });
                     } else {

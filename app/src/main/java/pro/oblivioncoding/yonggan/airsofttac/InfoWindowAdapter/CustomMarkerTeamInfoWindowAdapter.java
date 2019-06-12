@@ -43,7 +43,7 @@ public class CustomMarkerTeamInfoWindowAdapter implements GoogleMap.InfoWindowAd
 
     private void renderWindowText(Marker marker, View view) {
         ((TextView) view.findViewById(R.id.title)).setText(title);
-        ((TextView) view.findViewById(R.id.latitudeLabel)).setText(String.valueOf(latitude));
+        ((TextView) view.findViewById(R.id.latitude)).setText(String.valueOf(latitude));
         ((TextView) view.findViewById(R.id.longitude)).setText(String.valueOf(longitude));
         ((TextView) view.findViewById(R.id.description)).setText(description);
         ((TextView) view.findViewById(R.id.teamName)).setText(teamName);

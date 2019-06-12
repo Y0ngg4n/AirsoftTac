@@ -24,6 +24,7 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -101,6 +102,8 @@ public class MainActivity extends AppCompatActivity
 
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         NavigationView navigationView = findViewById(R.id.nav_view);
+        ((TextView) navigationView.getHeaderView(0).findViewById(R.id.nav_header_title)).setText(FirebaseDB.getGameData().getOwnUserData(FirebaseAuthentication.getFirebaseUser().getEmail()).getNickname());
+        ((TextView) navigationView.getHeaderView(0).findViewById(R.id.nav_header_email)).setText(FirebaseAuthentication.getFirebaseUser().getEmail());
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
@@ -244,8 +247,22 @@ public class MainActivity extends AppCompatActivity
                 item.setChecked(true);
                 mapFragment.showSettings = MapFragment.ShowSettings.ShowOnlyNotAssigned;
                 break;
+            case R.id.settings_show_all_player_team:
+                item.setChecked(true);
+                teamFragment.showSettings = TeamFragment.ShowSettings.AllPlayer;
+                break;
+            case R.id.settings_show_own_team_only_team:
+                item.setChecked(true);
+                teamFragment.showSettings = TeamFragment.ShowSettings.ShowTeamOnly;
+                break;
+            case R.id.settings_show_not_assigned_team:
+                item.setChecked(true);
+                teamFragment.showSettings = TeamFragment.ShowSettings.ShowOnlyNotAssigned;
+                break;
         }
         mapFragment.setMarker();
+        if (teamFragment.getRecyclerView() != null && FirebaseDB.getGameData().getTeams() != null)
+            teamFragment.setRecyclerView(FirebaseDB.getGameData().getTeams(), teamFragment.getRecyclerView());
         return true;
 
         //noinspection SimplifiableIfStatement
@@ -278,7 +295,7 @@ public class MainActivity extends AppCompatActivity
             currentFragment = playerFragment;
         } else if (id == R.id.nav_team) {
             if (menu != null)
-                getMenuInflater().inflate(R.menu.main, menu);
+                getMenuInflater().inflate(R.menu.team, menu);
             fragmentTransaction.attach(teamFragment);
             currentFragment = teamFragment;
         } else if (id == R.id.nav_settings) {
