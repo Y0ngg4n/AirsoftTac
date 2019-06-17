@@ -64,6 +64,7 @@ public class TeamFragment extends Fragment {
             CreateTeamDialogFragment createTeamDialogFragment = CreateTeamDialogFragment.newInstance("New Team", this, recyclerView);
             createTeamDialogFragment.show(getFragmentManager(), "create_team_dialog");
             setRecyclerView(FirebaseDB.getGameData().getTeams(), recyclerView);
+            setAdapter(FirebaseDB.getGameData().getTeams());
         });
         final UserData ownUserData = FirebaseDB.getGameData().getOwnUserData(FirebaseAuthentication.getFirebaseUser().getEmail());
         if (ownUserData.getTeam() != null && !ownUserData.isOrga())
@@ -148,11 +149,7 @@ public class TeamFragment extends Fragment {
         } else if (showSettings.equals(ShowSettings.AllPlayer)) {
             teamDataBuffer = teamData;
         }
-
-
-        RecyclerViewTeamListAdapter recyclerViewTeamListAdapter = new RecyclerViewTeamListAdapter(getFragmentManager(), teamDataBuffer, rootView.getContext());
-        recyclerView.setAdapter(recyclerViewTeamListAdapter);
-        recyclerView.setLayoutManager(new LinearLayoutManager(rootView.getContext()));
+        setAdapter(teamData);
     }
 
     // TODO: Rename method, update argument and hook method into UI event
@@ -196,5 +193,11 @@ public class TeamFragment extends Fragment {
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
+    }
+
+    private void setAdapter(ArrayList<TeamData> teamData) {
+        RecyclerViewTeamListAdapter recyclerViewTeamListAdapter = new RecyclerViewTeamListAdapter(getFragmentManager(), teamData, rootView.getContext());
+        recyclerView.setAdapter(recyclerViewTeamListAdapter);
+        recyclerView.setLayoutManager(new LinearLayoutManager(rootView.getContext()));
     }
 }

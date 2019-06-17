@@ -6,6 +6,7 @@ import com.google.firebase.Timestamp;
 
 import java.util.ArrayList;
 
+import pro.oblivioncoding.yonggan.airsofttac.Firebase.GameCollection.Chat.ChatMessage;
 import pro.oblivioncoding.yonggan.airsofttac.Firebase.GameCollection.Marker.MarkerTypes.FlagMarkerData;
 import pro.oblivioncoding.yonggan.airsofttac.Firebase.GameCollection.Marker.MarkerTypes.HQMarkerData;
 import pro.oblivioncoding.yonggan.airsofttac.Firebase.GameCollection.Marker.MarkerTypes.MissionMarkerData;
@@ -30,6 +31,8 @@ public class GameData {
     private ArrayList<MissionMarkerData> missionMarkerData;
     private ArrayList<RespawnMarkerData> respawnMarkerData;
     private ArrayList<TacticalMarkerData> tacticalMarkerData;
+
+    private ArrayList<ChatMessage> chatMessages;
 
     @Nullable
     public UserData getOwnUserData(String email) {
@@ -163,6 +166,15 @@ public class GameData {
 
     public void setTacticalMarkerData(ArrayList<TacticalMarkerData> tacticalMarkerData) {
         this.tacticalMarkerData = tacticalMarkerData;
+    }
+
+    public ArrayList<ChatMessage> getChatMessages() {
+        if (chatMessages == null) chatMessages = new ArrayList<>();
+        return chatMessages;
+    }
+
+    public void setChatMessages(ArrayList<ChatMessage> chatMessages) {
+        this.chatMessages = chatMessages;
     }
 }
 

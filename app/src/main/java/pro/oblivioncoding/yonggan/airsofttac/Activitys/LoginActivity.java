@@ -46,6 +46,9 @@ public class LoginActivity extends AppCompatActivity {
         });
     }
 
+    @Override
+    public void onBackPressed() {
+    }
     private void loadScanGameActivity() {
         LoginActivity.this.startActivity(new Intent(LoginActivity.this, JoinGameActivity.class));
     }

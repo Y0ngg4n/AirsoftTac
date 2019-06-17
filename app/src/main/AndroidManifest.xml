@@ -6,6 +6,7 @@
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE"/>
+    <uses-permission android:name="android.permission.CAMERA" />
 
     <application
         android:allowBackup="true"
@@ -21,23 +22,22 @@
 
         <activity
             android:name=".Activitys.MainActivity"
-            android:label="@string/title_activity_main"
+            android:label=""
             android:theme="@style/AppTheme.NoActionBar"></activity>
         <activity
             android:name=".Activitys.JoinGameActivity"
-            android:label="@string/title_activity_join_game"
+            android:label="Join or Create Game"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".Activitys.CreateGameActivity"
-            android:label="@string/title_activity_create_game"
+            android:label="Create Game"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".Activitys.LoginActivity"
-            android:label="@string/title_activity_login"
+            android:label="Login"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
+                <action android:name="AirsoftGPS" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>

@@ -32,6 +32,7 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import pro.oblivioncoding.yonggan.airsofttac.Firebase.FirebaseAuthentication;
 import pro.oblivioncoding.yonggan.airsofttac.Firebase.FirebaseDB;
 import pro.oblivioncoding.yonggan.airsofttac.Firebase.GameCollection.GameData;
+import pro.oblivioncoding.yonggan.airsofttac.Fragments.ChatFragment;
 import pro.oblivioncoding.yonggan.airsofttac.Fragments.MapFragment;
 import pro.oblivioncoding.yonggan.airsofttac.Fragments.PlayerFragment;
 import pro.oblivioncoding.yonggan.airsofttac.Fragments.TeamFragment;
@@ -39,11 +40,12 @@ import pro.oblivioncoding.yonggan.airsofttac.R;
 import pro.oblivioncoding.yonggan.airsofttac.Services.GoogleLocationService;
 
 public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener, MapFragment.OnFragmentInteractionListener, PlayerFragment.OnFragmentInteractionListener, TeamFragment.OnFragmentInteractionListener {
+        implements NavigationView.OnNavigationItemSelectedListener, MapFragment.OnFragmentInteractionListener, PlayerFragment.OnFragmentInteractionListener, TeamFragment.OnFragmentInteractionListener, ChatFragment.OnFragmentInteractionListener {
 
     private Fragment currentFragment;
     private MapFragment mapFragment;
     private PlayerFragment playerFragment;
+    private ChatFragment chatFragment;
     private static MainActivity instance;
 
     private static LocationManager locationManager;
@@ -114,6 +116,7 @@ public class MainActivity extends AppCompatActivity
         mapFragment = new MapFragment();
         playerFragment = new PlayerFragment();
         teamFragment = new TeamFragment();
+        chatFragment = new ChatFragment();
 
         FragmentManager fragmentManager = getSupportFragmentManager();
 
@@ -122,9 +125,11 @@ public class MainActivity extends AppCompatActivity
         fragmentTransaction.add(R.id.content_main, mapFragment);
         fragmentTransaction.add(R.id.content_main, playerFragment);
         fragmentTransaction.add(R.id.content_main, teamFragment);
+        fragmentTransaction.add(R.id.content_main, chatFragment);
 
         fragmentTransaction.detach(playerFragment);
         fragmentTransaction.detach(teamFragment);
+        fragmentTransaction.detach(chatFragment);
         fragmentTransaction.commit();
 
         currentFragment = mapFragment;
@@ -214,7 +219,6 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void onBackPressed() {
-        super.onBackPressed();
     }
 
     @Override
@@ -298,13 +302,13 @@ public class MainActivity extends AppCompatActivity
                 getMenuInflater().inflate(R.menu.team, menu);
             fragmentTransaction.attach(teamFragment);
             currentFragment = teamFragment;
-        } else if (id == R.id.nav_settings) {
-
-        } else if (id == R.id.nav_share) {
-
-        } else if (id == R.id.nav_send) {
-
+        } else if (id == R.id.nav_chat) {
+            if (menu != null)
+                getMenuInflater().inflate(R.menu.team, menu);
+            fragmentTransaction.attach(chatFragment);
+            currentFragment = chatFragment;
         }
+
         fragmentTransaction.commit();
         queryUpdateData();
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
