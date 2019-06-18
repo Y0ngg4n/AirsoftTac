@@ -20,17 +20,21 @@ import pro.oblivioncoding.yonggan.airsofttac.Firebase.FirebaseDB;
 import pro.oblivioncoding.yonggan.airsofttac.Firebase.GameCollection.Teams.TeamData;
 import pro.oblivioncoding.yonggan.airsofttac.Firebase.GameCollection.User.UserData;
 import pro.oblivioncoding.yonggan.airsofttac.Fragments.Dialog.AssignMarkerTeamDialogFragment;
+import pro.oblivioncoding.yonggan.airsofttac.Fragments.Dialog.AssignRadioChannelDialogFragment;
+import pro.oblivioncoding.yonggan.airsofttac.Fragments.TeamFragment;
 import pro.oblivioncoding.yonggan.airsofttac.R;
 
 public class RecyclerViewTeamListAdapter extends RecyclerView.Adapter<RecyclerViewTeamListAdapter.ViewHolder> {
     private ArrayList<TeamData> teamDataArrayList;
     private FragmentManager fragmentManager;
+    private TeamFragment teamFragment;
     private Context context;
 
-    public RecyclerViewTeamListAdapter(FragmentManager fragmentManager, ArrayList<TeamData> teamDataArrayList, Context context) {
+    public RecyclerViewTeamListAdapter(FragmentManager fragmentManager, ArrayList<TeamData> teamDataArrayList, Context context, TeamFragment teamFragment) {
         this.fragmentManager = fragmentManager;
         this.teamDataArrayList = teamDataArrayList;
         this.context = context;
+        this.teamFragment = teamFragment;
     }
 
     @NonNull
@@ -45,6 +49,8 @@ public class RecyclerViewTeamListAdapter extends RecyclerView.Adapter<RecyclerVi
     public void onBindViewHolder(@NonNull RecyclerViewTeamListAdapter.ViewHolder viewHolder, int i) {
         final TeamData teamData = teamDataArrayList.get(i);
         viewHolder.teamName.setText(teamData.getTeamName());
+        viewHolder.minorRadioChannel.setText(String.valueOf(teamData.getMinorRadioChannel()));
+        viewHolder.majorRadioChannel.setText(String.valueOf(teamData.getMajorRadioChannel()));
     }
 
     @Override
@@ -62,8 +68,8 @@ public class RecyclerViewTeamListAdapter extends RecyclerView.Adapter<RecyclerVi
 
     public class ViewHolder extends RecyclerView.ViewHolder {
 
-        TextView teamName;
-        Button joinLeaveTeam, assignMarker;
+        TextView teamName, minorRadioChannel, majorRadioChannel;
+        Button joinLeaveTeam, assignMarker, assignRadioChannel;
         ConstraintLayout constraintLayout;
 
         public ViewHolder(@NonNull View itemView) {
@@ -71,7 +77,10 @@ public class RecyclerViewTeamListAdapter extends RecyclerView.Adapter<RecyclerVi
             teamName = itemView.findViewById(R.id.markerTitle);
             joinLeaveTeam = itemView.findViewById(R.id.teamMarkerAssign);
             assignMarker = itemView.findViewById(R.id.teamListAssign);
+            assignRadioChannel = itemView.findViewById(R.id.radioChannel);
             constraintLayout = itemView.findViewById(R.id.playerListLayout);
+            minorRadioChannel = itemView.findViewById(R.id.minorRadioChannelText);
+            majorRadioChannel = itemView.findViewById(R.id.majorRadioChannelText);
             FirebaseDB.getGames().whereEqualTo("gameID", FirebaseDB.getGameData().getGameID())
                     .get().addOnCompleteListener(task -> {
                 if (task.isSuccessful()) {
@@ -96,14 +105,26 @@ public class RecyclerViewTeamListAdapter extends RecyclerView.Adapter<RecyclerVi
                                             teamData.getUsers().remove(ownUserData.getEmail());
                                             ownUserData.setTeam(null);
                                         }
-                                        FirebaseDB.updateObject(documentSnapshot, "teams",
-                                                FirebaseDB.getGameData().getTeams());
-                                        FirebaseDB.updateObject(documentSnapshot, "users",
-                                                FirebaseDB.getGameData().getUsers());
+                                        FirebaseDB.updateObject(documentSnapshot.getReference(), FirebaseDB.getGameData());
                                         setButtonJointLeave(joinLeaveTeam);
                                     }
+                            toggleRadioAssignButton(assignRadioChannel, teamName, teamData);
+                                });
+
+                        toggleRadioAssignButton(assignRadioChannel, teamName);
+
+                        assignRadioChannel.setOnClickListener(v -> {
+                            TeamData teamData = null;
+                            for (TeamData team : FirebaseDB.getGameData().getTeams()) {
+                                if (team.getTeamName().equals(teamName.getText().toString())) {
+                                    teamData = team;
                                 }
-                        );
+                            }
+                            AssignRadioChannelDialogFragment assignRadioChannelDialogFragment = AssignRadioChannelDialogFragment.newInstance("Assign Radio Channel", teamData, teamFragment);
+                            assignRadioChannelDialogFragment.show(fragmentManager, "assign_team_marker");
+                        });
+
+
 
                         assignMarker.setOnClickListener(v -> {
                             TeamData teamData = null;
@@ -118,6 +139,34 @@ public class RecyclerViewTeamListAdapter extends RecyclerView.Adapter<RecyclerVi
                     }
                 }
             });
+        }
+    }
+
+    private void toggleRadioAssignButton(Button assignRadioChannel, TextView teamName){
+        {
+            TeamData teamData = null;
+            for (TeamData team : FirebaseDB.getGameData().getTeams()) {
+                if (team.getTeamName().equals(teamName.getText().toString())) {
+                    teamData = team;
+                }
+            }
+            if (teamData != null && (teamData.getUsers().contains(FirebaseAuthentication.getFirebaseUser().getEmail())
+                    || FirebaseDB.getGameData().getOwnUserData(FirebaseAuthentication.getFirebaseUser().getEmail()).isOrga())) {
+                assignRadioChannel.setVisibility(View.VISIBLE);
+            } else {
+                assignRadioChannel.setVisibility(View.INVISIBLE);
+            }
+        }
+    }
+
+    private void toggleRadioAssignButton(Button assignRadioChannel, TextView teamName, TeamData teamData){
+        {
+            if (teamData != null && (teamData.getUsers().contains(FirebaseAuthentication.getFirebaseUser().getEmail())
+                    || FirebaseDB.getGameData().getOwnUserData(FirebaseAuthentication.getFirebaseUser().getEmail()).isOrga())) {
+                assignRadioChannel.setVisibility(View.VISIBLE);
+            } else {
+                assignRadioChannel.setVisibility(View.INVISIBLE);
+            }
         }
     }
 }

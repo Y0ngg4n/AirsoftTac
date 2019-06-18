@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content">
 
@@ -29,24 +30,69 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="25dp"
-        android:layout_marginTop="25dp"
+        android:layout_marginTop="10dp"
         android:background="#3366CC"
-        android:textColor="@android:color/white"
         android:text="Join"
+        android:textColor="@android:color/white"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/markerTitleLabel" />
+        app:layout_constraintTop_toBottomOf="@+id/majorRCLabel" />
 
     <Button
         android:id="@+id/teamListAssign"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="25dp"
-        android:layout_marginTop="25dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginEnd="10dp"
+        android:background="#3366CC"
+        android:text="Assign"
+        android:textColor="@android:color/white"
+        app:layout_constraintEnd_toStartOf="@id/radioChannel"
+        app:layout_constraintStart_toEndOf="@id/teamMarkerAssign"
+        app:layout_constraintTop_toTopOf="@+id/teamMarkerAssign" />
+
+    <Button
+        android:id="@+id/radioChannel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="0dp"
         android:layout_marginEnd="25dp"
+        android:text="Radio"
+        app:layout_constraintEnd_toEndOf="parent"
         android:background="#3366CC"
         android:textColor="@android:color/white"
-        android:text="Assign"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@id/teamMarkerAssign"
-        app:layout_constraintTop_toBottomOf="@id/markerTitle" />
+        app:layout_constraintTop_toTopOf="@+id/teamListAssign" />
+
+    <TextView
+        android:id="@+id/majorRCLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:text="Major RC:"
+        app:layout_constraintStart_toStartOf="@+id/markerTitleLabel"
+        app:layout_constraintTop_toBottomOf="@+id/markerTitleLabel" />
+
+    <TextView
+        android:id="@+id/majorRadioChannelText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
+        app:layout_constraintStart_toEndOf="@+id/majorRCLabel"
+        app:layout_constraintTop_toTopOf="@+id/majorRCLabel" />
+
+    <TextView
+        android:id="@+id/minorRCLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
+        android:text="Minor RC:"
+        app:layout_constraintStart_toEndOf="@+id/majorRadioChannelText"
+        app:layout_constraintTop_toTopOf="@+id/majorRadioChannelText" />
+
+    <TextView
+        android:id="@+id/minorRadioChannelText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
+        app:layout_constraintStart_toEndOf="@+id/minorRCLabel"
+        app:layout_constraintTop_toTopOf="@+id/minorRCLabel" />
 </android.support.constraint.ConstraintLayout>

@@ -53,4 +53,8 @@ public class FirebaseDB {
         documentReference.update(path, object);
     }
 
+    public static void updateObject(DocumentReference documentReference, Object object){
+        documentReference.set(object);
+    }
+
 }

@@ -37,7 +37,7 @@
             android:label="Login"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
-                <action android:name="AirsoftGPS" />
+                <action android:name="AirsoftTac" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>

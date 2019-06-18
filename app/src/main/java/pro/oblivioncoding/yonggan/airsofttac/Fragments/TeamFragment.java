@@ -80,7 +80,9 @@ public class TeamFragment extends Fragment {
                 if (!s.toString().isEmpty()) {
                     teamDataArrayList = new ArrayList<>();
                     for (TeamData teamData : FirebaseDB.getGameData().getTeams()) {
-                        if (teamData.getTeamName().toLowerCase().contains(s.toString().toLowerCase())) {
+                        if (teamData.getTeamName().toLowerCase().contains(s.toString().toLowerCase())
+                        || String.valueOf(teamData.getMinorRadioChannel()).toLowerCase().contains(s.toString().toLowerCase())
+                        || String.valueOf(teamData.getMajorRadioChannel()).toLowerCase().contains(s.toString().toLowerCase())) {
                             teamDataArrayList.add(teamData);
                         }
                     }
@@ -196,7 +198,7 @@ public class TeamFragment extends Fragment {
     }
 
     private void setAdapter(ArrayList<TeamData> teamData) {
-        RecyclerViewTeamListAdapter recyclerViewTeamListAdapter = new RecyclerViewTeamListAdapter(getFragmentManager(), teamData, rootView.getContext());
+        RecyclerViewTeamListAdapter recyclerViewTeamListAdapter = new RecyclerViewTeamListAdapter(getFragmentManager(), teamData, rootView.getContext(), this);
         recyclerView.setAdapter(recyclerViewTeamListAdapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(rootView.getContext()));
     }

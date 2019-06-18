@@ -20,6 +20,8 @@ public class TeamData {
     private RespawnMarkerData respawnMarkerData;
     private TacticalMarkerData tacticalMarkerData;
 
+    private int minorRadioChannel, majorRadioChannel;
+
     public TeamData() {
     }
 
@@ -82,5 +84,21 @@ public class TeamData {
 
     public void setTacticalMarkerData(TacticalMarkerData tacticalMarkerData) {
         this.tacticalMarkerData = tacticalMarkerData;
+    }
+
+    public int getMinorRadioChannel() {
+        return minorRadioChannel;
+    }
+
+    public void setMinorRadioChannel(int minorRadioChannel) {
+        this.minorRadioChannel = minorRadioChannel;
+    }
+
+    public int getMajorRadioChannel() {
+        return majorRadioChannel;
+    }
+
+    public void setMajorRadioChannel(int majorRadioChannel) {
+        this.majorRadioChannel = majorRadioChannel;
     }
 }

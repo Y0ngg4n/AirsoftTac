@@ -101,27 +101,57 @@ public class OrgaAddMarkerDialogFragment extends DialogFragment {
                             Log.i("Owned", String.valueOf(own));
                             switch (spinner.getSelectedItemPosition()) {
                                 case 0:
+                                    for(TacticalMarkerData tacticalMarkerData : FirebaseDB.getGameData().getTacticalMarkerData()){
+                                        if(tacticalMarkerData.getTitle().equals(title)) {
+                                            Toast.makeText(getContext(), "Title allready exists!", Toast.LENGTH_LONG).show();
+                                            return;
+                                        }
+                                    }
                                     FirebaseDB.getGameData().getTacticalMarkerData().add(new TacticalMarkerData(latitude, longitude, title, description));
                                     FirebaseDB.updateObject(documentSnapshot, "tacticalMarkerData", FirebaseDB.getGameData().getTacticalMarkerData());
                                     break;
                                 case 1:
+                                    for(MissionMarkerData missionMarkerData : FirebaseDB.getGameData().getMissionMarkerData()){
+                                        if(missionMarkerData.getTitle().equals(title)) {
+                                            Toast.makeText(getContext(), "Title allready exists!", Toast.LENGTH_LONG).show();
+                                            return;
+                                        }
+                                    }
                                     FirebaseDB.getGameData().getMissionMarkerData().add(new MissionMarkerData(
                                             latitude, longitude, title, description));
                                     FirebaseDB.updateObject(documentSnapshot, "missionMarkerData", FirebaseDB.getGameData().getMissionMarkerData());
                                     break;
                                 case 2:
+                                    for(RespawnMarkerData respawnMarkerData: FirebaseDB.getGameData().getRespawnMarkerData()){
+                                        if(respawnMarkerData.getTitle().equals(title)) {
+                                            Toast.makeText(getContext(), "Title allready exists!", Toast.LENGTH_LONG).show();
+                                            return;
+                                        }
+                                    }
                                     FirebaseDB.getGameData().getRespawnMarkerData().add(new RespawnMarkerData(
                                             latitude, longitude, title, description, own
                                     ));
                                     FirebaseDB.updateObject(documentSnapshot, "respawnMarkerData", FirebaseDB.getGameData().getRespawnMarkerData());
                                     break;
                                 case 3:
+                                    for(HQMarkerData hqMarkerData: FirebaseDB.getGameData().getHqMarkerData()){
+                                        if(hqMarkerData.getTitle().equals(title)) {
+                                            Toast.makeText(getContext(), "Title allready exists!", Toast.LENGTH_LONG).show();
+                                            return;
+                                        }
+                                    }
                                     FirebaseDB.getGameData().getHqMarkerData().add(new HQMarkerData(
                                             latitude, longitude, title, description, own
                                     ));
                                     FirebaseDB.updateObject(documentSnapshot, "hqMarkerData", FirebaseDB.getGameData().getHqMarkerData());
                                     break;
                                 case 4:
+                                    for(FlagMarkerData flagMarkerData: FirebaseDB.getGameData().getFlagMarkerData()){
+                                        if(flagMarkerData.getTitle().equals(title)) {
+                                            Toast.makeText(getContext(), "Title allready exists!", Toast.LENGTH_LONG).show();
+                                            return;
+                                        }
+                                    }
                                     FirebaseDB.getGameData().getFlagMarkerData().add(new FlagMarkerData(
                                             latitude, longitude, title, description, own
                                     ));

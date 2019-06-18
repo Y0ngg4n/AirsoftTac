@@ -304,7 +304,7 @@ public class MainActivity extends AppCompatActivity
             currentFragment = teamFragment;
         } else if (id == R.id.nav_chat) {
             if (menu != null)
-                getMenuInflater().inflate(R.menu.team, menu);
+                getMenuInflater().inflate(R.menu.main, menu);
             fragmentTransaction.attach(chatFragment);
             currentFragment = chatFragment;
         }

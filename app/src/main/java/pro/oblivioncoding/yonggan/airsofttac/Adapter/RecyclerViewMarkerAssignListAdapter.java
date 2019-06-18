@@ -96,10 +96,7 @@ public class RecyclerViewMarkerAssignListAdapter extends RecyclerView.Adapter<Re
                         } else if (teamDataMarker instanceof TacticalMarkerData) {
                             teamData.setTacticalMarkerData((TacticalMarkerData) teamDataMarker);
                         }
-                        FirebaseDB.updateObject(documentSnapshot, "teams",
-                                FirebaseDB.getGameData().getTeams());
-                        FirebaseDB.updateObject(documentSnapshot, "users",
-                                FirebaseDB.getGameData().getUsers());
+                        FirebaseDB.updateObject(documentSnapshot.getReference(), FirebaseDB.getGameData());
                         fragmentManager.beginTransaction().remove(assignMarkerTeamDialogFragment).commit();
                     });
                 }
