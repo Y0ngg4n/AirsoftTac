@@ -132,14 +132,14 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                             underfirefb.show();
                             hitfb.setImageResource(R.drawable.ic_fb_hit);
                             hitfb.hide();
-                            hitfb.show();
+                            showAfterTime(hitfb, 3000L);
                         } else {
                             missionfb.hide();
                             supportfb.hide();
                             underfirefb.hide();
                             hitfb.setImageResource(R.drawable.ic_fb_healed);
                             hitfb.hide();
-                            hitfb.show();
+                            showAfterTime(hitfb, 3000L);
                         }
                     } else {
                         Toast.makeText(getContext(), "Couldn´t find Document with GameID!",
@@ -165,12 +165,12 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                             missionfb.hide();
                             underfirefb.setImageResource(R.drawable.ic_fb_not_underfire);
                             underfirefb.hide();
-                            underfirefb.show();
+                            showAfterTime(underfirefb, 3000L);
                         } else {
                             missionfb.show();
                             underfirefb.setImageResource(R.drawable.ic_fb_under_fire);
                             underfirefb.hide();
-                            underfirefb.show();
+                            showAfterTime(underfirefb, 3000L);
                         }
                     } else {
                         Toast.makeText(getContext(), "Couldn´t find Document with GameID!",
@@ -196,12 +196,12 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                             missionfb.hide();
                             supportfb.setImageResource(R.drawable.ic_fb_no_support);
                             supportfb.hide();
-                            supportfb.show();
+                            showAfterTime(supportfb, 3000L);
                         } else {
                             missionfb.show();
                             supportfb.setImageResource(R.drawable.ic_fb_support);
                             supportfb.hide();
-                            supportfb.show();
+                            showAfterTime(supportfb, 3000L);
                         }
                     } else {
                         Toast.makeText(getContext(), "Couldn´t find Document with GameID!",
@@ -229,14 +229,14 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                             hitfb.hide();
                             missionfb.setImageResource(R.drawable.ic_fb_mission_success);
                             missionfb.hide();
-                            missionfb.show();
+                            showAfterTime(missionfb, 3000L);
                         } else {
                             underfirefb.show();
                             supportfb.show();
                             hitfb.show();
                             missionfb.setImageResource(R.drawable.ic_fb_mission);
                             missionfb.hide();
-                            missionfb.show();
+                            showAfterTime(missionfb, 3000L);
                         }
                     } else {
                         Toast.makeText(getContext(), "Couldn´t find Document with GameID!",
@@ -270,14 +270,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                             Toast.LENGTH_LONG).show();
                 }
             });
-            new Timer().schedule(new TimerTask() {
-                @Override
-                public void run() {
-                    getActivity().runOnUiThread(() -> {
-                        reloadfb.show();
-                    });
-                }
-            }, 30000L);
+            showAfterTime(reloadfb, 30000L);
         });
         return rootView;
     }
@@ -405,7 +398,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                             if (tacticalMarkerDataHashMap.containsKey(currentMarker)) {
                                 TacticalMarkerData tacticalMarkerData = tacticalMarkerDataHashMap.get(currentMarker);
                                 for (TeamData teamData : FirebaseDB.getGameData().getTeams()) {
-                                    if (teamData.getTacticalMarkerData() != null && teamData.getTacticalMarkerData().getTitle().equals(tacticalMarkerData.getTitle())){
+                                    if (teamData.getTacticalMarkerData() != null && teamData.getTacticalMarkerData().getTitle().equals(tacticalMarkerData.getTitle())) {
                                         teamData.setTacticalMarkerData(null);
                                     }
                                 }
@@ -811,6 +804,17 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         float density = c.getResources().getDisplayMetrics().density;
         float pixel = dp * density;
         return pixel;
+    }
+
+    private void showAfterTime(FloatingActionButton button, long delay){
+        new Timer().schedule(new TimerTask() {
+            @Override
+            public void run() {
+                getActivity().runOnUiThread(() -> {
+                    button.show();
+                });
+            }
+        }, delay);
     }
 }
 

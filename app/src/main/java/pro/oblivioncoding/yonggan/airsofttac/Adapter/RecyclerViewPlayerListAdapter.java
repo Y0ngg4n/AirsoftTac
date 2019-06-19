@@ -7,25 +7,30 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.Switch;
 import android.widget.TextView;
 
 import com.google.firebase.firestore.DocumentSnapshot;
 
 import java.util.ArrayList;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import pro.oblivioncoding.yonggan.airsofttac.Firebase.FirebaseDB;
 import pro.oblivioncoding.yonggan.airsofttac.Firebase.GameCollection.User.UserData;
+import pro.oblivioncoding.yonggan.airsofttac.Fragments.PlayerFragment;
 import pro.oblivioncoding.yonggan.airsofttac.R;
 
 public class RecyclerViewPlayerListAdapter extends RecyclerView.Adapter<RecyclerViewPlayerListAdapter.ViewHolder> {
 
     private ArrayList<UserData> userDataArrayList;
     private Context context;
-
-    public RecyclerViewPlayerListAdapter(ArrayList<UserData> userDataArrayList, Context context) {
+    private PlayerFragment playerFragment;
+    public RecyclerViewPlayerListAdapter(ArrayList<UserData> userDataArrayList, Context context, PlayerFragment playerFragment) {
         this.userDataArrayList = userDataArrayList;
         this.context = context;
+        this.playerFragment = playerFragment;
     }
 
     @NonNull
@@ -70,10 +75,22 @@ public class RecyclerViewPlayerListAdapter extends RecyclerView.Adapter<Recycler
                             FirebaseDB.getGameData().getOwnUserData(email.getText().toString()).setOrga(isOrga.isChecked());
                             FirebaseDB.updateObject(documentSnapshot, "users",
                                     FirebaseDB.getGameData().getUsers());
+                            isOrga.setVisibility(View.INVISIBLE);
+                            showAfterTime(isOrga, 30000L);
                         });
                     }
                 }
             });
         }
+    }
+    private void showAfterTime(Switch button, long delay){
+        new Timer().schedule(new TimerTask() {
+            @Override
+            public void run() {
+                playerFragment.getActivity().runOnUiThread(() -> {
+                    button.setVisibility(View.VISIBLE);
+                });
+            }
+        }, delay);
     }
 }

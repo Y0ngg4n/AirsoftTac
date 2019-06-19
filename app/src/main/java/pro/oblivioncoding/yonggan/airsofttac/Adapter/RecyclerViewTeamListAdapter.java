@@ -5,6 +5,7 @@ import android.support.annotation.NonNull;
 import android.support.constraint.ConstraintLayout;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,6 +16,8 @@ import android.widget.Toast;
 import com.google.firebase.firestore.DocumentSnapshot;
 
 import java.util.ArrayList;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import pro.oblivioncoding.yonggan.airsofttac.Firebase.FirebaseAuthentication;
 import pro.oblivioncoding.yonggan.airsofttac.Firebase.FirebaseDB;
@@ -60,7 +63,7 @@ public class RecyclerViewTeamListAdapter extends RecyclerView.Adapter<RecyclerVi
     }
 
     private void setButtonJointLeave(Button button, UserData ownUserdata, String teamName) {
-        if (ownUserdata.getTeam() == null || ownUserdata.getTeam().isEmpty() || !teamName.equals(teamName)) {
+        if (ownUserdata.getTeam() == null || !teamName.equals(teamName)) {
             button.setText("Join");
         } else {
             button.setText("Leave");
@@ -77,7 +80,8 @@ public class RecyclerViewTeamListAdapter extends RecyclerView.Adapter<RecyclerVi
             }
             if (teamData != null && (teamData.getUsers().contains(FirebaseAuthentication.getFirebaseUser().getEmail())
                     || FirebaseDB.getGameData().getOwnUserData(FirebaseAuthentication.getFirebaseUser().getEmail()).isOrga())) {
-                assignRadioChannel.setVisibility(View.VISIBLE);
+                assignRadioChannel.setVisibility(View.INVISIBLE);
+                showAfterTime(assignRadioChannel, 10000L);
             } else {
                 assignRadioChannel.setVisibility(View.INVISIBLE);
             }
@@ -88,8 +92,10 @@ public class RecyclerViewTeamListAdapter extends RecyclerView.Adapter<RecyclerVi
         {
             if (teamData != null && (teamData.getUsers().contains(FirebaseAuthentication.getFirebaseUser().getEmail())
                     || FirebaseDB.getGameData().getOwnUserData(FirebaseAuthentication.getFirebaseUser().getEmail()).isOrga())) {
-                assignRadioChannel.setVisibility(View.VISIBLE);
+                assignRadioChannel.setVisibility(View.INVISIBLE);
+                showAfterTime(assignRadioChannel, 10000L);
             } else {
+
                 assignRadioChannel.setVisibility(View.INVISIBLE);
             }
         }
@@ -115,50 +121,90 @@ public class RecyclerViewTeamListAdapter extends RecyclerView.Adapter<RecyclerVi
                 if (task.isSuccessful()) {
                     if (task.getResult().size() > 0) {
                         final DocumentSnapshot documentSnapshot = task.getResult().getDocuments().get(0);
-                        final UserData ownUserData = FirebaseDB.getGameData().getOwnUserData(FirebaseAuthentication
-                                .getFirebaseUser().getEmail());
-                        TeamData teamData = null;
-                        for (TeamData team : FirebaseDB.getGameData().getTeams()) {
-                            if (team.getTeamName().equals(teamName.getText().toString())) {
-                                teamData = team;
+                        {
+                            TeamData teamData = null;
+                            for (TeamData team : FirebaseDB.getGameData().getTeams()) {
+                                if (team.getTeamName().equals(teamName.getText().toString())) {
+                                    teamData = team;
+                                }
                             }
+                            final UserData ownUserData = FirebaseDB.getGameData().getOwnUserData(FirebaseAuthentication
+                                    .getFirebaseUser().getEmail());
+                            setButtonJointLeave(joinLeaveTeam, ownUserData, teamData.getTeamName());
                         }
-                        TeamData finalTeamData = teamData;
-                        if (finalTeamData != null) {
-                            setButtonJointLeave(joinLeaveTeam, ownUserData, finalTeamData.getTeamName());
-                            joinLeaveTeam.setOnClickListener(v -> {
+                        joinLeaveTeam.setOnClickListener(v -> {
+                            TeamData teamData = null;
+                            for (TeamData team : FirebaseDB.getGameData().getTeams()) {
+                                if (team.getTeamName().equals(teamName.getText().toString())) {
+                                    teamData = team;
+                                }
+                            }
+                            if (teamData != null) {
+                                final UserData ownUserData = FirebaseDB.getGameData().getOwnUserData(FirebaseAuthentication
+                                        .getFirebaseUser().getEmail());
                                 if (ownUserData.getTeam() == null) {
-                                    finalTeamData.getUsers().add(ownUserData.getEmail());
-                                    ownUserData.setTeam(finalTeamData.getTeamName());
+                                    teamData.getUsers().add(ownUserData.getEmail());
+                                    ownUserData.setTeam(teamData.getTeamName());
+                                    Log.i("JoinLeave", FirebaseDB.getGameData().getOwnUserData(FirebaseAuthentication
+                                            .getFirebaseUser().getEmail()).getTeam());
                                 } else {
-                                    if (ownUserData.getTeam().equals(finalTeamData.getTeamName())) {
+                                    if (ownUserData.getTeam().equals(teamData.getTeamName())) {
+                                        teamData.getUsers().remove(ownUserData.getEmail());
                                         ownUserData.setTeam(null);
-                                        finalTeamData.getUsers().remove(ownUserData.getEmail());
                                     } else {
-                                        Toast.makeText(context, "Please leave your current Team first!", Toast.LENGTH_LONG).show();
+                                        Toast.makeText(context, "Please leave your current Team First!", Toast.LENGTH_LONG).show();
                                         return;
                                     }
                                 }
-                                setButtonJointLeave(joinLeaveTeam, ownUserData, finalTeamData.getTeamName());
-                                toggleRadioAssignButton(assignRadioChannel, teamName, finalTeamData);
-                                FirebaseDB.updateObject(documentSnapshot.getReference(), FirebaseDB.getGameData());
-                            });
-                        }
+                                setButtonJointLeave(joinLeaveTeam, ownUserData, teamData.getTeamName());
+                                toggleRadioAssignButton(assignRadioChannel, teamName, teamData);
+                                FirebaseDB.updateObject(documentSnapshot.getReference(), "users", FirebaseDB.getGameData().getUsers());
+                                FirebaseDB.updateObject(documentSnapshot.getReference(), "teams", FirebaseDB.getGameData().getTeams());
+                                joinLeaveTeam.setVisibility(View.INVISIBLE);
+                                showAfterTime(joinLeaveTeam, 10000L);
+                            }
+                        });
 
                         toggleRadioAssignButton(assignRadioChannel, teamName);
                         assignRadioChannel.setOnClickListener(v -> {
-                            AssignRadioChannelDialogFragment assignRadioChannelDialogFragment = AssignRadioChannelDialogFragment.newInstance("Assign Radio Channel", finalTeamData, teamFragment);
+                            TeamData teamData = null;
+                            for (TeamData team : FirebaseDB.getGameData().getTeams()) {
+                                if (team.getTeamName().equals(teamName.getText().toString())) {
+                                    teamData = team;
+                                }
+                            }
+                            AssignRadioChannelDialogFragment assignRadioChannelDialogFragment = AssignRadioChannelDialogFragment.newInstance("Assign Radio Channel", teamData, teamFragment);
                             assignRadioChannelDialogFragment.show(fragmentManager, "assign_team_marker");
+
                         });
 
 
                         assignMarker.setOnClickListener(v -> {
-                            AssignMarkerTeamDialogFragment assignMarkerTeamDialogFragment = AssignMarkerTeamDialogFragment.newInstance("Assign Team", finalTeamData);
+                            TeamData teamData = null;
+                            for (TeamData team : FirebaseDB.getGameData().getTeams()) {
+                                if (team.getTeamName().equals(teamName.getText().toString())) {
+                                    teamData = team;
+                                }
+                            }
+                            AssignMarkerTeamDialogFragment assignMarkerTeamDialogFragment = AssignMarkerTeamDialogFragment.newInstance("Assign Team", teamData);
                             assignMarkerTeamDialogFragment.show(fragmentManager, "assign_team_marker");
+                            assignMarker.setVisibility(View.INVISIBLE);
+                            showAfterTime(assignMarker, 10000L);
                         });
                     }
                 }
             });
         }
+    }
+
+    private void showAfterTime(Button button, long delay){
+        new Timer().schedule(new TimerTask() {
+            @Override
+            public void run() {
+                teamFragment.getActivity().runOnUiThread(() -> {
+                    button.setVisibility(View.VISIBLE);
+                });
+            }
+        }, delay);
     }
 }

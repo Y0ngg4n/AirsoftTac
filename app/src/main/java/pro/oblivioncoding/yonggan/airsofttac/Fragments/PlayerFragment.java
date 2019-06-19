@@ -128,7 +128,7 @@ public class PlayerFragment extends Fragment {
     }
 
     private void setRecyclerView(ArrayList<UserData> userData, RecyclerView recyclerView) {
-        RecyclerViewPlayerListAdapter recyclerViewPlayerListAdapter = new RecyclerViewPlayerListAdapter(userData, rootView.getContext());
+        RecyclerViewPlayerListAdapter recyclerViewPlayerListAdapter = new RecyclerViewPlayerListAdapter(userData, rootView.getContext(), this);
         recyclerView.setAdapter(recyclerViewPlayerListAdapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(rootView.getContext()));
     }

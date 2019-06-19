@@ -12,9 +12,12 @@ import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import pro.oblivioncoding.yonggan.airsofttac.Adapter.RecyclerViewTeamListAdapter;
 import pro.oblivioncoding.yonggan.airsofttac.Firebase.FirebaseAuthentication;
@@ -65,6 +68,8 @@ public class TeamFragment extends Fragment {
             createTeamDialogFragment.show(getFragmentManager(), "create_team_dialog");
             setRecyclerView(FirebaseDB.getGameData().getTeams(), recyclerView);
             setAdapter(FirebaseDB.getGameData().getTeams());
+            teamListAddFB.hide();
+            showAfterTime(teamListAddFB, 30000L);
         });
         final UserData ownUserData = FirebaseDB.getGameData().getOwnUserData(FirebaseAuthentication.getFirebaseUser().getEmail());
         if (ownUserData.getTeam() != null && !ownUserData.isOrga())
@@ -202,4 +207,16 @@ public class TeamFragment extends Fragment {
         recyclerView.setAdapter(recyclerViewTeamListAdapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(rootView.getContext()));
     }
+
+    private void showAfterTime(FloatingActionButton button, long delay){
+        new Timer().schedule(new TimerTask() {
+            @Override
+            public void run() {
+                getActivity().runOnUiThread(() -> {
+                    button.show();
+                });
+            }
+        }, delay);
+    }
+
 }
