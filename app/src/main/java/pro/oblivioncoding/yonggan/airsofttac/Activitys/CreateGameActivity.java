@@ -29,20 +29,20 @@ import pro.oblivioncoding.yonggan.airsofttac.R;
 public class CreateGameActivity extends AppCompatActivity {
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_game_activity);
-        Toolbar toolbar = findViewById(R.id.toolbar);
+        final Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
         final Calendar c = Calendar.getInstance();
-        int mYear = c.get(Calendar.YEAR);
-        int mMonth = c.get(Calendar.MONTH);
-        int mDay = c.get(Calendar.DAY_OF_MONTH);
-        int mHour = c.get(Calendar.HOUR_OF_DAY);
-        int mMinute = c.get(Calendar.MINUTE);
-        int dHour = c.get(Calendar.HOUR_OF_DAY);
-        int dMinute = c.get(Calendar.MINUTE);
+        final int mYear = c.get(Calendar.YEAR);
+        final int mMonth = c.get(Calendar.MONTH);
+        final int mDay = c.get(Calendar.DAY_OF_MONTH);
+        final int mHour = c.get(Calendar.HOUR_OF_DAY);
+        final int mMinute = c.get(Calendar.MINUTE);
+        final int dHour = c.get(Calendar.HOUR_OF_DAY);
+        final int dMinute = c.get(Calendar.MINUTE);
 
         findViewById(R.id.datePicker).setOnClickListener(v -> {
             new DatePickerDialog(this,
@@ -95,7 +95,7 @@ public class CreateGameActivity extends AppCompatActivity {
     private GameData createGame() {
         try {
             SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-            Date startTime = simpleDateFormat.parse(((EditText) findViewById(R.id.date))
+            final Date startTime = simpleDateFormat.parse(((EditText) findViewById(R.id.date))
                     .getText().toString()
                     + " " + ((EditText) findViewById(R.id.startTime)).getText().toString());
             simpleDateFormat = new SimpleDateFormat("HH:mm:ss");
@@ -110,14 +110,14 @@ public class CreateGameActivity extends AppCompatActivity {
                     new Timestamp(durationDate),
                     userData);
 
-        } catch (ParseException e) {
+        } catch (final ParseException e) {
             Log.i("CreateGame", "Could not parse Date");
             Toast.makeText(getApplicationContext(), "Could not parse Date", Toast.LENGTH_LONG).show();
         }
         return null;
     }
 
-    private void writeGameData(@NonNull GameData gameData) {
+    private void writeGameData(@NonNull final GameData gameData) {
         FirebaseDB.getGames().document().set(gameData);
     }
 }

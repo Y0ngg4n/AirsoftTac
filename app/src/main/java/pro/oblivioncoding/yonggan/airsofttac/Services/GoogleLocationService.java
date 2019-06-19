@@ -19,12 +19,7 @@ import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 import android.widget.Toast;
 
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.QuerySnapshot;
-
-import java.util.function.Consumer;
 
 import pro.oblivioncoding.yonggan.airsofttac.Activitys.MainActivity;
 import pro.oblivioncoding.yonggan.airsofttac.Firebase.FirebaseAuthentication;
@@ -42,13 +37,13 @@ public class GoogleLocationService extends Service implements LocationListener {
     }
 
     @Override
-    public IBinder onBind(Intent intent) {
+    public IBinder onBind(final Intent intent) {
         // TODO: Return the communication channel to the service.
         throw new UnsupportedOperationException("Not yet implemented");
     }
 
     @Override
-    public void onLocationChanged(@NonNull Location location) {
+    public void onLocationChanged(@NonNull final Location location) {
         Log.i("Location", "OnLocationChanged");
         final UserData ownUserData = FirebaseDB.getGameData().getOwnUserData(FirebaseAuthentication.getFirebaseUser().getEmail());
         if (ownUserData != null) {
@@ -68,28 +63,28 @@ public class GoogleLocationService extends Service implements LocationListener {
                 }
             } else {
                 Toast.makeText(getApplicationContext(), "Couldn´t query Database!",
-                        Toast.LENGTH_LONG);
+                        Toast.LENGTH_LONG).show();
             }
         });
     }
 
     @Override
-    public void onStatusChanged(String provider, int status, Bundle extras) {
+    public void onStatusChanged(final String provider, final int status, final Bundle extras) {
 
     }
 
     @Override
-    public void onProviderEnabled(String provider) {
+    public void onProviderEnabled(final String provider) {
 
     }
 
     @Override
-    public void onProviderDisabled(String provider) {
+    public void onProviderDisabled(final String provider) {
 
     }
 
     @Override
-    public int onStartCommand(Intent intent, int flags, int startId) {
+    public int onStartCommand(final Intent intent, final int flags, final int startId) {
         startForeground();
         requestLocation();
         return super.onStartCommand(intent, flags, startId);
@@ -98,17 +93,17 @@ public class GoogleLocationService extends Service implements LocationListener {
     private void startForeground() {
         notificationIntent = new Intent(getApplicationContext(), MainActivity.class);
 
-        PendingIntent pendingIntent = PendingIntent.getActivity(getApplicationContext(), 0,
+        final PendingIntent pendingIntent = PendingIntent.getActivity(getApplicationContext(), 0,
                 notificationIntent, 0);
 
         if (Build.VERSION.SDK_INT >= 26) {
-            NotificationManager notificationManager =
+            final NotificationManager notificationManager =
                     (NotificationManager) getApplicationContext().getSystemService(
                             getApplicationContext().NOTIFICATION_SERVICE);
-            NotificationChannel channel = new NotificationChannel("airsofttaclocationservice",
+            final NotificationChannel channel = new NotificationChannel("airsofttaclocationservice",
                     NOTIF_CHANNEL_ID,
                     NotificationManager.IMPORTANCE_DEFAULT);
-            channel.setDescription("This Notification Channel is for the ArisoftTacLocationService Notification");
+            channel.setDescription("This Notification Channel is for the AirsoftTacLocationService Notification");
             notificationManager.createNotificationChannel(channel);
         }
         startForeground(NOTIF_ID, new NotificationCompat.Builder(getApplicationContext(),
@@ -116,7 +111,7 @@ public class GoogleLocationService extends Service implements LocationListener {
                 .setOngoing(true)
                 .setSmallIcon(R.drawable.ic_pin_drop_black_24dp)
                 .setContentTitle("AirsoftTac")
-                .setContentText("Service is running background")
+                .setContentText("Updating your Position in Background.\nTo stop, kill the App in your Task-Manager.")
                 .setContentIntent(pendingIntent)
                 .build());
     }

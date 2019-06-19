@@ -50,22 +50,22 @@ public class ChatFragment extends Fragment {
      * @return A new instance of fragment ChatFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static ChatFragment newInstance(String pChatChannelID) {
-        ChatFragment fragment = new ChatFragment();
-        Bundle args = new Bundle();
+    public static ChatFragment newInstance(final String pChatChannelID) {
+        final ChatFragment fragment = new ChatFragment();
+        final Bundle args = new Bundle();
         fragment.setArguments(args);
         chatChannelID = pChatChannelID;
         return fragment;
     }
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
+    public void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(final LayoutInflater inflater, final ViewGroup container,
+                             final Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         rootView = inflater.inflate(R.layout.fragment_chat, container, false);
         recyclerView = rootView.findViewById(R.id.chatMessageList);
@@ -106,14 +106,14 @@ public class ChatFragment extends Fragment {
     }
 
     // TODO: Rename method, update argument and hook method into UI event
-    public void onButtonPressed(Uri uri) {
+    public void onButtonPressed(final Uri uri) {
         if (mListener != null) {
             mListener.onFragmentInteraction(uri);
         }
     }
 
     @Override
-    public void onAttach(Context context) {
+    public void onAttach(final Context context) {
         super.onAttach(context);
         if (context instanceof OnFragmentInteractionListener) {
             mListener = (OnFragmentInteractionListener) context;
@@ -129,8 +129,8 @@ public class ChatFragment extends Fragment {
         mListener = null;
     }
 
-    private void setRecyclerView(ArrayList<ChatMessage> chatMessages) {
-        RecyclerViewChatMessage recyclerViewChatMessage = new RecyclerViewChatMessage(FirebaseDB.getGameData().getChatMessages());
+    private void setRecyclerView(final ArrayList<ChatMessage> chatMessages) {
+        final RecyclerViewChatMessage recyclerViewChatMessage = new RecyclerViewChatMessage(FirebaseDB.getGameData().getChatMessages());
         recyclerView.setAdapter(recyclerViewChatMessage);
         recyclerView.setLayoutManager(new LinearLayoutManager(rootView.getContext()));
         recyclerView.scrollToPosition(chatMessages.size() - 1);

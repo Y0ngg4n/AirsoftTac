@@ -20,7 +20,7 @@ public class CustomMarkerTeamInfoWindowAdapter implements GoogleMap.InfoWindowAd
 
     private String title, description, teamName;
 
-    public CustomMarkerTeamInfoWindowAdapter(Context mContext, double latitude, double longitude, String title, String description, String teamName) {
+    public CustomMarkerTeamInfoWindowAdapter(final Context mContext, final double latitude, final double longitude, final String title, final String description, final String teamName) {
         this.mContext = mContext;
         mWindow = LayoutInflater.from(mContext).inflate(R.layout.fragment_custom_marker_team_info_window_adapter, null);
         this.latitude = latitude;
@@ -31,17 +31,17 @@ public class CustomMarkerTeamInfoWindowAdapter implements GoogleMap.InfoWindowAd
     }
 
     @Override
-    public View getInfoWindow(Marker marker) {
+    public View getInfoWindow(final Marker marker) {
         renderWindowText(marker, mWindow);
         return mWindow;
     }
 
     @Override
-    public View getInfoContents(Marker marker) {
+    public View getInfoContents(final Marker marker) {
         return mWindow;
     }
 
-    private void renderWindowText(Marker marker, View view) {
+    private void renderWindowText(final Marker marker, final View view) {
         ((TextView) view.findViewById(R.id.title)).setText(title);
         ((TextView) view.findViewById(R.id.latitude)).setText(String.valueOf(latitude));
         ((TextView) view.findViewById(R.id.longitude)).setText(String.valueOf(longitude));

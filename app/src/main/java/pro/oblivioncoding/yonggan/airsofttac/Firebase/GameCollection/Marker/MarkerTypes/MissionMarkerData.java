@@ -7,7 +7,7 @@ public class MissionMarkerData extends MarkerType {
     public MissionMarkerData() {
     }
 
-    public MissionMarkerData(double latitude, double longitude, String title, String description) {
+    public MissionMarkerData(final double latitude, final double longitude, final String title, final String description) {
         this.latitude = latitude;
         this.longitude = longitude;
         this.title = title;
@@ -20,7 +20,7 @@ public class MissionMarkerData extends MarkerType {
     }
 
 
-    public void setLatitude(double latitude) {
+    public void setLatitude(final double latitude) {
         this.latitude = latitude;
     }
 
@@ -30,7 +30,7 @@ public class MissionMarkerData extends MarkerType {
     }
 
 
-    public void setLongitude(double longitude) {
+    public void setLongitude(final double longitude) {
         this.longitude = longitude;
     }
 
@@ -40,7 +40,7 @@ public class MissionMarkerData extends MarkerType {
     }
 
 
-    public void setTitle(String title) {
+    public void setTitle(final String title) {
         this.title = title;
     }
 
@@ -50,7 +50,7 @@ public class MissionMarkerData extends MarkerType {
     }
 
 
-    public void setDescription(String description) {
+    public void setDescription(final String description) {
         this.description = description;
     }
 }

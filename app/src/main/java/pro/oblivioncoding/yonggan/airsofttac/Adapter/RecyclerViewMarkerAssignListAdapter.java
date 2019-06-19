@@ -32,7 +32,7 @@ public class RecyclerViewMarkerAssignListAdapter extends RecyclerView.Adapter<Re
     private FragmentManager fragmentManager;
     private AssignMarkerTeamDialogFragment assignMarkerTeamDialogFragment;
 
-    public RecyclerViewMarkerAssignListAdapter(ArrayList<MarkerType> markerTypeArrayList, TeamData teamData, FragmentManager fragmentManager, AssignMarkerTeamDialogFragment assignMarkerTeamDialogFragment, Context context) {
+    public RecyclerViewMarkerAssignListAdapter(final ArrayList<MarkerType> markerTypeArrayList, final TeamData teamData, final FragmentManager fragmentManager, final AssignMarkerTeamDialogFragment assignMarkerTeamDialogFragment, final Context context) {
         this.markerTypeArrayList = markerTypeArrayList;
         this.teamData = teamData;
         this.context = context;
@@ -42,14 +42,14 @@ public class RecyclerViewMarkerAssignListAdapter extends RecyclerView.Adapter<Re
 
     @NonNull
     @Override
-    public RecyclerViewMarkerAssignListAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
-        View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.recycler_view_assign_marker_team_list_item, viewGroup, false);
-        RecyclerViewMarkerAssignListAdapter.ViewHolder holder = new RecyclerViewMarkerAssignListAdapter.ViewHolder(view);
+    public RecyclerViewMarkerAssignListAdapter.ViewHolder onCreateViewHolder(@NonNull final ViewGroup viewGroup, final int i) {
+        final View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.recycler_view_assign_marker_team_list_item, viewGroup, false);
+        final RecyclerViewMarkerAssignListAdapter.ViewHolder holder = new RecyclerViewMarkerAssignListAdapter.ViewHolder(view);
         return holder;
     }
 
     @Override
-    public void onBindViewHolder(@NonNull RecyclerViewMarkerAssignListAdapter.ViewHolder viewHolder, int i) {
+    public void onBindViewHolder(@NonNull final RecyclerViewMarkerAssignListAdapter.ViewHolder viewHolder, final int i) {
         final MarkerType teamDataMarker = markerTypeArrayList.get(i);
 
         if (teamDataMarker instanceof FlagMarkerData) {
@@ -114,7 +114,7 @@ public class RecyclerViewMarkerAssignListAdapter extends RecyclerView.Adapter<Re
         TextView markerTitle, markerDescription, markerType;
         Button assignMarker;
 
-        public ViewHolder(@NonNull View itemView) {
+        public ViewHolder(@NonNull final View itemView) {
             super(itemView);
             markerTitle = itemView.findViewById(R.id.markerTitle);
             markerDescription = itemView.findViewById(R.id.markerDescription);

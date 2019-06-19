@@ -10,7 +10,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.NumberPicker;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -31,16 +30,16 @@ public class AssignRadioChannelDialogFragment extends DialogFragment {
         // Use `newInstance` instead as shown below
     }
 
-    public static AssignRadioChannelDialogFragment newInstance(String title, TeamData pTeamData, TeamFragment pTeamFragment) {
+    public static AssignRadioChannelDialogFragment newInstance(final String title, final TeamData pTeamData, final TeamFragment pTeamFragment) {
         teamData = pTeamData;
         teamFragment = pTeamFragment;
         return new AssignRadioChannelDialogFragment();
     }
 
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.radio_channel_select_dialog, container);
+    public View onCreateView(@NonNull final LayoutInflater inflater, final ViewGroup container,
+                             final Bundle savedInstanceState) {
+        final View rootView = inflater.inflate(R.layout.radio_channel_select_dialog, container);
         final NumberPicker minorRadioChannelPicker = rootView.findViewById(R.id.minorRadioChannel);
         minorRadioChannelPicker.setMinValue(1);
         minorRadioChannelPicker.setMaxValue(121);
@@ -51,7 +50,7 @@ public class AssignRadioChannelDialogFragment extends DialogFragment {
     }
 
     @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+    public void onViewCreated(@NonNull final View view, @Nullable final Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
         FirebaseDB.getGames().whereEqualTo("gameID", FirebaseDB.getGameData().getGameID())

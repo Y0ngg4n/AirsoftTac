@@ -86,13 +86,31 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         AllPlayer, ShowTeamOnly, ShowOnlyNotAssigned
     }
 
+    @NonNull
+    public static MapFragment newInstance() {
+        final MapFragment fragment = new MapFragment();
+        final Bundle args = new Bundle();
+        fragment.setArguments(args);
+        return fragment;
+    }
+
+    public MapFragment() {
+        // Required empty public constructor
+    }
+
+    private static float dpTopixel(final Context c, final float dp) {
+        final float density = c.getResources().getDisplayMetrics().density;
+        final float pixel = dp * density;
+        return pixel;
+    }
+
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(@NonNull final LayoutInflater inflater, final ViewGroup container,
+                             final Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         rootView = inflater.inflate(R.layout.fragment_map, container, false);
         //This is for loading the Map
-        SupportMapFragment mapFragment = SupportMapFragment.newInstance();
+        final SupportMapFragment mapFragment = SupportMapFragment.newInstance();
         mapFragment.getMapAsync(this::onMapReady);
         getChildFragmentManager().beginTransaction().replace(R.id.map, mapFragment).commit();
 
@@ -275,26 +293,14 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         return rootView;
     }
 
-    public MapFragment() {
-        // Required empty public constructor
-    }
-
-    @NonNull
-    public static MapFragment newInstance() {
-        MapFragment fragment = new MapFragment();
-        Bundle args = new Bundle();
-        fragment.setArguments(args);
-        return fragment;
-    }
-
     @Override
-    public void onCreate(Bundle savedInstanceState) {
+    public void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
     }
 
     @Override
-    public void onMapReady(@NonNull GoogleMap googleMap) {
+    public void onMapReady(@NonNull final GoogleMap googleMap) {
         if (ActivityCompat.checkSelfPermission(getContext(),
                 Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED
                 && ActivityCompat.checkSelfPermission(getContext(),
@@ -384,7 +390,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         if (FirebaseDB.getGameData().getOwnUserData(FirebaseAuthentication.getFirebaseUser().getEmail()).isOrga()) {
             setMarkerfb.show();
             setMarkerfb.setOnClickListener(v -> {
-                OrgaAddMarkerDialogFragment orgaAddMarkerDialogFragment = OrgaAddMarkerDialogFragment.newInstance("New Marker");
+                final OrgaAddMarkerDialogFragment orgaAddMarkerDialogFragment = OrgaAddMarkerDialogFragment.newInstance("New Marker");
                 orgaAddMarkerDialogFragment.show(getFragmentManager(), "orga_add_marker_dialog");
             });
 
@@ -396,8 +402,8 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                                 .document(task.getResult().getDocuments().get(0).getId());
                         removeMarkerfb.setOnClickListener(e -> {
                             if (tacticalMarkerDataHashMap.containsKey(currentMarker)) {
-                                TacticalMarkerData tacticalMarkerData = tacticalMarkerDataHashMap.get(currentMarker);
-                                for (TeamData teamData : FirebaseDB.getGameData().getTeams()) {
+                                final TacticalMarkerData tacticalMarkerData = tacticalMarkerDataHashMap.get(currentMarker);
+                                for (final TeamData teamData : FirebaseDB.getGameData().getTeams()) {
                                     if (teamData.getTacticalMarkerData() != null && teamData.getTacticalMarkerData().getTitle().equals(tacticalMarkerData.getTitle())) {
                                         teamData.setTacticalMarkerData(null);
                                     }
@@ -405,16 +411,16 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                                 FirebaseDB.getGameData().getTacticalMarkerData().remove(tacticalMarkerData);
                                 tacticalMarkerDataHashMap.remove(currentMarker);
                             } else if (respawnMarkerDataHashMap.containsKey(currentMarker)) {
-                                RespawnMarkerData respawnMarkerData = respawnMarkerDataHashMap.get(currentMarker);
-                                for (TeamData teamData : FirebaseDB.getGameData().getTeams()) {
+                                final RespawnMarkerData respawnMarkerData = respawnMarkerDataHashMap.get(currentMarker);
+                                for (final TeamData teamData : FirebaseDB.getGameData().getTeams()) {
                                     if (teamData.getRespawnMarkerData() != null && teamData.getRespawnMarkerData().getTitle().equals(respawnMarkerData.getTitle()))
                                         teamData.setRespawnMarkerData(null);
                                 }
                                 FirebaseDB.getGameData().getRespawnMarkerData().remove(respawnMarkerData);
                                 respawnMarkerDataHashMap.remove(currentMarker);
                             } else if (missionMarkerDataHashMap.containsKey(currentMarker)) {
-                                MissionMarkerData missionMarkerData = missionMarkerDataHashMap.get(currentMarker);
-                                for (TeamData teamData : FirebaseDB.getGameData().getTeams()) {
+                                final MissionMarkerData missionMarkerData = missionMarkerDataHashMap.get(currentMarker);
+                                for (final TeamData teamData : FirebaseDB.getGameData().getTeams()) {
                                     if (teamData.getMissionMarkerData() != null && teamData.getMissionMarkerData().getTitle().equals(missionMarkerData.getTitle()))
                                         teamData.setMissionMarkerData(null);
                                 }
@@ -422,15 +428,15 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                                 missionMarkerDataHashMap.remove(currentMarker);
                             } else if (hqMarkerDataHashMap.containsKey(currentMarker)) {
                                 final HQMarkerData hqMarkerData = hqMarkerDataHashMap.get(currentMarker);
-                                for (TeamData teamData : FirebaseDB.getGameData().getTeams()) {
+                                for (final TeamData teamData : FirebaseDB.getGameData().getTeams()) {
                                     if (teamData.getHqMarkerData() != null && teamData.getHqMarkerData().getTitle().equals(hqMarkerData.getTitle()))
                                         teamData.setHqMarkerData(null);
                                 }
                                 FirebaseDB.getGameData().getHqMarkerData().remove(hqMarkerData);
                                 hqMarkerDataHashMap.remove(currentMarker);
                             } else if (flagDataHashMap.containsKey(currentMarker)) {
-                                FlagMarkerData flagMarkerData = flagDataHashMap.get(currentMarker);
-                                for (TeamData teamData : FirebaseDB.getGameData().getTeams()) {
+                                final FlagMarkerData flagMarkerData = flagDataHashMap.get(currentMarker);
+                                for (final TeamData teamData : FirebaseDB.getGameData().getTeams()) {
                                     if (teamData.getFlagMarkerData() != null && teamData.getFlagMarkerData().getTitle().equals(flagMarkerData.getTitle()))
                                         teamData.setFlagMarkerData(null);
                                 }
@@ -458,22 +464,22 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
 
                         googleMap.setOnMarkerDragListener(new GoogleMap.OnMarkerDragListener() {
                             @Override
-                            public void onMarkerDragStart(Marker marker) {
+                            public void onMarkerDragStart(final Marker marker) {
                                 marker.hideInfoWindow();
                             }
 
                             @Override
-                            public void onMarkerDrag(Marker marker) {
+                            public void onMarkerDrag(final Marker marker) {
                                 marker.hideInfoWindow();
                             }
 
                             @Override
-                            public void onMarkerDragEnd(@NonNull Marker marker) {
+                            public void onMarkerDragEnd(@NonNull final Marker marker) {
                                 if (tacticalMarkerDataHashMap.containsKey(marker)) {
                                     final TacticalMarkerData tacticalMarkerData = tacticalMarkerDataHashMap.get(marker);
                                     tacticalMarkerData.setLatitude(marker.getPosition().latitude);
                                     tacticalMarkerData.setLongitude(marker.getPosition().longitude);
-                                    for (TeamData teamData : FirebaseDB.getGameData().getTeams()) {
+                                    for (final TeamData teamData : FirebaseDB.getGameData().getTeams()) {
                                         if (teamData.getTacticalMarkerData() != null && teamData.getTacticalMarkerData().getTitle().equals(tacticalMarkerData.getTitle())) {
                                             teamData.getTacticalMarkerData().setLatitude(marker.getPosition().latitude);
                                             teamData.getTacticalMarkerData().setLongitude(marker.getPosition().longitude);
@@ -483,7 +489,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                                     final MissionMarkerData missionMarkerData = missionMarkerDataHashMap.get(marker);
                                     missionMarkerData.setLatitude(marker.getPosition().latitude);
                                     missionMarkerData.setLongitude(marker.getPosition().longitude);
-                                    for (TeamData teamData : FirebaseDB.getGameData().getTeams()) {
+                                    for (final TeamData teamData : FirebaseDB.getGameData().getTeams()) {
                                         if (teamData.getMissionMarkerData() != null && teamData.getMissionMarkerData().getTitle().equals(missionMarkerData.getTitle())) {
                                             teamData.getMissionMarkerData().setLatitude(marker.getPosition().latitude);
                                             teamData.getMissionMarkerData().setLongitude(marker.getPosition().longitude);
@@ -493,7 +499,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                                     final RespawnMarkerData respawnMarkerData = respawnMarkerDataHashMap.get(marker);
                                     respawnMarkerData.setLatitude(marker.getPosition().latitude);
                                     respawnMarkerData.setLongitude(marker.getPosition().longitude);
-                                    for (TeamData teamData : FirebaseDB.getGameData().getTeams()) {
+                                    for (final TeamData teamData : FirebaseDB.getGameData().getTeams()) {
                                         if (teamData.getRespawnMarkerData() != null && teamData.getRespawnMarkerData().getTitle().equals(respawnMarkerData.getTitle())) {
                                             teamData.getRespawnMarkerData().setLatitude(marker.getPosition().latitude);
                                             teamData.getRespawnMarkerData().setLongitude(marker.getPosition().longitude);
@@ -503,7 +509,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                                     final HQMarkerData hqMarkerData = hqMarkerDataHashMap.get(marker);
                                     hqMarkerData.setLatitude(marker.getPosition().latitude);
                                     hqMarkerData.setLongitude(marker.getPosition().longitude);
-                                    for (TeamData teamData : FirebaseDB.getGameData().getTeams()) {
+                                    for (final TeamData teamData : FirebaseDB.getGameData().getTeams()) {
                                         if (teamData.getHqMarkerData() != null && teamData.getHqMarkerData().getTitle().equals(hqMarkerData.getTitle())) {
                                             teamData.getHqMarkerData().setLatitude(marker.getPosition().latitude);
                                             teamData.getHqMarkerData().setLongitude(marker.getPosition().longitude);
@@ -513,7 +519,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                                     final FlagMarkerData flagMarkerData = flagDataHashMap.get(marker);
                                     flagMarkerData.setLatitude(marker.getPosition().latitude);
                                     flagMarkerData.setLongitude(marker.getPosition().longitude);
-                                    for (TeamData teamData : FirebaseDB.getGameData().getTeams()) {
+                                    for (final TeamData teamData : FirebaseDB.getGameData().getTeams()) {
                                         if (teamData.getFlagMarkerData() != null && teamData.getFlagMarkerData().getTitle().equals(flagMarkerData.getTitle())) {
                                             teamData.getFlagMarkerData().setLatitude(marker.getPosition().latitude);
                                             teamData.getFlagMarkerData().setLongitude(marker.getPosition().longitude);
@@ -542,20 +548,9 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
     }
 
     // TODO: Rename method, update argument and hook method into UI event
-    public void onButtonPressed(Uri uri) {
+    public void onButtonPressed(final Uri uri) {
         if (mListener != null) {
             mListener.onFragmentInteraction(uri);
-        }
-    }
-
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        if (context instanceof PlayerFragment.OnFragmentInteractionListener) {
-            mListener = (PlayerFragment.OnFragmentInteractionListener) context;
-        } else {
-            throw new RuntimeException(context.toString()
-                    + " must implement OnFragmentInteractionListener");
         }
     }
 
@@ -565,7 +560,18 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         mListener = null;
     }
 
-    private void updateData(DocumentSnapshot documentSnapshot) {
+    @Override
+    public void onAttach(final Context context) {
+        super.onAttach(context);
+        if (context instanceof PlayerFragment.OnFragmentInteractionListener) {
+            mListener = (PlayerFragment.OnFragmentInteractionListener) context;
+        } else {
+            throw new RuntimeException(context.toString()
+                    + " must implement OnFragmentInteractionListener");
+        }
+    }
+
+    private void updateData(final DocumentSnapshot documentSnapshot) {
         Log.d("UpdateDB", "Current data: " + documentSnapshot.getData());
         FirebaseDB.setGameData(documentSnapshot.toObject(GameData.class));
         this.setMarker();
@@ -574,12 +580,12 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
     public void setAllPositionMarker() {
         userMarkerDataHashMap.clear();
         userMarkerPolyline.clear();
-        for (UserData userData : FirebaseDB.getGameData().getUsers()) {
+        for (final UserData userData : FirebaseDB.getGameData().getUsers()) {
             if (showSettings.equals(ShowSettings.ShowTeamOnly)) {
                 if (userData.getTeam() != null && userData.getTeam().equals(FirebaseDB.getGameData().getOwnUserData(FirebaseAuthentication.getFirebaseUser().getEmail()).getTeam())) {
                     setPositionMarker(userData);
                     TeamData teamData = null;
-                    for (TeamData team : FirebaseDB.getGameData().getTeams()) {
+                    for (final TeamData team : FirebaseDB.getGameData().getTeams()) {
                         if (team.getTeamName().equals(userData.getTeam())) {
                             teamData = team;
                         }
@@ -588,19 +594,19 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                     if (teamData != null) {
                         LatLng latLng = null;
                         if (teamData.getFlagMarkerData() != null) {
-                            FlagMarkerData flagMarkerData = teamData.getFlagMarkerData();
+                            final FlagMarkerData flagMarkerData = teamData.getFlagMarkerData();
                             latLng = new LatLng(flagMarkerData.getLatitude(), flagMarkerData.getLongitude());
                         } else if (teamData.getHqMarkerData() != null) {
-                            HQMarkerData hqMarkerData = teamData.getHqMarkerData();
+                            final HQMarkerData hqMarkerData = teamData.getHqMarkerData();
                             latLng = new LatLng(hqMarkerData.getLatitude(), hqMarkerData.getLongitude());
                         } else if (teamData.getMissionMarkerData() != null) {
-                            MissionMarkerData missionMarkerData = teamData.getMissionMarkerData();
+                            final MissionMarkerData missionMarkerData = teamData.getMissionMarkerData();
                             latLng = new LatLng(missionMarkerData.getLatitude(), missionMarkerData.getLongitude());
                         } else if (teamData.getRespawnMarkerData() != null) {
-                            RespawnMarkerData respawnMarkerData = teamData.getRespawnMarkerData();
+                            final RespawnMarkerData respawnMarkerData = teamData.getRespawnMarkerData();
                             latLng = new LatLng(respawnMarkerData.getLatitude(), respawnMarkerData.getLongitude());
                         } else if (teamData.getTacticalMarkerData() != null) {
-                            TacticalMarkerData tacticalMarkerData = teamData.getTacticalMarkerData();
+                            final TacticalMarkerData tacticalMarkerData = teamData.getTacticalMarkerData();
                             latLng = new LatLng(tacticalMarkerData.getLatitude(), tacticalMarkerData.getLongitude());
                         }
 
@@ -613,7 +619,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
             } else if (showSettings.equals(ShowSettings.AllPlayer)) {
                 setPositionMarker(userData);
                 TeamData teamData = null;
-                for (TeamData team : FirebaseDB.getGameData().getTeams()) {
+                for (final TeamData team : FirebaseDB.getGameData().getTeams()) {
                     if (team.getTeamName().equals(userData.getTeam())) {
                         teamData = team;
                     }
@@ -623,19 +629,19 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
 //                        Log.i("Poly", "!showTeamAssignOnly");
                     LatLng latLng = null;
                     if (teamData.getFlagMarkerData() != null) {
-                        FlagMarkerData flagMarkerData = teamData.getFlagMarkerData();
+                        final FlagMarkerData flagMarkerData = teamData.getFlagMarkerData();
                         latLng = new LatLng(flagMarkerData.getLatitude(), flagMarkerData.getLongitude());
                     } else if (teamData.getHqMarkerData() != null) {
-                        HQMarkerData hqMarkerData = teamData.getHqMarkerData();
+                        final HQMarkerData hqMarkerData = teamData.getHqMarkerData();
                         latLng = new LatLng(hqMarkerData.getLatitude(), hqMarkerData.getLongitude());
                     } else if (teamData.getMissionMarkerData() != null) {
-                        MissionMarkerData missionMarkerData = teamData.getMissionMarkerData();
+                        final MissionMarkerData missionMarkerData = teamData.getMissionMarkerData();
                         latLng = new LatLng(missionMarkerData.getLatitude(), missionMarkerData.getLongitude());
                     } else if (teamData.getRespawnMarkerData() != null) {
-                        RespawnMarkerData respawnMarkerData = teamData.getRespawnMarkerData();
+                        final RespawnMarkerData respawnMarkerData = teamData.getRespawnMarkerData();
                         latLng = new LatLng(respawnMarkerData.getLatitude(), respawnMarkerData.getLongitude());
                     } else if (teamData.getTacticalMarkerData() != null) {
-                        TacticalMarkerData tacticalMarkerData = teamData.getTacticalMarkerData();
+                        final TacticalMarkerData tacticalMarkerData = teamData.getTacticalMarkerData();
                         latLng = new LatLng(tacticalMarkerData.getLatitude(), tacticalMarkerData.getLongitude());
                     }
 
@@ -646,7 +652,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                 }
             } else if (showSettings.equals(ShowSettings.ShowOnlyNotAssigned)) {
                 TeamData teamData = null;
-                for (TeamData team : FirebaseDB.getGameData().getTeams()) {
+                for (final TeamData team : FirebaseDB.getGameData().getTeams()) {
                     if (team.getTeamName().equals(userData.getTeam())) {
                         teamData = team;
                     }
@@ -662,13 +668,6 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
             }
         }
 
-    }
-
-    private void setPositionMarker(UserData userData) {
-        final MarkerOptions markerOptions = new MarkerOptions();
-        markerOptions.position(new LatLng(userData.getPositionLat(), userData.getPositionLong()));
-        setMarkerIcon(markerOptions, userData);
-        userMarkerDataHashMap.put(googleMap.addMarker(markerOptions), userData);
     }
 
     public void setMarker() {
@@ -700,10 +699,17 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         void onFragmentInteraction(Uri uri);
     }
 
+    private void setPositionMarker(final UserData userData) {
+        final MarkerOptions markerOptions = new MarkerOptions();
+        markerOptions.position(new LatLng(userData.getPositionLat(), userData.getPositionLong()));
+        setMarkerIcon(markerOptions, userData);
+        userMarkerDataHashMap.put(googleMap.addMarker(markerOptions), userData);
+    }
+
     public void setAlTacticalMarker() {
         tacticalMarkerDataHashMap.clear();
         if (FirebaseDB.getGameData().getTacticalMarkerData() != null) {
-            for (TacticalMarkerData tacticalMarkerData : FirebaseDB.getGameData().getTacticalMarkerData()) {
+            for (final TacticalMarkerData tacticalMarkerData : FirebaseDB.getGameData().getTacticalMarkerData()) {
                 final MarkerOptions markerOptions = new MarkerOptions();
                 markerOptions.position(new LatLng(tacticalMarkerData.getLatitude(), tacticalMarkerData.getLongitude()));
                 markerOptions.draggable(true);
@@ -716,7 +722,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
     public void setAllMissionMarker() {
         missionMarkerDataHashMap.clear();
         if (FirebaseDB.getGameData().getMissionMarkerData() != null) {
-            for (MissionMarkerData missionMarkerData : FirebaseDB.getGameData().getMissionMarkerData()) {
+            for (final MissionMarkerData missionMarkerData : FirebaseDB.getGameData().getMissionMarkerData()) {
                 final MarkerOptions markerOptions = new MarkerOptions();
                 markerOptions.position(new LatLng(missionMarkerData.getLatitude(), missionMarkerData.getLongitude()));
                 markerOptions.draggable(true);
@@ -729,7 +735,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
     public void setAllRespawnMarker() {
         respawnMarkerDataHashMap.clear();
         if (FirebaseDB.getGameData().getRespawnMarkerData() != null) {
-            for (RespawnMarkerData respawnMarkerData : FirebaseDB.getGameData().getRespawnMarkerData()) {
+            for (final RespawnMarkerData respawnMarkerData : FirebaseDB.getGameData().getRespawnMarkerData()) {
                 final MarkerOptions markerOptions = new MarkerOptions();
                 markerOptions.position(new LatLng(respawnMarkerData.getLatitude(), respawnMarkerData.getLongitude()));
                 markerOptions.draggable(true);
@@ -744,7 +750,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
     public void setAllHQMarker() {
         hqMarkerDataHashMap.clear();
         if (FirebaseDB.getGameData().getHqMarkerData() != null) {
-            for (HQMarkerData hqMarkerData : FirebaseDB.getGameData().getHqMarkerData()) {
+            for (final HQMarkerData hqMarkerData : FirebaseDB.getGameData().getHqMarkerData()) {
                 final MarkerOptions markerOptions = new MarkerOptions();
                 markerOptions.position(new LatLng(hqMarkerData.getLatitude(), hqMarkerData.getLongitude()));
                 markerOptions.draggable(true);
@@ -759,7 +765,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
     public void setAllFlagMarker() {
         flagDataHashMap.clear();
         if (FirebaseDB.getGameData().getFlagMarkerData() != null) {
-            for (FlagMarkerData flagMarkerData : FirebaseDB.getGameData().getFlagMarkerData()) {
+            for (final FlagMarkerData flagMarkerData : FirebaseDB.getGameData().getFlagMarkerData()) {
                 final MarkerOptions markerOptions = new MarkerOptions();
                 markerOptions.position(new LatLng(flagMarkerData.getLatitude(), flagMarkerData.getLongitude()));
                 markerOptions.draggable(true);
@@ -771,8 +777,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         }
     }
 
-
-    private void setMarkerIcon(@NonNull MarkerOptions markerOptions, UserData userData) {
+    private void setMarkerIcon(@NonNull final MarkerOptions markerOptions, final UserData userData) {
         Log.i("Marker", "Setting Icon of Marker");
         if (userData.isMission()) {
             markerOptions.icon(getBitmapDescriptor(R.drawable.ic_marker_alivemission));
@@ -789,24 +794,18 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         }
     }
 
-    private BitmapDescriptor getBitmapDescriptor(int id) {
-        Drawable vectorDrawable = getResources().getDrawable(id);
-        int h = ((int) dpTopixel(getContext(), 50));
-        int w = ((int) dpTopixel(getContext(), 50));
+    private BitmapDescriptor getBitmapDescriptor(final int id) {
+        final Drawable vectorDrawable = getResources().getDrawable(id);
+        final int h = ((int) dpTopixel(getContext(), 50));
+        final int w = ((int) dpTopixel(getContext(), 50));
         vectorDrawable.setBounds(0, 0, w, h);
-        Bitmap bm = Bitmap.createBitmap(w, h, Bitmap.Config.ARGB_8888);
-        Canvas canvas = new Canvas(bm);
+        final Bitmap bm = Bitmap.createBitmap(w, h, Bitmap.Config.ARGB_8888);
+        final Canvas canvas = new Canvas(bm);
         vectorDrawable.draw(canvas);
         return BitmapDescriptorFactory.fromBitmap(bm);
     }
 
-    private static float dpTopixel(Context c, float dp) {
-        float density = c.getResources().getDisplayMetrics().density;
-        float pixel = dp * density;
-        return pixel;
-    }
-
-    private void showAfterTime(FloatingActionButton button, long delay){
+    private void showAfterTime(final FloatingActionButton button, final long delay) {
         new Timer().schedule(new TimerTask() {
             @Override
             public void run() {

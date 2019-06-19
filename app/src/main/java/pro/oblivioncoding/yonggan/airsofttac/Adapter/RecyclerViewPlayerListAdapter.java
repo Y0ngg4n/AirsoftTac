@@ -7,7 +7,6 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.Switch;
 import android.widget.TextView;
 
@@ -27,7 +26,8 @@ public class RecyclerViewPlayerListAdapter extends RecyclerView.Adapter<Recycler
     private ArrayList<UserData> userDataArrayList;
     private Context context;
     private PlayerFragment playerFragment;
-    public RecyclerViewPlayerListAdapter(ArrayList<UserData> userDataArrayList, Context context, PlayerFragment playerFragment) {
+
+    public RecyclerViewPlayerListAdapter(final ArrayList<UserData> userDataArrayList, final Context context, final PlayerFragment playerFragment) {
         this.userDataArrayList = userDataArrayList;
         this.context = context;
         this.playerFragment = playerFragment;
@@ -35,14 +35,14 @@ public class RecyclerViewPlayerListAdapter extends RecyclerView.Adapter<Recycler
 
     @NonNull
     @Override
-    public ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
-        View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.recycler_view_player_list_item, viewGroup, false);
-        ViewHolder holder = new ViewHolder(view);
+    public ViewHolder onCreateViewHolder(@NonNull final ViewGroup viewGroup, final int i) {
+        final View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.recycler_view_player_list_item, viewGroup, false);
+        final ViewHolder holder = new ViewHolder(view);
         return holder;
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ViewHolder viewHolder, int i) {
+    public void onBindViewHolder(@NonNull final ViewHolder viewHolder, final int i) {
         final UserData userData = userDataArrayList.get(i);
         viewHolder.isOrga.setChecked(userData.isOrga());
         viewHolder.email.setText(userData.getEmail());
@@ -54,13 +54,24 @@ public class RecyclerViewPlayerListAdapter extends RecyclerView.Adapter<Recycler
         return userDataArrayList.size();
     }
 
+    private void showAfterTime(final Switch button, final long delay) {
+        new Timer().schedule(new TimerTask() {
+            @Override
+            public void run() {
+                playerFragment.getActivity().runOnUiThread(() -> {
+                    button.setVisibility(View.VISIBLE);
+                });
+            }
+        }, delay);
+    }
+
     public class ViewHolder extends RecyclerView.ViewHolder {
 
         TextView email, nickname;
         Switch isOrga;
         ConstraintLayout constraintLayout;
 
-        public ViewHolder(@NonNull View itemView) {
+        public ViewHolder(@NonNull final View itemView) {
             super(itemView);
             email = itemView.findViewById(R.id.playerListEmail);
             nickname = itemView.findViewById(R.id.playerListNickName);
@@ -82,15 +93,5 @@ public class RecyclerViewPlayerListAdapter extends RecyclerView.Adapter<Recycler
                 }
             });
         }
-    }
-    private void showAfterTime(Switch button, long delay){
-        new Timer().schedule(new TimerTask() {
-            @Override
-            public void run() {
-                playerFragment.getActivity().runOnUiThread(() -> {
-                    button.setVisibility(View.VISIBLE);
-                });
-            }
-        }, delay);
     }
 }

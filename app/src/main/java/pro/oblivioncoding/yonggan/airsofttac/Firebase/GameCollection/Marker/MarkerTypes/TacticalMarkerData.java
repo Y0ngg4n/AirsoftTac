@@ -6,7 +6,7 @@ public class TacticalMarkerData extends MarkerType {
 
     public TacticalMarkerData(){}
 
-    public TacticalMarkerData(double latitude, double longitude, String title, String description) {
+    public TacticalMarkerData(final double latitude, final double longitude, final String title, final String description) {
         this.latitude = latitude;
         this.longitude = longitude;
         this.title = title;
@@ -17,7 +17,7 @@ public class TacticalMarkerData extends MarkerType {
         return latitude;
     }
 
-    public void setLatitude(double latitude) {
+    public void setLatitude(final double latitude) {
         this.latitude = latitude;
     }
 
@@ -25,7 +25,7 @@ public class TacticalMarkerData extends MarkerType {
         return longitude;
     }
 
-    public void setLongitude(double longitude) {
+    public void setLongitude(final double longitude) {
         this.longitude = longitude;
     }
 
@@ -33,7 +33,7 @@ public class TacticalMarkerData extends MarkerType {
         return title;
     }
 
-    public void setTitle(String title) {
+    public void setTitle(final String title) {
         this.title = title;
     }
 
@@ -41,7 +41,7 @@ public class TacticalMarkerData extends MarkerType {
         return description;
     }
 
-    public void setDescription(String description) {
+    public void setDescription(final String description) {
         this.description = description;
     }
 }

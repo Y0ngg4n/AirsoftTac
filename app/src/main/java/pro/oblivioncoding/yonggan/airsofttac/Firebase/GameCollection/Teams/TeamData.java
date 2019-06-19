@@ -25,7 +25,7 @@ public class TeamData {
     public TeamData() {
     }
 
-    public TeamData(String teamName) {
+    public TeamData(final String teamName) {
         this.teamName = teamName;
     }
 
@@ -33,7 +33,7 @@ public class TeamData {
         return teamName;
     }
 
-    public void setTeamName(String teamName) {
+    public void setTeamName(final String teamName) {
         this.teamName = teamName;
     }
 
@@ -42,7 +42,7 @@ public class TeamData {
         return users;
     }
 
-    public void setUsers(ArrayList<String> users) {
+    public void setUsers(final ArrayList<String> users) {
         this.users = users;
     }
 
@@ -50,7 +50,7 @@ public class TeamData {
         return flagMarkerData;
     }
 
-    public void setFlagMarkerData(FlagMarkerData flagMarkerData) {
+    public void setFlagMarkerData(final FlagMarkerData flagMarkerData) {
         this.flagMarkerData = flagMarkerData;
     }
 
@@ -58,7 +58,7 @@ public class TeamData {
         return hqMarkerData;
     }
 
-    public void setHqMarkerData(HQMarkerData hqMarkerData) {
+    public void setHqMarkerData(final HQMarkerData hqMarkerData) {
         this.hqMarkerData = hqMarkerData;
     }
 
@@ -66,7 +66,7 @@ public class TeamData {
         return missionMarkerData;
     }
 
-    public void setMissionMarkerData(MissionMarkerData missionMarkerData) {
+    public void setMissionMarkerData(final MissionMarkerData missionMarkerData) {
         this.missionMarkerData = missionMarkerData;
     }
 
@@ -74,7 +74,7 @@ public class TeamData {
         return respawnMarkerData;
     }
 
-    public void setRespawnMarkerData(RespawnMarkerData respawnMarkerData) {
+    public void setRespawnMarkerData(final RespawnMarkerData respawnMarkerData) {
         this.respawnMarkerData = respawnMarkerData;
     }
 
@@ -82,7 +82,7 @@ public class TeamData {
         return tacticalMarkerData;
     }
 
-    public void setTacticalMarkerData(TacticalMarkerData tacticalMarkerData) {
+    public void setTacticalMarkerData(final TacticalMarkerData tacticalMarkerData) {
         this.tacticalMarkerData = tacticalMarkerData;
     }
 
@@ -90,7 +90,7 @@ public class TeamData {
         return minorRadioChannel;
     }
 
-    public void setMinorRadioChannel(int minorRadioChannel) {
+    public void setMinorRadioChannel(final int minorRadioChannel) {
         this.minorRadioChannel = minorRadioChannel;
     }
 
@@ -98,7 +98,7 @@ public class TeamData {
         return majorRadioChannel;
     }
 
-    public void setMajorRadioChannel(int majorRadioChannel) {
+    public void setMajorRadioChannel(final int majorRadioChannel) {
         this.majorRadioChannel = majorRadioChannel;
     }
 }

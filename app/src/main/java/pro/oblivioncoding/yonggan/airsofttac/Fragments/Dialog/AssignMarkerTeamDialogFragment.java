@@ -37,48 +37,48 @@ public class AssignMarkerTeamDialogFragment extends DialogFragment {
         // Use `newInstance` instead as shown below
     }
 
-    public static AssignMarkerTeamDialogFragment newInstance(String title, TeamData pteamData) {
+    public static AssignMarkerTeamDialogFragment newInstance(final String title, final TeamData pteamData) {
         teamData = pteamData;
         return new AssignMarkerTeamDialogFragment();
     }
 
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(@NonNull final LayoutInflater inflater, final ViewGroup container,
+                             final Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.assign_marker_team_dialog, container, false);
         final RecyclerView recyclerView = rootView.findViewById(R.id.markerassignlist);
         final TextView searchTeamList = rootView.findViewById(R.id.searchMarkerName);
 
         searchTeamList.addTextChangedListener(new TextWatcher() {
             @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            public void beforeTextChanged(final CharSequence s, final int start, final int count, final int after) {
             }
 
             @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
+            public void onTextChanged(final CharSequence s, final int start, final int before, final int count) {
                 if (!s.toString().isEmpty()) {
-                    ArrayList<MarkerType> markerTypeArrayList = new ArrayList<>();
-                    for (MarkerType markerType : getAllMarker()) {
+                    final ArrayList<MarkerType> markerTypeArrayList = new ArrayList<>();
+                    for (final MarkerType markerType : getAllMarker()) {
                         String title = null;
                         String description = null;
                         if (teamData.getFlagMarkerData() != null) {
-                            FlagMarkerData flagMarkerData = teamData.getFlagMarkerData();
+                            final FlagMarkerData flagMarkerData = teamData.getFlagMarkerData();
                             title = flagMarkerData.getTitle();
                             description = flagMarkerData.getDescription();
                         } else if (teamData.getHqMarkerData() != null) {
-                            HQMarkerData hqMarkerData = teamData.getHqMarkerData();
+                            final HQMarkerData hqMarkerData = teamData.getHqMarkerData();
                             title = hqMarkerData.getTitle();
                             description = hqMarkerData.getDescription();
                         } else if (teamData.getMissionMarkerData() != null) {
-                            MissionMarkerData missionMarkerData = teamData.getMissionMarkerData();
+                            final MissionMarkerData missionMarkerData = teamData.getMissionMarkerData();
                             title = missionMarkerData.getTitle();
                             description = missionMarkerData.getDescription();
                         } else if (teamData.getRespawnMarkerData() != null) {
-                            RespawnMarkerData respawnMarkerData = teamData.getRespawnMarkerData();
+                            final RespawnMarkerData respawnMarkerData = teamData.getRespawnMarkerData();
                             title = respawnMarkerData.getTitle();
                             description = respawnMarkerData.getDescription();
                         } else if (teamData.getTacticalMarkerData() != null) {
-                            TacticalMarkerData tacticalMarkerData = teamData.getTacticalMarkerData();
+                            final TacticalMarkerData tacticalMarkerData = teamData.getTacticalMarkerData();
                             title = tacticalMarkerData.getTitle();
                             description = tacticalMarkerData.getDescription();
                         }
@@ -93,7 +93,7 @@ public class AssignMarkerTeamDialogFragment extends DialogFragment {
             }
 
             @Override
-            public void afterTextChanged(Editable s) {
+            public void afterTextChanged(final Editable s) {
             }
         });
         setRecyclerView(getAllMarker(), teamData, recyclerView);
@@ -101,32 +101,32 @@ public class AssignMarkerTeamDialogFragment extends DialogFragment {
     }
 
     @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+    public void onViewCreated(@NonNull final View view, @Nullable final Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
     }
 
     private ArrayList<MarkerType> getAllMarker() {
-        ArrayList<MarkerType> markerTypeArrayList = new ArrayList<>();
-        for (HQMarkerData hqMarkerData : FirebaseDB.getGameData().getHqMarkerData()) {
+        final ArrayList<MarkerType> markerTypeArrayList = new ArrayList<>();
+        for (final HQMarkerData hqMarkerData : FirebaseDB.getGameData().getHqMarkerData()) {
             markerTypeArrayList.add(hqMarkerData);
         }
-        for (FlagMarkerData flagMarkerData : FirebaseDB.getGameData().getFlagMarkerData()) {
+        for (final FlagMarkerData flagMarkerData : FirebaseDB.getGameData().getFlagMarkerData()) {
             markerTypeArrayList.add(flagMarkerData);
         }
-        for (MissionMarkerData missionMarkerData : FirebaseDB.getGameData().getMissionMarkerData()) {
+        for (final MissionMarkerData missionMarkerData : FirebaseDB.getGameData().getMissionMarkerData()) {
             markerTypeArrayList.add(missionMarkerData);
         }
-        for (RespawnMarkerData respawnMarkerData : FirebaseDB.getGameData().getRespawnMarkerData()) {
+        for (final RespawnMarkerData respawnMarkerData : FirebaseDB.getGameData().getRespawnMarkerData()) {
             markerTypeArrayList.add(respawnMarkerData);
         }
-        for (TacticalMarkerData tacticalMarkerData : FirebaseDB.getGameData().getTacticalMarkerData()) {
+        for (final TacticalMarkerData tacticalMarkerData : FirebaseDB.getGameData().getTacticalMarkerData()) {
             markerTypeArrayList.add(tacticalMarkerData);
         }
         return markerTypeArrayList;
     }
 
-    private void setRecyclerView(ArrayList<MarkerType> markerTypes, TeamData teamData, RecyclerView recyclerView) {
-        RecyclerViewMarkerAssignListAdapter recyclerViewMarkerAssignListAdapter = new RecyclerViewMarkerAssignListAdapter(markerTypes, teamData, getFragmentManager(), this, rootView.getContext());
+    private void setRecyclerView(final ArrayList<MarkerType> markerTypes, final TeamData teamData, final RecyclerView recyclerView) {
+        final RecyclerViewMarkerAssignListAdapter recyclerViewMarkerAssignListAdapter = new RecyclerViewMarkerAssignListAdapter(markerTypes, teamData, getFragmentManager(), this, rootView.getContext());
         recyclerView.setAdapter(recyclerViewMarkerAssignListAdapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(rootView.getContext()));
     }

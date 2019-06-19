@@ -43,35 +43,35 @@ public class PlayerFragment extends Fragment {
 
     @NonNull
     public static PlayerFragment newInstance() {
-        PlayerFragment fragment = new PlayerFragment();
-        Bundle args = new Bundle();
+        final PlayerFragment fragment = new PlayerFragment();
+        final Bundle args = new Bundle();
         fragment.setArguments(args);
         return fragment;
     }
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
+    public void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
     }
 
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(@NonNull final LayoutInflater inflater, final ViewGroup container,
+                             final Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         rootView = inflater.inflate(R.layout.fragment_player, container, false);
         final RecyclerView recyclerView = rootView.findViewById(R.id.playerList);
         final TextView searchPlayerList = rootView.findViewById(R.id.searchPlayerList);
         searchPlayerList.addTextChangedListener(new TextWatcher() {
             @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            public void beforeTextChanged(final CharSequence s, final int start, final int count, final int after) {
             }
 
             @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
+            public void onTextChanged(final CharSequence s, final int start, final int before, final int count) {
                 ArrayList<UserData> userDataArrayList = FirebaseDB.getGameData().getUsers();
                 if (!s.toString().isEmpty()) {
                     userDataArrayList = new ArrayList<>();
-                    for (UserData userData : FirebaseDB.getGameData().getUsers()) {
+                    for (final UserData userData : FirebaseDB.getGameData().getUsers()) {
                         if (userData.getEmail().toLowerCase().contains(s.toString().toLowerCase())
                                 || userData.getNickname().toLowerCase().contains(s.toString().toLowerCase())) {
                             userDataArrayList.add(userData);
@@ -82,7 +82,7 @@ public class PlayerFragment extends Fragment {
             }
 
             @Override
-            public void afterTextChanged(Editable s) {
+            public void afterTextChanged(final Editable s) {
             }
         });
         setRecyclerView(FirebaseDB.getGameData().getUsers(), recyclerView);
@@ -90,14 +90,14 @@ public class PlayerFragment extends Fragment {
     }
 
     // TODO: Rename method, update argument and hook method into UI event
-    public void onButtonPressed(Uri uri) {
+    public void onButtonPressed(final Uri uri) {
         if (mListener != null) {
             mListener.onFragmentInteraction(uri);
         }
     }
 
     @Override
-    public void onAttach(Context context) {
+    public void onAttach(final Context context) {
         super.onAttach(context);
         if (context instanceof OnFragmentInteractionListener) {
             mListener = (OnFragmentInteractionListener) context;
@@ -127,8 +127,8 @@ public class PlayerFragment extends Fragment {
         void onFragmentInteraction(Uri uri);
     }
 
-    private void setRecyclerView(ArrayList<UserData> userData, RecyclerView recyclerView) {
-        RecyclerViewPlayerListAdapter recyclerViewPlayerListAdapter = new RecyclerViewPlayerListAdapter(userData, rootView.getContext(), this);
+    private void setRecyclerView(final ArrayList<UserData> userData, final RecyclerView recyclerView) {
+        final RecyclerViewPlayerListAdapter recyclerViewPlayerListAdapter = new RecyclerViewPlayerListAdapter(userData, rootView.getContext(), this);
         recyclerView.setAdapter(recyclerViewPlayerListAdapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(rootView.getContext()));
     }

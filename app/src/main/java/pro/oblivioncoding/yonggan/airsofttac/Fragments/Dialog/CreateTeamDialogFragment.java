@@ -29,20 +29,20 @@ public class CreateTeamDialogFragment extends DialogFragment {
         // Use `newInstance` instead as shown below
     }
 
-    public static CreateTeamDialogFragment newInstance(String title, TeamFragment pTeamFragment, RecyclerView pRecyclerView) {
+    public static CreateTeamDialogFragment newInstance(final String title, final TeamFragment pTeamFragment, final RecyclerView pRecyclerView) {
         teamFragment = pTeamFragment;
         recyclerView = pRecyclerView;
         return new CreateTeamDialogFragment();
     }
 
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(@NonNull final LayoutInflater inflater, final ViewGroup container,
+                             final Bundle savedInstanceState) {
         return inflater.inflate(R.layout.create_team_dialog, container);
     }
 
     @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+    public void onViewCreated(@NonNull final View view, @Nullable final Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
         //Current Lcoation Button
@@ -54,11 +54,11 @@ public class CreateTeamDialogFragment extends DialogFragment {
                     final DocumentSnapshot documentSnapshot = task.getResult().getDocuments().get(0);
                     if (documentSnapshot != null && documentSnapshot.exists()) {
                         view.findViewById(R.id.createTeamCreateButton).setOnClickListener(v -> {
-                            TextView teamname = view.findViewById(R.id.searchMarkerName);
+                            final TextView teamname = view.findViewById(R.id.searchMarkerName);
                             if (teamname.getText().toString().isEmpty())
                                 return;
                             boolean teamExists = false;
-                            for (TeamData teamData : FirebaseDB.getGameData().getTeams()) {
+                            for (final TeamData teamData : FirebaseDB.getGameData().getTeams()) {
                                 if (teamname.getText().toString().equals(teamData.getTeamName()))
                                     teamExists = true;
                             }

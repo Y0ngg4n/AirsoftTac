@@ -16,20 +16,20 @@ public class RecyclerViewChatMessage extends RecyclerView.Adapter<RecyclerViewCh
 
     private ArrayList<ChatMessage> chatDataArrayList;
 
-    public RecyclerViewChatMessage(ArrayList<ChatMessage> chatData) {
+    public RecyclerViewChatMessage(final ArrayList<ChatMessage> chatData) {
         chatDataArrayList = chatData;
     }
 
     @NonNull
     @Override
-    public RecyclerViewChatMessage.ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
-        View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.recycler_view_chat_message, viewGroup, false);
-        RecyclerViewChatMessage.ViewHolder holder = new RecyclerViewChatMessage.ViewHolder(view);
+    public RecyclerViewChatMessage.ViewHolder onCreateViewHolder(@NonNull final ViewGroup viewGroup, final int i) {
+        final View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.recycler_view_chat_message, viewGroup, false);
+        final RecyclerViewChatMessage.ViewHolder holder = new RecyclerViewChatMessage.ViewHolder(view);
         return holder;
     }
 
     @Override
-    public void onBindViewHolder(@NonNull RecyclerViewChatMessage.ViewHolder viewHolder, int i) {
+    public void onBindViewHolder(@NonNull final RecyclerViewChatMessage.ViewHolder viewHolder, final int i) {
         viewHolder.nickName.setText(chatDataArrayList.get(i).getNickName());
         viewHolder.text.setText(chatDataArrayList.get(i).getText());
     }
@@ -43,7 +43,7 @@ public class RecyclerViewChatMessage extends RecyclerView.Adapter<RecyclerViewCh
 
         TextView nickName, text;
 
-        public ViewHolder(@NonNull View itemView) {
+        public ViewHolder(@NonNull final View itemView) {
             super(itemView);
             nickName = itemView.findViewById(R.id.chatMessageNickName);
             text = itemView.findViewById(R.id.chatMessageText);

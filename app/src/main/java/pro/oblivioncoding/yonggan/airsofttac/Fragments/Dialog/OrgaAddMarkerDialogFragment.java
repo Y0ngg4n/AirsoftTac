@@ -38,29 +38,29 @@ public class OrgaAddMarkerDialogFragment extends DialogFragment {
         // Use `newInstance` instead as shown below
     }
 
-    public static OrgaAddMarkerDialogFragment newInstance(String title) {
+    public static OrgaAddMarkerDialogFragment newInstance(final String title) {
         return new OrgaAddMarkerDialogFragment();
     }
 
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(@NonNull final LayoutInflater inflater, final ViewGroup container,
+                             final Bundle savedInstanceState) {
         return inflater.inflate(R.layout.orga_add_marker_dialog, container);
     }
 
     @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+    public void onViewCreated(@NonNull final View view, @Nullable final Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         final Spinner spinner = getView().findViewById(R.id.orgaaddmarkerdialogtype);
-        ArrayList<String> spinnerItems = new ArrayList<String>(Arrays.asList("Tactical Marker", "Mission Marker", "Respawn Marker", "HQ Marker", "Flag Marker"));
-        ArrayAdapter<CharSequence> adapter = new ArrayAdapter(getContext(), android.R.layout.simple_spinner_item, spinnerItems);
+        final ArrayList<String> spinnerItems = new ArrayList<String>(Arrays.asList("Tactical Marker", "Mission Marker", "Respawn Marker", "HQ Marker", "Flag Marker"));
+        final ArrayAdapter<CharSequence> adapter = new ArrayAdapter(getContext(), android.R.layout.simple_spinner_item, spinnerItems);
 
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner.setAdapter(adapter);
         getView().findViewById(R.id.orgaaddmarkerdialogown).setVisibility(View.INVISIBLE);
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+            public void onItemSelected(final AdapterView<?> parent, final View view, final int position, final long id) {
                 Log.i("Spinner", position + " selected");
 
                 if (position == 2 || position == 3 || position == 4) {
@@ -71,7 +71,7 @@ public class OrgaAddMarkerDialogFragment extends DialogFragment {
             }
 
             @Override
-            public void onNothingSelected(AdapterView<?> parent) {
+            public void onNothingSelected(final AdapterView<?> parent) {
 
             }
         });
@@ -101,7 +101,7 @@ public class OrgaAddMarkerDialogFragment extends DialogFragment {
                             Log.i("Owned", String.valueOf(own));
                             switch (spinner.getSelectedItemPosition()) {
                                 case 0:
-                                    for(TacticalMarkerData tacticalMarkerData : FirebaseDB.getGameData().getTacticalMarkerData()){
+                                    for (final TacticalMarkerData tacticalMarkerData : FirebaseDB.getGameData().getTacticalMarkerData()) {
                                         if(tacticalMarkerData.getTitle().equals(title)) {
                                             Toast.makeText(getContext(), "Title allready exists!", Toast.LENGTH_LONG).show();
                                             return;
@@ -111,7 +111,7 @@ public class OrgaAddMarkerDialogFragment extends DialogFragment {
                                     FirebaseDB.updateObject(documentSnapshot, "tacticalMarkerData", FirebaseDB.getGameData().getTacticalMarkerData());
                                     break;
                                 case 1:
-                                    for(MissionMarkerData missionMarkerData : FirebaseDB.getGameData().getMissionMarkerData()){
+                                    for (final MissionMarkerData missionMarkerData : FirebaseDB.getGameData().getMissionMarkerData()) {
                                         if(missionMarkerData.getTitle().equals(title)) {
                                             Toast.makeText(getContext(), "Title allready exists!", Toast.LENGTH_LONG).show();
                                             return;
@@ -122,7 +122,7 @@ public class OrgaAddMarkerDialogFragment extends DialogFragment {
                                     FirebaseDB.updateObject(documentSnapshot, "missionMarkerData", FirebaseDB.getGameData().getMissionMarkerData());
                                     break;
                                 case 2:
-                                    for(RespawnMarkerData respawnMarkerData: FirebaseDB.getGameData().getRespawnMarkerData()){
+                                    for (final RespawnMarkerData respawnMarkerData : FirebaseDB.getGameData().getRespawnMarkerData()) {
                                         if(respawnMarkerData.getTitle().equals(title)) {
                                             Toast.makeText(getContext(), "Title allready exists!", Toast.LENGTH_LONG).show();
                                             return;
@@ -134,7 +134,7 @@ public class OrgaAddMarkerDialogFragment extends DialogFragment {
                                     FirebaseDB.updateObject(documentSnapshot, "respawnMarkerData", FirebaseDB.getGameData().getRespawnMarkerData());
                                     break;
                                 case 3:
-                                    for(HQMarkerData hqMarkerData: FirebaseDB.getGameData().getHqMarkerData()){
+                                    for (final HQMarkerData hqMarkerData : FirebaseDB.getGameData().getHqMarkerData()) {
                                         if(hqMarkerData.getTitle().equals(title)) {
                                             Toast.makeText(getContext(), "Title allready exists!", Toast.LENGTH_LONG).show();
                                             return;
@@ -146,7 +146,7 @@ public class OrgaAddMarkerDialogFragment extends DialogFragment {
                                     FirebaseDB.updateObject(documentSnapshot, "hqMarkerData", FirebaseDB.getGameData().getHqMarkerData());
                                     break;
                                 case 4:
-                                    for(FlagMarkerData flagMarkerData: FirebaseDB.getGameData().getFlagMarkerData()){
+                                    for (final FlagMarkerData flagMarkerData : FirebaseDB.getGameData().getFlagMarkerData()) {
                                         if(flagMarkerData.getTitle().equals(title)) {
                                             Toast.makeText(getContext(), "Title allready exists!", Toast.LENGTH_LONG).show();
                                             return;

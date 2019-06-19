@@ -34,7 +34,7 @@ public class RecyclerViewTeamListAdapter extends RecyclerView.Adapter<RecyclerVi
     private TeamFragment teamFragment;
     private Context context;
 
-    public RecyclerViewTeamListAdapter(FragmentManager fragmentManager, ArrayList<TeamData> teamDataArrayList, Context context, TeamFragment teamFragment) {
+    public RecyclerViewTeamListAdapter(final FragmentManager fragmentManager, final ArrayList<TeamData> teamDataArrayList, final Context context, final TeamFragment teamFragment) {
         this.fragmentManager = fragmentManager;
         this.teamDataArrayList = teamDataArrayList;
         this.context = context;
@@ -43,14 +43,14 @@ public class RecyclerViewTeamListAdapter extends RecyclerView.Adapter<RecyclerVi
 
     @NonNull
     @Override
-    public RecyclerViewTeamListAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
-        View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.recycler_view_team_list_item, viewGroup, false);
-        RecyclerViewTeamListAdapter.ViewHolder holder = new RecyclerViewTeamListAdapter.ViewHolder(view);
+    public RecyclerViewTeamListAdapter.ViewHolder onCreateViewHolder(@NonNull final ViewGroup viewGroup, final int i) {
+        final View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.recycler_view_team_list_item, viewGroup, false);
+        final RecyclerViewTeamListAdapter.ViewHolder holder = new RecyclerViewTeamListAdapter.ViewHolder(view);
         return holder;
     }
 
     @Override
-    public void onBindViewHolder(@NonNull RecyclerViewTeamListAdapter.ViewHolder viewHolder, int i) {
+    public void onBindViewHolder(@NonNull final RecyclerViewTeamListAdapter.ViewHolder viewHolder, final int i) {
         final TeamData teamData = teamDataArrayList.get(i);
         viewHolder.teamName.setText(teamData.getTeamName());
         viewHolder.minorRadioChannel.setText(String.valueOf(teamData.getMinorRadioChannel()));
@@ -62,7 +62,7 @@ public class RecyclerViewTeamListAdapter extends RecyclerView.Adapter<RecyclerVi
         return teamDataArrayList.size();
     }
 
-    private void setButtonJointLeave(Button button, UserData ownUserdata, String teamName) {
+    private void setButtonJointLeave(final Button button, final UserData ownUserdata, final String teamName) {
         if (ownUserdata.getTeam() == null || !teamName.equals(teamName)) {
             button.setText("Join");
         } else {
@@ -70,10 +70,10 @@ public class RecyclerViewTeamListAdapter extends RecyclerView.Adapter<RecyclerVi
         }
     }
 
-    private void toggleRadioAssignButton(Button assignRadioChannel, TextView teamName) {
+    private void toggleRadioAssignButton(final Button assignRadioChannel, final TextView teamName) {
         {
             TeamData teamData = null;
-            for (TeamData team : FirebaseDB.getGameData().getTeams()) {
+            for (final TeamData team : FirebaseDB.getGameData().getTeams()) {
                 if (team.getTeamName().equals(teamName.getText().toString())) {
                     teamData = team;
                 }
@@ -88,7 +88,7 @@ public class RecyclerViewTeamListAdapter extends RecyclerView.Adapter<RecyclerVi
         }
     }
 
-    private void toggleRadioAssignButton(Button assignRadioChannel, TextView teamName, TeamData teamData) {
+    private void toggleRadioAssignButton(final Button assignRadioChannel, final TextView teamName, final TeamData teamData) {
         {
             if (teamData != null && (teamData.getUsers().contains(FirebaseAuthentication.getFirebaseUser().getEmail())
                     || FirebaseDB.getGameData().getOwnUserData(FirebaseAuthentication.getFirebaseUser().getEmail()).isOrga())) {
@@ -101,13 +101,24 @@ public class RecyclerViewTeamListAdapter extends RecyclerView.Adapter<RecyclerVi
         }
     }
 
+    private void showAfterTime(final Button button, final long delay) {
+        new Timer().schedule(new TimerTask() {
+            @Override
+            public void run() {
+                teamFragment.getActivity().runOnUiThread(() -> {
+                    button.setVisibility(View.VISIBLE);
+                });
+            }
+        }, delay);
+    }
+
     public class ViewHolder extends RecyclerView.ViewHolder {
 
         TextView teamName, minorRadioChannel, majorRadioChannel;
         Button joinLeaveTeam, assignMarker, assignRadioChannel;
         ConstraintLayout constraintLayout;
 
-        public ViewHolder(@NonNull View itemView) {
+        public ViewHolder(@NonNull final View itemView) {
             super(itemView);
             teamName = itemView.findViewById(R.id.markerTitle);
             joinLeaveTeam = itemView.findViewById(R.id.teamMarkerAssign);
@@ -123,7 +134,7 @@ public class RecyclerViewTeamListAdapter extends RecyclerView.Adapter<RecyclerVi
                         final DocumentSnapshot documentSnapshot = task.getResult().getDocuments().get(0);
                         {
                             TeamData teamData = null;
-                            for (TeamData team : FirebaseDB.getGameData().getTeams()) {
+                            for (final TeamData team : FirebaseDB.getGameData().getTeams()) {
                                 if (team.getTeamName().equals(teamName.getText().toString())) {
                                     teamData = team;
                                 }
@@ -134,7 +145,7 @@ public class RecyclerViewTeamListAdapter extends RecyclerView.Adapter<RecyclerVi
                         }
                         joinLeaveTeam.setOnClickListener(v -> {
                             TeamData teamData = null;
-                            for (TeamData team : FirebaseDB.getGameData().getTeams()) {
+                            for (final TeamData team : FirebaseDB.getGameData().getTeams()) {
                                 if (team.getTeamName().equals(teamName.getText().toString())) {
                                     teamData = team;
                                 }
@@ -168,12 +179,12 @@ public class RecyclerViewTeamListAdapter extends RecyclerView.Adapter<RecyclerVi
                         toggleRadioAssignButton(assignRadioChannel, teamName);
                         assignRadioChannel.setOnClickListener(v -> {
                             TeamData teamData = null;
-                            for (TeamData team : FirebaseDB.getGameData().getTeams()) {
+                            for (final TeamData team : FirebaseDB.getGameData().getTeams()) {
                                 if (team.getTeamName().equals(teamName.getText().toString())) {
                                     teamData = team;
                                 }
                             }
-                            AssignRadioChannelDialogFragment assignRadioChannelDialogFragment = AssignRadioChannelDialogFragment.newInstance("Assign Radio Channel", teamData, teamFragment);
+                            final AssignRadioChannelDialogFragment assignRadioChannelDialogFragment = AssignRadioChannelDialogFragment.newInstance("Assign Radio Channel", teamData, teamFragment);
                             assignRadioChannelDialogFragment.show(fragmentManager, "assign_team_marker");
 
                         });
@@ -181,12 +192,12 @@ public class RecyclerViewTeamListAdapter extends RecyclerView.Adapter<RecyclerVi
 
                         assignMarker.setOnClickListener(v -> {
                             TeamData teamData = null;
-                            for (TeamData team : FirebaseDB.getGameData().getTeams()) {
+                            for (final TeamData team : FirebaseDB.getGameData().getTeams()) {
                                 if (team.getTeamName().equals(teamName.getText().toString())) {
                                     teamData = team;
                                 }
                             }
-                            AssignMarkerTeamDialogFragment assignMarkerTeamDialogFragment = AssignMarkerTeamDialogFragment.newInstance("Assign Team", teamData);
+                            final AssignMarkerTeamDialogFragment assignMarkerTeamDialogFragment = AssignMarkerTeamDialogFragment.newInstance("Assign Team", teamData);
                             assignMarkerTeamDialogFragment.show(fragmentManager, "assign_team_marker");
                             assignMarker.setVisibility(View.INVISIBLE);
                             showAfterTime(assignMarker, 10000L);
@@ -195,16 +206,5 @@ public class RecyclerViewTeamListAdapter extends RecyclerView.Adapter<RecyclerVi
                 }
             });
         }
-    }
-
-    private void showAfterTime(Button button, long delay){
-        new Timer().schedule(new TimerTask() {
-            @Override
-            public void run() {
-                teamFragment.getActivity().runOnUiThread(() -> {
-                    button.setVisibility(View.VISIBLE);
-                });
-            }
-        }, delay);
     }
 }

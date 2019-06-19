@@ -1,21 +1,13 @@
 package pro.oblivioncoding.yonggan.airsofttac.Firebase;
 
-import android.content.Context;
 import android.support.annotation.NonNull;
-import android.widget.TextView;
-import android.widget.Toast;
 
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.QuerySnapshot;
-
-import java.util.function.Consumer;
 
 import pro.oblivioncoding.yonggan.airsofttac.Firebase.GameCollection.GameData;
-import pro.oblivioncoding.yonggan.airsofttac.R;
 
 public class FirebaseDB {
 
@@ -41,19 +33,19 @@ public class FirebaseDB {
         return games;
     }
 
-    public static void setGameData(GameData gameData) {
+    public static void setGameData(final GameData gameData) {
         FirebaseDB.gameData = gameData;
     }
 
-    public static void updateObject(DocumentSnapshot documentSnapshot, @NonNull String path, Object object){
+    public static void updateObject(final DocumentSnapshot documentSnapshot, @NonNull final String path, final Object object) {
         FirebaseDB.getGames().document(documentSnapshot.getId()).update(path, object);
     }
 
-    public static void updateObject(DocumentReference documentReference, @NonNull String path, Object object){
+    public static void updateObject(final DocumentReference documentReference, @NonNull final String path, final Object object) {
         documentReference.update(path, object);
     }
 
-    public static void updateObject(DocumentReference documentReference, Object object){
+    public static void updateObject(final DocumentReference documentReference, final Object object) {
         documentReference.set(object);
     }
 

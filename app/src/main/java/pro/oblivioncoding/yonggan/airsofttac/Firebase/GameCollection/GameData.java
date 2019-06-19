@@ -34,21 +34,7 @@ public class GameData {
 
     private ArrayList<ChatMessage> chatMessages;
 
-    @Nullable
-    public UserData getOwnUserData(String email) {
-        if (users != null) {
-            for (UserData user : users) {
-                if (user.getEmail().equals(email)) return user;
-            }
-        }
-        return null;
-    }
-
-    public GameData() {
-    }
-
-
-    public GameData(String gameID, String creatorEmail, Timestamp startTime, Timestamp endTime, ArrayList<UserData> users) {
+    public GameData(final String gameID, final String creatorEmail, final Timestamp startTime, final Timestamp endTime, final ArrayList<UserData> users) {
         GameID = gameID;
         this.creatorEmail = creatorEmail;
         this.startTime = startTime;
@@ -56,10 +42,14 @@ public class GameData {
         this.users = users;
     }
 
-    public GameData(String gameID, String creatorEmail, Timestamp startTime, Timestamp endTime,
-                    ArrayList<UserData> users, ArrayList<FlagMarkerData> flagMarkerData,
-                    ArrayList<HQMarkerData> hqMarkerData, ArrayList<MissionMarkerData> missionMarkerData,
-                    ArrayList<RespawnMarkerData> respawnMarkerData, ArrayList<TacticalMarkerData> tacticalMarkerData) {
+    public GameData() {
+    }
+
+
+    public GameData(final String gameID, final String creatorEmail, final Timestamp startTime, final Timestamp endTime,
+                    final ArrayList<UserData> users, final ArrayList<FlagMarkerData> flagMarkerData,
+                    final ArrayList<HQMarkerData> hqMarkerData, final ArrayList<MissionMarkerData> missionMarkerData,
+                    final ArrayList<RespawnMarkerData> respawnMarkerData, final ArrayList<TacticalMarkerData> tacticalMarkerData) {
         GameID = gameID;
         this.creatorEmail = creatorEmail;
         this.startTime = startTime;
@@ -72,12 +62,22 @@ public class GameData {
         this.tacticalMarkerData = tacticalMarkerData;
     }
 
+    @Nullable
+    public UserData getOwnUserData(final String email) {
+        if (users != null) {
+            for (final UserData user : users) {
+                if (user.getEmail().equals(email)) return user;
+            }
+        }
+        return null;
+    }
+
 
     public String getGameID() {
         return GameID;
     }
 
-    public void setGameID(String gameID) {
+    public void setGameID(final String gameID) {
         GameID = gameID;
     }
 
@@ -85,7 +85,7 @@ public class GameData {
         return creatorEmail;
     }
 
-    public void setCreatorEmail(String creatorEmail) {
+    public void setCreatorEmail(final String creatorEmail) {
         this.creatorEmail = creatorEmail;
     }
 
@@ -93,7 +93,7 @@ public class GameData {
         return startTime;
     }
 
-    public void setStartTime(Timestamp startTime) {
+    public void setStartTime(final Timestamp startTime) {
         this.startTime = startTime;
     }
 
@@ -101,7 +101,7 @@ public class GameData {
         return endTime;
     }
 
-    public void setEndTime(Timestamp endTime) {
+    public void setEndTime(final Timestamp endTime) {
         this.endTime = endTime;
     }
 
@@ -110,7 +110,7 @@ public class GameData {
         return users;
     }
 
-    public void setUsers(ArrayList<UserData> users) {
+    public void setUsers(final ArrayList<UserData> users) {
         this.users = users;
     }
 
@@ -119,7 +119,7 @@ public class GameData {
         return flagMarkerData;
     }
 
-    public void setFlagMarkerData(ArrayList<FlagMarkerData> flagMarkerData) {
+    public void setFlagMarkerData(final ArrayList<FlagMarkerData> flagMarkerData) {
         this.flagMarkerData = flagMarkerData;
     }
 
@@ -128,7 +128,7 @@ public class GameData {
         return hqMarkerData;
     }
 
-    public void setHqMarkerData(ArrayList<HQMarkerData> hqMarkerData) {
+    public void setHqMarkerData(final ArrayList<HQMarkerData> hqMarkerData) {
         this.hqMarkerData = hqMarkerData;
     }
 
@@ -137,7 +137,7 @@ public class GameData {
         return missionMarkerData;
     }
 
-    public void setMissionMarkerData(ArrayList<MissionMarkerData> missionMarkerData) {
+    public void setMissionMarkerData(final ArrayList<MissionMarkerData> missionMarkerData) {
         this.missionMarkerData = missionMarkerData;
     }
 
@@ -146,7 +146,7 @@ public class GameData {
         return respawnMarkerData;
     }
 
-    public void setRespawnMarkerData(ArrayList<RespawnMarkerData> respawnMarkerData) {
+    public void setRespawnMarkerData(final ArrayList<RespawnMarkerData> respawnMarkerData) {
         this.respawnMarkerData = respawnMarkerData;
     }
 
@@ -160,11 +160,11 @@ public class GameData {
         return teams;
     }
 
-    public void setTeams(ArrayList<TeamData> teams) {
+    public void setTeams(final ArrayList<TeamData> teams) {
         this.teams = teams;
     }
 
-    public void setTacticalMarkerData(ArrayList<TacticalMarkerData> tacticalMarkerData) {
+    public void setTacticalMarkerData(final ArrayList<TacticalMarkerData> tacticalMarkerData) {
         this.tacticalMarkerData = tacticalMarkerData;
     }
 
@@ -173,7 +173,7 @@ public class GameData {
         return chatMessages;
     }
 
-    public void setChatMessages(ArrayList<ChatMessage> chatMessages) {
+    public void setChatMessages(final ArrayList<ChatMessage> chatMessages) {
         this.chatMessages = chatMessages;
     }
 }

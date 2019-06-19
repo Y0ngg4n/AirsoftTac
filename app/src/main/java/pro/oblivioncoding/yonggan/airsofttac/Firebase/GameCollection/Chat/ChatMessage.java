@@ -7,7 +7,7 @@ public class ChatMessage {
     public ChatMessage() {
     }
 
-    public ChatMessage(String nickName, String email, String text) {
+    public ChatMessage(final String nickName, final String email, final String text) {
         this.nickName = nickName;
         this.email = email;
         this.text = text;
@@ -17,7 +17,7 @@ public class ChatMessage {
         return nickName;
     }
 
-    public void setNickName(String nickName) {
+    public void setNickName(final String nickName) {
         this.nickName = nickName;
     }
 
@@ -25,7 +25,7 @@ public class ChatMessage {
         return email;
     }
 
-    public void setEmail(String email) {
+    public void setEmail(final String email) {
         this.email = email;
     }
 
@@ -33,7 +33,7 @@ public class ChatMessage {
         return text;
     }
 
-    public void setText(String text) {
+    public void setText(final String text) {
         this.text = text;
     }
 }

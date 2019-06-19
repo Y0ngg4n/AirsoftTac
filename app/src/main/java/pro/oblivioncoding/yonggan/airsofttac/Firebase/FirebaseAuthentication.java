@@ -17,11 +17,11 @@ public class FirebaseAuthentication {
         return firebaseUser;
     }
 
-    public static void setFirebaseUser(FirebaseUser firebaseUser) {
+    public static void setFirebaseUser(final FirebaseUser firebaseUser) {
         FirebaseAuthentication.firebaseUser = firebaseUser;
     }
 
-    public static void setFirebaseAuth(FirebaseAuth firebaseAuth) {
+    public static void setFirebaseAuth(final FirebaseAuth firebaseAuth) {
         FirebaseAuthentication.firebaseAuth = firebaseAuth;
     }
 

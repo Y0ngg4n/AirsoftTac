@@ -8,7 +8,7 @@ public class FlagMarkerData extends MarkerType {
 
     public FlagMarkerData(){ }
 
-    public FlagMarkerData(double latitude, double longitude, String title, String description, boolean own) {
+    public FlagMarkerData(final double latitude, final double longitude, final String title, final String description, final boolean own) {
         this.latitude = latitude;
         this.longitude = longitude;
         this.title = title;
@@ -20,7 +20,7 @@ public class FlagMarkerData extends MarkerType {
         return latitude;
     }
 
-    public void setLatitude(double latitude) {
+    public void setLatitude(final double latitude) {
         this.latitude = latitude;
     }
 
@@ -28,7 +28,7 @@ public class FlagMarkerData extends MarkerType {
         return longitude;
     }
 
-    public void setLongitude(double longitude) {
+    public void setLongitude(final double longitude) {
         this.longitude = longitude;
     }
 
@@ -36,7 +36,7 @@ public class FlagMarkerData extends MarkerType {
         return title;
     }
 
-    public void setTitle(String title) {
+    public void setTitle(final String title) {
         this.title = title;
     }
 
@@ -44,7 +44,7 @@ public class FlagMarkerData extends MarkerType {
         return description;
     }
 
-    public void setDescription(String description) {
+    public void setDescription(final String description) {
         this.description = description;
     }
 
@@ -52,7 +52,7 @@ public class FlagMarkerData extends MarkerType {
         return own;
     }
 
-    public void setOwn(boolean own) {
+    public void setOwn(final boolean own) {
         this.own = own;
     }
 }

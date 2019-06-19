@@ -12,7 +12,6 @@ import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -55,16 +54,38 @@ public class TeamFragment extends Fragment {
         return recyclerView;
     }
 
+    /**
+     * Use this factory method to create a new instance of
+     * this fragment using the provided parameters.
+     *
+     * @param param1 Parameter 1.
+     * @param param2 Parameter 2.
+     * @return A new instance of fragment TeamFragment.
+     */
+    // TODO: Rename and change types and number of parameters
+    public static TeamFragment newInstance(final String param1, final String param2) {
+        final TeamFragment fragment = new TeamFragment();
+        final Bundle args = new Bundle();
+        args.putString(ARG_PARAM1, param1);
+        args.putString(ARG_PARAM2, param2);
+        fragment.setArguments(args);
+        return fragment;
+    }
+
+    public TeamFragment() {
+        // Required empty public constructor
+    }
+
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(final LayoutInflater inflater, final ViewGroup container,
+                             final Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         rootView = inflater.inflate(R.layout.fragment_team, container, false);
         recyclerView = rootView.findViewById(R.id.teamList);
         final TextView searchTeamList = rootView.findViewById(R.id.teamListSearch);
         final FloatingActionButton teamListAddFB = rootView.findViewById(R.id.teamListAddTeamFB);
         teamListAddFB.setOnClickListener(v -> {
-            CreateTeamDialogFragment createTeamDialogFragment = CreateTeamDialogFragment.newInstance("New Team", this, recyclerView);
+            final CreateTeamDialogFragment createTeamDialogFragment = CreateTeamDialogFragment.newInstance("New Team", this, recyclerView);
             createTeamDialogFragment.show(getFragmentManager(), "create_team_dialog");
             setRecyclerView(FirebaseDB.getGameData().getTeams(), recyclerView);
             setAdapter(FirebaseDB.getGameData().getTeams());
@@ -76,15 +97,15 @@ public class TeamFragment extends Fragment {
             teamListAddFB.hide();
         searchTeamList.addTextChangedListener(new TextWatcher() {
             @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            public void beforeTextChanged(final CharSequence s, final int start, final int count, final int after) {
             }
 
             @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
+            public void onTextChanged(final CharSequence s, final int start, final int before, final int count) {
                 ArrayList<TeamData> teamDataArrayList = FirebaseDB.getGameData().getTeams();
                 if (!s.toString().isEmpty()) {
                     teamDataArrayList = new ArrayList<>();
-                    for (TeamData teamData : FirebaseDB.getGameData().getTeams()) {
+                    for (final TeamData teamData : FirebaseDB.getGameData().getTeams()) {
                         if (teamData.getTeamName().toLowerCase().contains(s.toString().toLowerCase())
                         || String.valueOf(teamData.getMinorRadioChannel()).toLowerCase().contains(s.toString().toLowerCase())
                         || String.valueOf(teamData.getMajorRadioChannel()).toLowerCase().contains(s.toString().toLowerCase())) {
@@ -96,37 +117,15 @@ public class TeamFragment extends Fragment {
             }
 
             @Override
-            public void afterTextChanged(Editable s) {
+            public void afterTextChanged(final Editable s) {
             }
         });
         setRecyclerView(FirebaseDB.getGameData().getTeams(), recyclerView);
         return rootView;
     }
 
-    public TeamFragment() {
-        // Required empty public constructor
-    }
-
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment TeamFragment.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static TeamFragment newInstance(String param1, String param2) {
-        TeamFragment fragment = new TeamFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
-    }
-
     @Override
-    public void onCreate(Bundle savedInstanceState) {
+    public void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
             mParam1 = getArguments().getString(ARG_PARAM1);
@@ -134,11 +133,11 @@ public class TeamFragment extends Fragment {
         }
     }
 
-    public void setRecyclerView(ArrayList<TeamData> teamData, RecyclerView recyclerView) {
-        UserData ownUserData = FirebaseDB.getGameData().getOwnUserData(FirebaseAuthentication.getFirebaseUser().getEmail());
+    public void setRecyclerView(final ArrayList<TeamData> teamData, final RecyclerView recyclerView) {
+        final UserData ownUserData = FirebaseDB.getGameData().getOwnUserData(FirebaseAuthentication.getFirebaseUser().getEmail());
         ArrayList<TeamData> teamDataBuffer = new ArrayList<>();
         if (showSettings.equals(ShowSettings.ShowTeamOnly)) {
-            for (TeamData team : teamData) {
+            for (final TeamData team : teamData) {
                 if (!ownUserData.getTeam().isEmpty()) {
                     if (ownUserData.getTeam().equals(team.getTeamName())) {
                         teamDataBuffer.add(team);
@@ -146,7 +145,7 @@ public class TeamFragment extends Fragment {
                 }
             }
         } else if (showSettings.equals(ShowSettings.ShowOnlyNotAssigned)) {
-            for (TeamData team : teamData) {
+            for (final TeamData team : teamData) {
                 if (team.getFlagMarkerData() == null && team.getHqMarkerData() == null
                         && team.getMissionMarkerData() == null && team.getRespawnMarkerData() == null
                         && team.getTacticalMarkerData() == null) {
@@ -160,14 +159,14 @@ public class TeamFragment extends Fragment {
     }
 
     // TODO: Rename method, update argument and hook method into UI event
-    public void onButtonPressed(Uri uri) {
+    public void onButtonPressed(final Uri uri) {
         if (mListener != null) {
             mListener.onFragmentInteraction(uri);
         }
     }
 
     @Override
-    public void onAttach(Context context) {
+    public void onAttach(final Context context) {
         super.onAttach(context);
         if (context instanceof OnFragmentInteractionListener) {
             mListener = (OnFragmentInteractionListener) context;
@@ -202,13 +201,13 @@ public class TeamFragment extends Fragment {
         void onFragmentInteraction(Uri uri);
     }
 
-    private void setAdapter(ArrayList<TeamData> teamData) {
-        RecyclerViewTeamListAdapter recyclerViewTeamListAdapter = new RecyclerViewTeamListAdapter(getFragmentManager(), teamData, rootView.getContext(), this);
+    private void setAdapter(final ArrayList<TeamData> teamData) {
+        final RecyclerViewTeamListAdapter recyclerViewTeamListAdapter = new RecyclerViewTeamListAdapter(getFragmentManager(), teamData, rootView.getContext(), this);
         recyclerView.setAdapter(recyclerViewTeamListAdapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(rootView.getContext()));
     }
 
-    private void showAfterTime(FloatingActionButton button, long delay){
+    private void showAfterTime(final FloatingActionButton button, final long delay) {
         new Timer().schedule(new TimerTask() {
             @Override
             public void run() {

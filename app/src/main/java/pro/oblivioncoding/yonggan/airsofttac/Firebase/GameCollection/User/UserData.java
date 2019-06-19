@@ -14,12 +14,12 @@ public class UserData {
     public UserData() {
     }
 
-    public UserData(String email, boolean orga) {
+    public UserData(final String email, final boolean orga) {
         this.email = email;
         this.orga = orga;
     }
 
-    public UserData(String email, boolean orga, String nickname) {
+    public UserData(final String email, final boolean orga, final String nickname) {
         this.email = email;
         this.orga = orga;
         this.nickname = nickname;
@@ -29,7 +29,7 @@ public class UserData {
         return email;
     }
 
-    public void setEmail(String email) {
+    public void setEmail(final String email) {
         this.email = email;
     }
 
@@ -37,7 +37,7 @@ public class UserData {
         return orga;
     }
 
-    public void setOrga(boolean orga) {
+    public void setOrga(final boolean orga) {
         this.orga = orga;
     }
 
@@ -45,7 +45,7 @@ public class UserData {
         return alive;
     }
 
-    public void setAlive(boolean alive) {
+    public void setAlive(final boolean alive) {
         this.alive = alive;
     }
 
@@ -53,7 +53,7 @@ public class UserData {
         return support;
     }
 
-    public void setSupport(boolean support) {
+    public void setSupport(final boolean support) {
         this.support = support;
     }
 
@@ -61,7 +61,7 @@ public class UserData {
         return mission;
     }
 
-    public void setMission(boolean mission) {
+    public void setMission(final boolean mission) {
         this.mission = mission;
     }
 
@@ -69,7 +69,7 @@ public class UserData {
         return underfire;
     }
 
-    public void setUnderfire(boolean underfire) {
+    public void setUnderfire(final boolean underfire) {
         this.underfire = underfire;
     }
 
@@ -77,7 +77,7 @@ public class UserData {
         return positionLat;
     }
 
-    public void setPositionLat(double positionLat) {
+    public void setPositionLat(final double positionLat) {
         this.positionLat = positionLat;
     }
 
@@ -85,7 +85,7 @@ public class UserData {
         return positionLong;
     }
 
-    public void setPositionLong(double positionLong) {
+    public void setPositionLong(final double positionLong) {
         this.positionLong = positionLong;
     }
 
@@ -93,7 +93,7 @@ public class UserData {
         return nickname;
     }
 
-    public void setNickname(String nickname) {
+    public void setNickname(final String nickname) {
         this.nickname = nickname;
     }
 
@@ -101,7 +101,7 @@ public class UserData {
         return team;
     }
 
-    public void setTeam(String team) {
+    public void setTeam(final String team) {
         this.team = team;
     }
 }
