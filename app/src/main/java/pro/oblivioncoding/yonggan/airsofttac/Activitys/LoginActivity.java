@@ -9,6 +9,9 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.google.firebase.FirebaseApp;
+import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
+import com.google.firebase.auth.FirebaseAuthUserCollisionException;
+import com.google.firebase.auth.FirebaseAuthWeakPasswordException;
 
 import pro.oblivioncoding.yonggan.airsofttac.Firebase.FirebaseAuthentication;
 import pro.oblivioncoding.yonggan.airsofttac.R;
@@ -28,19 +31,36 @@ public class LoginActivity extends AppCompatActivity {
 
             if (email.isEmpty() || password.isEmpty()) return;
 
-            FirebaseAuthentication.getFirebaseAuth().signInWithEmailAndPassword(email, password)
+            FirebaseAuthentication.getFirebaseAuth().createUserWithEmailAndPassword(email, password)
                     .addOnCompleteListener(this, task -> {
                         if (task.isSuccessful()) {
-                            // Sign in success, update UI with the signed-in user's information
-                            Log.d("FirebaseLogin", "signInWithEmail:success");
-                            FirebaseAuthentication.setFirebaseUser(
-                                    FirebaseAuthentication.getFirebaseAuth().getCurrentUser());
                             loadScanGameActivity();
                         } else {
-                            // If sign in fails, display a message to the user.
-                            Log.w("FirebaseLogin", "signInWithEmail:failure", task.getException());
-                            Toast.makeText(getApplicationContext(), "Authentication failed.",
-                                    Toast.LENGTH_SHORT).show();
+                            try {
+                                throw task.getException();
+                            } catch (FirebaseAuthUserCollisionException existEmail) {
+                                FirebaseAuthentication.getFirebaseAuth().signInWithEmailAndPassword(email, password)
+                                        .addOnCompleteListener(this, task1 -> {
+                                            if (task1.isSuccessful()) {
+                                                // Sign in success, update UI with the signed-in user's information
+                                                Log.d("FirebaseLogin", "signInWithEmail:success");
+                                                FirebaseAuthentication.setFirebaseUser(
+                                                        FirebaseAuthentication.getFirebaseAuth().getCurrentUser());
+                                                loadScanGameActivity();
+                                            } else {
+                                                // If sign in fails, display a message to the user.
+                                                Log.w("FirebaseLogin", "signInWithEmail:failure", task1.getException());
+                                                Toast.makeText(getApplicationContext(), "Authentication failed.",
+                                                        Toast.LENGTH_SHORT).show();
+                                            }
+                                        });
+                            } catch (FirebaseAuthWeakPasswordException weakPassword) {
+                                Toast.makeText(getApplicationContext(), "Password is too weak!", Toast.LENGTH_LONG).show();
+                            } catch (FirebaseAuthInvalidCredentialsException malformedEmail) {
+                                Toast.makeText(getApplicationContext(), "Malformed Email!", Toast.LENGTH_LONG).show();
+                            } catch (Exception e) {
+                                Log.i("LoginLogin", e.getMessage());
+                            }
                         }
                     });
         });
@@ -49,6 +69,7 @@ public class LoginActivity extends AppCompatActivity {
     @Override
     public void onBackPressed() {
     }
+
     private void loadScanGameActivity() {
         LoginActivity.this.startActivity(new Intent(LoginActivity.this, JoinGameActivity.class));
     }

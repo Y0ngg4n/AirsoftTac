@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 
+import at.favre.lib.crypto.bcrypt.BCrypt;
 import pro.oblivioncoding.yonggan.airsofttac.Firebase.FirebaseAuthentication;
 import pro.oblivioncoding.yonggan.airsofttac.Firebase.FirebaseDB;
 import pro.oblivioncoding.yonggan.airsofttac.Firebase.GameCollection.GameData;
@@ -74,7 +75,7 @@ public class CreateGameActivity extends AppCompatActivity {
             if (task.isSuccessful()) {
                 if (task == null || task.getResult().size() <= 0) {
                     (findViewById(R.id.createGame)).setOnClickListener(v -> {
-
+                        Toast.makeText(this, "Trying to create Game...", Toast.LENGTH_LONG);
                         final GameData gameData = createGame();
                         writeGameData(gameData);
                         FirebaseDB.setGameData(gameData);
@@ -108,8 +109,7 @@ public class CreateGameActivity extends AppCompatActivity {
                     FirebaseAuthentication.getFirebaseUser().getEmail(),
                     new Timestamp(startTime),
                     new Timestamp(durationDate),
-                    userData);
-
+                    userData, BCrypt.withDefaults().hashToString(12, ((EditText) findViewById(R.id.passwordField)).getText().toString().toCharArray()));
         } catch (final ParseException e) {
             Log.i("CreateGame", "Could not parse Date");
             Toast.makeText(getApplicationContext(), "Could not parse Date", Toast.LENGTH_LONG).show();

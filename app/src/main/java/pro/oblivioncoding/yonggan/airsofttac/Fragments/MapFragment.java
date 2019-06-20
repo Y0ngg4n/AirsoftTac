@@ -20,6 +20,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import com.github.pengrad.mapscaleview.MapScaleView;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -27,6 +28,7 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MapStyleOptions;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.Polyline;
@@ -59,16 +61,20 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
     @Nullable
     private PlayerFragment.OnFragmentInteractionListener mListener;
 
-    private GoogleMap googleMap;
-
-    private FloatingActionButton currentlocationfb;
+    private static GoogleMap googleMap;
+    private static MapScaleView scaleView;
 
     private static FloatingActionButton hitfb, underfirefb, supportfb, missionfb;
 
     private static FloatingActionButton reloadfb, setMarkerfb, removeMarkerfb, swapFlagfb;
+    private static int MapType = GoogleMap.MAP_TYPE_HYBRID;
+
     public ShowSettings showSettings = ShowSettings.AllPlayer;
     private Marker currentMarker;
     private View rootView;
+    private static MapStyleOptions mapStyleOptions;
+    private FloatingActionButton currentlocationfb, toggleMap;
+
     @NonNull
     private HashMap<Marker, TacticalMarkerData> tacticalMarkerDataHashMap = new HashMap<>();
     @NonNull
@@ -104,6 +110,18 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         return pixel;
     }
 
+    public static void setMapStyle(String json) {
+        if (googleMap != null) {
+            mapStyleOptions = new MapStyleOptions(json);
+        }
+    }
+
+    @Override
+    public void onCreate(final Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+    }
+
     @Override
     public View onCreateView(@NonNull final LayoutInflater inflater, final ViewGroup container,
                              final Bundle savedInstanceState) {
@@ -123,6 +141,9 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                     ownUserData.getPositionLong())));
         });
 
+        scaleView = rootView.findViewById(R.id.scaleView);
+        toggleMap = rootView.findViewById(R.id.togglemapfb);
+
         hitfb = rootView.findViewById(R.id.hitfb);
         underfirefb = rootView.findViewById(R.id.underfirefb);
         supportfb = rootView.findViewById(R.id.supportfb);
@@ -132,9 +153,12 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         setMarkerfb = rootView.findViewById(R.id.setMarker);
         removeMarkerfb = rootView.findViewById(R.id.removeMarker);
         swapFlagfb = rootView.findViewById(R.id.swapFlagMarker);
+
+
         setMarkerfb.hide();
         removeMarkerfb.hide();
         swapFlagfb.hide();
+
         hitfb.setOnClickListener(v -> {
             FirebaseDB.getGames().whereEqualTo("gameID", FirebaseDB.getGameData().getGameID())
                     .get().addOnCompleteListener(task -> {
@@ -291,260 +315,6 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
             showAfterTime(reloadfb, 30000L);
         });
         return rootView;
-    }
-
-    @Override
-    public void onCreate(final Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-
-    }
-
-    @Override
-    public void onMapReady(@NonNull final GoogleMap googleMap) {
-        if (ActivityCompat.checkSelfPermission(getContext(),
-                Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED
-                && ActivityCompat.checkSelfPermission(getContext(),
-                Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-            googleMap.setMyLocationEnabled(true);
-        }
-        googleMap.getUiSettings().setCompassEnabled(true);
-
-        final UserData ownUserData = FirebaseDB.getGameData().getOwnUserData(FirebaseAuthentication
-                .getFirebaseUser().getEmail());
-
-        googleMap.animateCamera(CameraUpdateFactory.newLatLng(new LatLng(
-                ownUserData.getPositionLat(),
-                ownUserData.getPositionLong())));
-
-        this.googleMap = googleMap;
-
-        googleMap.setOnMarkerClickListener(marker ->
-        {
-            if (userMarkerDataHashMap.containsKey(marker)) {
-                final UserData userData = userMarkerDataHashMap.get(marker);
-                googleMap.setInfoWindowAdapter(new CustomMarkerTeamInfoWindowAdapter(getContext(),
-                        userData.getPositionLat(), userData.getPositionLong(),
-                        userData.getEmail(), userData.getEmail(), userData.getTeam()));
-            } else if (tacticalMarkerDataHashMap.containsKey(marker)) {
-                final TacticalMarkerData tacticalMarkerData = tacticalMarkerDataHashMap.get(marker);
-                googleMap.setInfoWindowAdapter(new CustomMarkerInfoWindowAdapter(getContext(),
-                        tacticalMarkerData.getLatitude(), tacticalMarkerData.getLongitude(),
-                        tacticalMarkerData.getTitle(), tacticalMarkerData.getDescription()));
-                currentMarker = marker;
-            } else if (missionMarkerDataHashMap.containsKey(marker)) {
-                final MissionMarkerData missionMarkerData = missionMarkerDataHashMap.get(marker);
-                googleMap.setInfoWindowAdapter(new CustomMarkerInfoWindowAdapter(getContext(),
-                        missionMarkerData.getLatitude(), missionMarkerData.getLongitude(),
-                        missionMarkerData.getTitle(), missionMarkerData.getDescription()));
-                currentMarker = marker;
-            } else if (respawnMarkerDataHashMap.containsKey(marker)) {
-                final RespawnMarkerData respawnMarkerData = respawnMarkerDataHashMap.get(marker);
-                googleMap.setInfoWindowAdapter(new CustomMarkerOwnInfoWindowAdapter(getContext(),
-                        respawnMarkerData.getLatitude(), respawnMarkerData.getLongitude(),
-                        respawnMarkerData.getTitle(), respawnMarkerData.getDescription(), respawnMarkerData.isOwn()));
-                currentMarker = marker;
-            } else if (hqMarkerDataHashMap.containsKey(marker)) {
-                final HQMarkerData hqMarkerData = hqMarkerDataHashMap.get(marker);
-                googleMap.setInfoWindowAdapter(new CustomMarkerOwnInfoWindowAdapter(getContext(),
-                        hqMarkerData.getLatitude(), hqMarkerData.getLongitude(),
-                        hqMarkerData.getTitle(), hqMarkerData.getDescription(), hqMarkerData.isOwn()));
-                currentMarker = marker;
-            } else if (flagDataHashMap.containsKey(marker)) {
-                final FlagMarkerData flagMarkerData = flagDataHashMap.get(marker);
-                googleMap.setInfoWindowAdapter(new CustomMarkerOwnInfoWindowAdapter(getContext(),
-                        flagMarkerData.getLatitude(), flagMarkerData.getLongitude(),
-                        flagMarkerData.getTitle(), flagMarkerData.getDescription(), flagMarkerData.isOwn()));
-                swapFlagfb.show();
-                currentMarker = marker;
-            }
-            if (currentMarker != null)
-                removeMarkerfb.show();
-            else removeMarkerfb.hide();
-            marker.showInfoWindow();
-
-            googleMap.setOnMapClickListener(e -> {
-                swapFlagfb.hide();
-                removeMarkerfb.show();
-            });
-
-            return true;
-        });
-
-        FirebaseDB.getGames().whereEqualTo("gameID", FirebaseDB.getGameData().getGameID())
-                .get().addOnCompleteListener(task -> {
-            if (task.isSuccessful()) {
-                if (task.getResult().size() > 0) {
-                    final DocumentReference documentReference = FirebaseDB.getGames()
-                            .document(task.getResult().getDocuments().get(0).getId());
-
-                } else {
-                    Toast.makeText(getContext(), "Couldn´t find Document with GameID!",
-                            Toast.LENGTH_LONG).show();
-                }
-            } else {
-                Toast.makeText(getContext(), "Couldn´t query Database!",
-                        Toast.LENGTH_LONG).show();
-            }
-        });
-
-        if (FirebaseDB.getGameData().getOwnUserData(FirebaseAuthentication.getFirebaseUser().getEmail()).isOrga()) {
-            setMarkerfb.show();
-            setMarkerfb.setOnClickListener(v -> {
-                final OrgaAddMarkerDialogFragment orgaAddMarkerDialogFragment = OrgaAddMarkerDialogFragment.newInstance("New Marker");
-                orgaAddMarkerDialogFragment.show(getFragmentManager(), "orga_add_marker_dialog");
-            });
-
-            FirebaseDB.getGames().whereEqualTo("gameID", FirebaseDB.getGameData().getGameID())
-                    .get().addOnCompleteListener(task -> {
-                if (task.isSuccessful()) {
-                    if (task.getResult().size() > 0) {
-                        final DocumentReference documentReference = FirebaseDB.getGames()
-                                .document(task.getResult().getDocuments().get(0).getId());
-                        removeMarkerfb.setOnClickListener(e -> {
-                            if (tacticalMarkerDataHashMap.containsKey(currentMarker)) {
-                                final TacticalMarkerData tacticalMarkerData = tacticalMarkerDataHashMap.get(currentMarker);
-                                for (final TeamData teamData : FirebaseDB.getGameData().getTeams()) {
-                                    if (teamData.getTacticalMarkerData() != null && teamData.getTacticalMarkerData().getTitle().equals(tacticalMarkerData.getTitle())) {
-                                        teamData.setTacticalMarkerData(null);
-                                    }
-                                }
-                                FirebaseDB.getGameData().getTacticalMarkerData().remove(tacticalMarkerData);
-                                tacticalMarkerDataHashMap.remove(currentMarker);
-                            } else if (respawnMarkerDataHashMap.containsKey(currentMarker)) {
-                                final RespawnMarkerData respawnMarkerData = respawnMarkerDataHashMap.get(currentMarker);
-                                for (final TeamData teamData : FirebaseDB.getGameData().getTeams()) {
-                                    if (teamData.getRespawnMarkerData() != null && teamData.getRespawnMarkerData().getTitle().equals(respawnMarkerData.getTitle()))
-                                        teamData.setRespawnMarkerData(null);
-                                }
-                                FirebaseDB.getGameData().getRespawnMarkerData().remove(respawnMarkerData);
-                                respawnMarkerDataHashMap.remove(currentMarker);
-                            } else if (missionMarkerDataHashMap.containsKey(currentMarker)) {
-                                final MissionMarkerData missionMarkerData = missionMarkerDataHashMap.get(currentMarker);
-                                for (final TeamData teamData : FirebaseDB.getGameData().getTeams()) {
-                                    if (teamData.getMissionMarkerData() != null && teamData.getMissionMarkerData().getTitle().equals(missionMarkerData.getTitle()))
-                                        teamData.setMissionMarkerData(null);
-                                }
-                                FirebaseDB.getGameData().getMissionMarkerData().remove(missionMarkerData);
-                                missionMarkerDataHashMap.remove(currentMarker);
-                            } else if (hqMarkerDataHashMap.containsKey(currentMarker)) {
-                                final HQMarkerData hqMarkerData = hqMarkerDataHashMap.get(currentMarker);
-                                for (final TeamData teamData : FirebaseDB.getGameData().getTeams()) {
-                                    if (teamData.getHqMarkerData() != null && teamData.getHqMarkerData().getTitle().equals(hqMarkerData.getTitle()))
-                                        teamData.setHqMarkerData(null);
-                                }
-                                FirebaseDB.getGameData().getHqMarkerData().remove(hqMarkerData);
-                                hqMarkerDataHashMap.remove(currentMarker);
-                            } else if (flagDataHashMap.containsKey(currentMarker)) {
-                                final FlagMarkerData flagMarkerData = flagDataHashMap.get(currentMarker);
-                                for (final TeamData teamData : FirebaseDB.getGameData().getTeams()) {
-                                    if (teamData.getFlagMarkerData() != null && teamData.getFlagMarkerData().getTitle().equals(flagMarkerData.getTitle()))
-                                        teamData.setFlagMarkerData(null);
-                                }
-                                FirebaseDB.getGameData().getFlagMarkerData().remove(flagMarkerData);
-                                flagDataHashMap.remove(currentMarker);
-                            }
-                            FirebaseDB.updateObject(documentReference, FirebaseDB.getGameData());
-                            currentMarker = null;
-                            removeMarkerfb.hide();
-                        });
-
-                        swapFlagfb.setOnClickListener(e -> {
-                            if (flagDataHashMap.containsKey(currentMarker) && currentMarker != null) {
-                                final FlagMarkerData flagMarkerData =
-                                        FirebaseDB.getGameData().getFlagMarkerData()
-                                                .get(FirebaseDB.getGameData().getFlagMarkerData()
-                                                        .indexOf(flagDataHashMap.get(currentMarker)));
-                                flagMarkerData.setOwn(!flagMarkerData.isOwn());
-                                FirebaseDB.updateObject(documentReference, "flagMarkerData",
-                                        FirebaseDB.getGameData().getFlagMarkerData());
-                                currentMarker = null;
-                                swapFlagfb.hide();
-                            }
-                        });
-
-                        googleMap.setOnMarkerDragListener(new GoogleMap.OnMarkerDragListener() {
-                            @Override
-                            public void onMarkerDragStart(final Marker marker) {
-                                marker.hideInfoWindow();
-                            }
-
-                            @Override
-                            public void onMarkerDrag(final Marker marker) {
-                                marker.hideInfoWindow();
-                            }
-
-                            @Override
-                            public void onMarkerDragEnd(@NonNull final Marker marker) {
-                                if (tacticalMarkerDataHashMap.containsKey(marker)) {
-                                    final TacticalMarkerData tacticalMarkerData = tacticalMarkerDataHashMap.get(marker);
-                                    tacticalMarkerData.setLatitude(marker.getPosition().latitude);
-                                    tacticalMarkerData.setLongitude(marker.getPosition().longitude);
-                                    for (final TeamData teamData : FirebaseDB.getGameData().getTeams()) {
-                                        if (teamData.getTacticalMarkerData() != null && teamData.getTacticalMarkerData().getTitle().equals(tacticalMarkerData.getTitle())) {
-                                            teamData.getTacticalMarkerData().setLatitude(marker.getPosition().latitude);
-                                            teamData.getTacticalMarkerData().setLongitude(marker.getPosition().longitude);
-                                        }
-                                    }
-                                } else if (missionMarkerDataHashMap.containsKey(marker)) {
-                                    final MissionMarkerData missionMarkerData = missionMarkerDataHashMap.get(marker);
-                                    missionMarkerData.setLatitude(marker.getPosition().latitude);
-                                    missionMarkerData.setLongitude(marker.getPosition().longitude);
-                                    for (final TeamData teamData : FirebaseDB.getGameData().getTeams()) {
-                                        if (teamData.getMissionMarkerData() != null && teamData.getMissionMarkerData().getTitle().equals(missionMarkerData.getTitle())) {
-                                            teamData.getMissionMarkerData().setLatitude(marker.getPosition().latitude);
-                                            teamData.getMissionMarkerData().setLongitude(marker.getPosition().longitude);
-                                        }
-                                    }
-                                } else if (respawnMarkerDataHashMap.containsKey(marker)) {
-                                    final RespawnMarkerData respawnMarkerData = respawnMarkerDataHashMap.get(marker);
-                                    respawnMarkerData.setLatitude(marker.getPosition().latitude);
-                                    respawnMarkerData.setLongitude(marker.getPosition().longitude);
-                                    for (final TeamData teamData : FirebaseDB.getGameData().getTeams()) {
-                                        if (teamData.getRespawnMarkerData() != null && teamData.getRespawnMarkerData().getTitle().equals(respawnMarkerData.getTitle())) {
-                                            teamData.getRespawnMarkerData().setLatitude(marker.getPosition().latitude);
-                                            teamData.getRespawnMarkerData().setLongitude(marker.getPosition().longitude);
-                                        }
-                                    }
-                                } else if (hqMarkerDataHashMap.containsKey(marker)) {
-                                    final HQMarkerData hqMarkerData = hqMarkerDataHashMap.get(marker);
-                                    hqMarkerData.setLatitude(marker.getPosition().latitude);
-                                    hqMarkerData.setLongitude(marker.getPosition().longitude);
-                                    for (final TeamData teamData : FirebaseDB.getGameData().getTeams()) {
-                                        if (teamData.getHqMarkerData() != null && teamData.getHqMarkerData().getTitle().equals(hqMarkerData.getTitle())) {
-                                            teamData.getHqMarkerData().setLatitude(marker.getPosition().latitude);
-                                            teamData.getHqMarkerData().setLongitude(marker.getPosition().longitude);
-                                        }
-                                    }
-                                } else if (flagDataHashMap.containsKey(marker)) {
-                                    final FlagMarkerData flagMarkerData = flagDataHashMap.get(marker);
-                                    flagMarkerData.setLatitude(marker.getPosition().latitude);
-                                    flagMarkerData.setLongitude(marker.getPosition().longitude);
-                                    for (final TeamData teamData : FirebaseDB.getGameData().getTeams()) {
-                                        if (teamData.getFlagMarkerData() != null && teamData.getFlagMarkerData().getTitle().equals(flagMarkerData.getTitle())) {
-                                            teamData.getFlagMarkerData().setLatitude(marker.getPosition().latitude);
-                                            teamData.getFlagMarkerData().setLongitude(marker.getPosition().longitude);
-                                        }
-                                    }
-                                }
-                                FirebaseDB.updateObject(documentReference, FirebaseDB.getGameData());
-                                setMarker();
-                                marker.showInfoWindow();
-                            }
-                        });
-                    } else {
-                        Toast.makeText(getContext(), "Couldn´t find Document with GameID!",
-                                Toast.LENGTH_LONG).show();
-                    }
-                } else {
-                    Toast.makeText(getContext(), "Couldn´t query Database!",
-                            Toast.LENGTH_LONG).show();
-                }
-            });
-        } else {
-            setMarkerfb.hide();
-            removeMarkerfb.hide();
-            swapFlagfb.hide();
-        }
     }
 
     // TODO: Rename method, update argument and hook method into UI event
@@ -814,6 +584,304 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                 });
             }
         }, delay);
+    }
+
+    @Override
+    public void onMapReady(@NonNull final GoogleMap googleMap) {
+        MapFragment.googleMap = googleMap;
+        if (ActivityCompat.checkSelfPermission(getContext(),
+                Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED
+                && ActivityCompat.checkSelfPermission(getContext(),
+                Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+            googleMap.setMyLocationEnabled(true);
+        }
+        googleMap.getUiSettings().setCompassEnabled(true);
+        googleMap.getUiSettings().setAllGesturesEnabled(true);
+
+
+        final UserData ownUserData = FirebaseDB.getGameData().getOwnUserData(FirebaseAuthentication
+                .getFirebaseUser().getEmail());
+
+        googleMap.animateCamera(CameraUpdateFactory.newLatLng(new LatLng(
+                ownUserData.getPositionLat(),
+                ownUserData.getPositionLong())));
+
+        googleMap.setMapType(MapType);
+
+        toggleMap.setOnClickListener(v -> {
+            switch (MapType) {
+                case GoogleMap.MAP_TYPE_HYBRID:
+                    googleMap.setMapType(GoogleMap.MAP_TYPE_TERRAIN);
+                    MapType = GoogleMap.MAP_TYPE_TERRAIN;
+                    break;
+                case GoogleMap.MAP_TYPE_TERRAIN:
+                    googleMap.setMapType(GoogleMap.MAP_TYPE_SATELLITE);
+                    MapType = GoogleMap.MAP_TYPE_SATELLITE;
+                    break;
+                case GoogleMap.MAP_TYPE_SATELLITE:
+                    googleMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
+                    MapType = GoogleMap.MAP_TYPE_NORMAL;
+                    break;
+                case GoogleMap.MAP_TYPE_NORMAL:
+                    googleMap.setMapType(GoogleMap.MAP_TYPE_NONE);
+                    MapType = GoogleMap.MAP_TYPE_NONE;
+                    break;
+                case GoogleMap.MAP_TYPE_NONE:
+                    googleMap.setMapType(GoogleMap.MAP_TYPE_HYBRID);
+                    MapType = GoogleMap.MAP_TYPE_HYBRID;
+                    break;
+            }
+        });
+
+        if (mapStyleOptions != null) {
+            googleMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
+            googleMap.setMapStyle(mapStyleOptions);
+        }
+
+        googleMap.setOnMarkerClickListener(marker ->
+        {
+            if (userMarkerDataHashMap.containsKey(marker)) {
+                final UserData userData = userMarkerDataHashMap.get(marker);
+                googleMap.setInfoWindowAdapter(new CustomMarkerTeamInfoWindowAdapter(getContext(),
+                        userData.getPositionLat(), userData.getPositionLong(),
+                        userData.getEmail(), userData.getEmail(), userData.getTeam()));
+            } else if (tacticalMarkerDataHashMap.containsKey(marker)) {
+                final TacticalMarkerData tacticalMarkerData = tacticalMarkerDataHashMap.get(marker);
+                googleMap.setInfoWindowAdapter(new CustomMarkerInfoWindowAdapter(getContext(),
+                        tacticalMarkerData.getLatitude(), tacticalMarkerData.getLongitude(),
+                        tacticalMarkerData.getTitle(), tacticalMarkerData.getDescription()));
+                currentMarker = marker;
+            } else if (missionMarkerDataHashMap.containsKey(marker)) {
+                final MissionMarkerData missionMarkerData = missionMarkerDataHashMap.get(marker);
+                googleMap.setInfoWindowAdapter(new CustomMarkerInfoWindowAdapter(getContext(),
+                        missionMarkerData.getLatitude(), missionMarkerData.getLongitude(),
+                        missionMarkerData.getTitle(), missionMarkerData.getDescription()));
+                currentMarker = marker;
+            } else if (respawnMarkerDataHashMap.containsKey(marker)) {
+                final RespawnMarkerData respawnMarkerData = respawnMarkerDataHashMap.get(marker);
+                googleMap.setInfoWindowAdapter(new CustomMarkerOwnInfoWindowAdapter(getContext(),
+                        respawnMarkerData.getLatitude(), respawnMarkerData.getLongitude(),
+                        respawnMarkerData.getTitle(), respawnMarkerData.getDescription(), respawnMarkerData.isOwn()));
+                currentMarker = marker;
+            } else if (hqMarkerDataHashMap.containsKey(marker)) {
+                final HQMarkerData hqMarkerData = hqMarkerDataHashMap.get(marker);
+                googleMap.setInfoWindowAdapter(new CustomMarkerOwnInfoWindowAdapter(getContext(),
+                        hqMarkerData.getLatitude(), hqMarkerData.getLongitude(),
+                        hqMarkerData.getTitle(), hqMarkerData.getDescription(), hqMarkerData.isOwn()));
+                currentMarker = marker;
+            } else if (flagDataHashMap.containsKey(marker)) {
+                final FlagMarkerData flagMarkerData = flagDataHashMap.get(marker);
+                googleMap.setInfoWindowAdapter(new CustomMarkerOwnInfoWindowAdapter(getContext(),
+                        flagMarkerData.getLatitude(), flagMarkerData.getLongitude(),
+                        flagMarkerData.getTitle(), flagMarkerData.getDescription(), flagMarkerData.isOwn()));
+                if (FirebaseDB.getGameData().getOwnUserData(FirebaseAuthentication.getFirebaseUser().getEmail()).isOrga()) {
+                    swapFlagfb.show();
+                }
+                currentMarker = marker;
+            }
+            if (FirebaseDB.getGameData().getOwnUserData(FirebaseAuthentication.getFirebaseUser().getEmail()).isOrga()) {
+                if (currentMarker != null)
+                    removeMarkerfb.show();
+                else removeMarkerfb.hide();
+                marker.showInfoWindow();
+            }
+
+            googleMap.setOnMapClickListener(e -> {
+                swapFlagfb.hide();
+                removeMarkerfb.show();
+            });
+
+            return true;
+        });
+
+
+        googleMap.setOnCameraMoveListener(() -> {
+            scaleView.update(googleMap.getCameraPosition().zoom, googleMap.getCameraPosition().target.latitude);
+        });
+
+        googleMap.setOnCameraIdleListener(() -> {
+            scaleView.update(googleMap.getCameraPosition().zoom, googleMap.getCameraPosition().target.latitude);
+        });
+
+        googleMap.setOnCameraMoveStartedListener(i -> {
+            scaleView.update(googleMap.getCameraPosition().zoom, googleMap.getCameraPosition().target.latitude);
+        });
+
+        FirebaseDB.getGames().whereEqualTo("gameID", FirebaseDB.getGameData().getGameID())
+                .get().addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                if (task.getResult().size() > 0) {
+                    final DocumentReference documentReference = FirebaseDB.getGames()
+                            .document(task.getResult().getDocuments().get(0).getId());
+
+                } else {
+                    Toast.makeText(getContext(), "Couldn´t find Document with GameID!",
+                            Toast.LENGTH_LONG).show();
+                }
+            } else {
+                Toast.makeText(getContext(), "Couldn´t query Database!",
+                        Toast.LENGTH_LONG).show();
+            }
+        });
+
+        if (FirebaseDB.getGameData().getOwnUserData(FirebaseAuthentication.getFirebaseUser().getEmail()).isOrga()) {
+            setMarkerfb.show();
+            setMarkerfb.setOnClickListener(v -> {
+                final OrgaAddMarkerDialogFragment orgaAddMarkerDialogFragment = OrgaAddMarkerDialogFragment.newInstance("New Marker");
+                orgaAddMarkerDialogFragment.show(getFragmentManager(), "orga_add_marker_dialog");
+            });
+
+            FirebaseDB.getGames().whereEqualTo("gameID", FirebaseDB.getGameData().getGameID())
+                    .get().addOnCompleteListener(task -> {
+                if (task.isSuccessful()) {
+                    if (task.getResult().size() > 0) {
+                        final DocumentReference documentReference = FirebaseDB.getGames()
+                                .document(task.getResult().getDocuments().get(0).getId());
+                        removeMarkerfb.setOnClickListener(e -> {
+                            if (tacticalMarkerDataHashMap.containsKey(currentMarker)) {
+                                final TacticalMarkerData tacticalMarkerData = tacticalMarkerDataHashMap.get(currentMarker);
+                                for (final TeamData teamData : FirebaseDB.getGameData().getTeams()) {
+                                    if (teamData.getTacticalMarkerData() != null && teamData.getTacticalMarkerData().getTitle().equals(tacticalMarkerData.getTitle())) {
+                                        teamData.setTacticalMarkerData(null);
+                                    }
+                                }
+                                FirebaseDB.getGameData().getTacticalMarkerData().remove(tacticalMarkerData);
+                                tacticalMarkerDataHashMap.remove(currentMarker);
+                            } else if (respawnMarkerDataHashMap.containsKey(currentMarker)) {
+                                final RespawnMarkerData respawnMarkerData = respawnMarkerDataHashMap.get(currentMarker);
+                                for (final TeamData teamData : FirebaseDB.getGameData().getTeams()) {
+                                    if (teamData.getRespawnMarkerData() != null && teamData.getRespawnMarkerData().getTitle().equals(respawnMarkerData.getTitle()))
+                                        teamData.setRespawnMarkerData(null);
+                                }
+                                FirebaseDB.getGameData().getRespawnMarkerData().remove(respawnMarkerData);
+                                respawnMarkerDataHashMap.remove(currentMarker);
+                            } else if (missionMarkerDataHashMap.containsKey(currentMarker)) {
+                                final MissionMarkerData missionMarkerData = missionMarkerDataHashMap.get(currentMarker);
+                                for (final TeamData teamData : FirebaseDB.getGameData().getTeams()) {
+                                    if (teamData.getMissionMarkerData() != null && teamData.getMissionMarkerData().getTitle().equals(missionMarkerData.getTitle()))
+                                        teamData.setMissionMarkerData(null);
+                                }
+                                FirebaseDB.getGameData().getMissionMarkerData().remove(missionMarkerData);
+                                missionMarkerDataHashMap.remove(currentMarker);
+                            } else if (hqMarkerDataHashMap.containsKey(currentMarker)) {
+                                final HQMarkerData hqMarkerData = hqMarkerDataHashMap.get(currentMarker);
+                                for (final TeamData teamData : FirebaseDB.getGameData().getTeams()) {
+                                    if (teamData.getHqMarkerData() != null && teamData.getHqMarkerData().getTitle().equals(hqMarkerData.getTitle()))
+                                        teamData.setHqMarkerData(null);
+                                }
+                                FirebaseDB.getGameData().getHqMarkerData().remove(hqMarkerData);
+                                hqMarkerDataHashMap.remove(currentMarker);
+                            } else if (flagDataHashMap.containsKey(currentMarker)) {
+                                final FlagMarkerData flagMarkerData = flagDataHashMap.get(currentMarker);
+                                for (final TeamData teamData : FirebaseDB.getGameData().getTeams()) {
+                                    if (teamData.getFlagMarkerData() != null && teamData.getFlagMarkerData().getTitle().equals(flagMarkerData.getTitle()))
+                                        teamData.setFlagMarkerData(null);
+                                }
+                                FirebaseDB.getGameData().getFlagMarkerData().remove(flagMarkerData);
+                                flagDataHashMap.remove(currentMarker);
+                            }
+                            FirebaseDB.updateObject(documentReference, FirebaseDB.getGameData());
+                            currentMarker = null;
+                            removeMarkerfb.hide();
+                        });
+
+                        swapFlagfb.setOnClickListener(e -> {
+                            if (flagDataHashMap.containsKey(currentMarker) && currentMarker != null) {
+                                final FlagMarkerData flagMarkerData =
+                                        FirebaseDB.getGameData().getFlagMarkerData()
+                                                .get(FirebaseDB.getGameData().getFlagMarkerData()
+                                                        .indexOf(flagDataHashMap.get(currentMarker)));
+                                flagMarkerData.setOwn(!flagMarkerData.isOwn());
+                                FirebaseDB.updateObject(documentReference, "flagMarkerData",
+                                        FirebaseDB.getGameData().getFlagMarkerData());
+                                currentMarker = null;
+                                swapFlagfb.hide();
+                            }
+                        });
+
+                        googleMap.setOnMarkerDragListener(new GoogleMap.OnMarkerDragListener() {
+                            @Override
+                            public void onMarkerDragStart(final Marker marker) {
+                                marker.hideInfoWindow();
+                            }
+
+                            @Override
+                            public void onMarkerDrag(final Marker marker) {
+                                marker.hideInfoWindow();
+                            }
+
+                            @Override
+                            public void onMarkerDragEnd(@NonNull final Marker marker) {
+                                if (tacticalMarkerDataHashMap.containsKey(marker)) {
+                                    final TacticalMarkerData tacticalMarkerData = tacticalMarkerDataHashMap.get(marker);
+                                    tacticalMarkerData.setLatitude(marker.getPosition().latitude);
+                                    tacticalMarkerData.setLongitude(marker.getPosition().longitude);
+                                    for (final TeamData teamData : FirebaseDB.getGameData().getTeams()) {
+                                        if (teamData.getTacticalMarkerData() != null && teamData.getTacticalMarkerData().getTitle().equals(tacticalMarkerData.getTitle())) {
+                                            teamData.getTacticalMarkerData().setLatitude(marker.getPosition().latitude);
+                                            teamData.getTacticalMarkerData().setLongitude(marker.getPosition().longitude);
+                                        }
+                                    }
+                                } else if (missionMarkerDataHashMap.containsKey(marker)) {
+                                    final MissionMarkerData missionMarkerData = missionMarkerDataHashMap.get(marker);
+                                    missionMarkerData.setLatitude(marker.getPosition().latitude);
+                                    missionMarkerData.setLongitude(marker.getPosition().longitude);
+                                    for (final TeamData teamData : FirebaseDB.getGameData().getTeams()) {
+                                        if (teamData.getMissionMarkerData() != null && teamData.getMissionMarkerData().getTitle().equals(missionMarkerData.getTitle())) {
+                                            teamData.getMissionMarkerData().setLatitude(marker.getPosition().latitude);
+                                            teamData.getMissionMarkerData().setLongitude(marker.getPosition().longitude);
+                                        }
+                                    }
+                                } else if (respawnMarkerDataHashMap.containsKey(marker)) {
+                                    final RespawnMarkerData respawnMarkerData = respawnMarkerDataHashMap.get(marker);
+                                    respawnMarkerData.setLatitude(marker.getPosition().latitude);
+                                    respawnMarkerData.setLongitude(marker.getPosition().longitude);
+                                    for (final TeamData teamData : FirebaseDB.getGameData().getTeams()) {
+                                        if (teamData.getRespawnMarkerData() != null && teamData.getRespawnMarkerData().getTitle().equals(respawnMarkerData.getTitle())) {
+                                            teamData.getRespawnMarkerData().setLatitude(marker.getPosition().latitude);
+                                            teamData.getRespawnMarkerData().setLongitude(marker.getPosition().longitude);
+                                        }
+                                    }
+                                } else if (hqMarkerDataHashMap.containsKey(marker)) {
+                                    final HQMarkerData hqMarkerData = hqMarkerDataHashMap.get(marker);
+                                    hqMarkerData.setLatitude(marker.getPosition().latitude);
+                                    hqMarkerData.setLongitude(marker.getPosition().longitude);
+                                    for (final TeamData teamData : FirebaseDB.getGameData().getTeams()) {
+                                        if (teamData.getHqMarkerData() != null && teamData.getHqMarkerData().getTitle().equals(hqMarkerData.getTitle())) {
+                                            teamData.getHqMarkerData().setLatitude(marker.getPosition().latitude);
+                                            teamData.getHqMarkerData().setLongitude(marker.getPosition().longitude);
+                                        }
+                                    }
+                                } else if (flagDataHashMap.containsKey(marker)) {
+                                    final FlagMarkerData flagMarkerData = flagDataHashMap.get(marker);
+                                    flagMarkerData.setLatitude(marker.getPosition().latitude);
+                                    flagMarkerData.setLongitude(marker.getPosition().longitude);
+                                    for (final TeamData teamData : FirebaseDB.getGameData().getTeams()) {
+                                        if (teamData.getFlagMarkerData() != null && teamData.getFlagMarkerData().getTitle().equals(flagMarkerData.getTitle())) {
+                                            teamData.getFlagMarkerData().setLatitude(marker.getPosition().latitude);
+                                            teamData.getFlagMarkerData().setLongitude(marker.getPosition().longitude);
+                                        }
+                                    }
+                                }
+                                FirebaseDB.updateObject(documentReference, FirebaseDB.getGameData());
+                                setMarker();
+                                marker.showInfoWindow();
+                            }
+                        });
+                    } else {
+                        Toast.makeText(getContext(), "Couldn´t find Document with GameID!",
+                                Toast.LENGTH_LONG).show();
+                    }
+                } else {
+                    Toast.makeText(getContext(), "Couldn´t query Database!",
+                            Toast.LENGTH_LONG).show();
+                }
+            });
+        } else {
+            setMarkerfb.hide();
+            removeMarkerfb.hide();
+            swapFlagfb.hide();
+        }
     }
 }
 

@@ -8,6 +8,8 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import pro.oblivioncoding.yonggan.airsofttac.Firebase.GameCollection.GameData;
+import pro.oblivioncoding.yonggan.airsofttac.Firebase.KMLCollection.KMLData;
+import pro.oblivioncoding.yonggan.airsofttac.Firebase.MapStyleCollection.MapStyleData;
 
 public class FirebaseDB {
 
@@ -21,8 +23,28 @@ public class FirebaseDB {
 
     private static GameData gameData;
 
+    private static MapStyleData mapStyleData;
+
+    private static KMLData kmlData;
+
     @NonNull
     private static CollectionReference games = db.collection("Games");
+
+    private static CollectionReference mapStyles = db.collection("MapStyles");
+
+    private static CollectionReference kml = db.collection("KML");
+
+    public static CollectionReference getMapStyles() {
+        return mapStyles;
+    }
+
+    public static void setMapStyles(CollectionReference mapStyles) {
+        FirebaseDB.mapStyles = mapStyles;
+    }
+
+    public static MapStyleData getMapStyleData() {
+        return mapStyleData;
+    }
 
     public static GameData getGameData() {
         return gameData;
@@ -49,4 +71,31 @@ public class FirebaseDB {
         documentReference.set(object);
     }
 
+    public static void setMapStyleData(MapStyleData mapStyleData) {
+        FirebaseDB.mapStyleData = mapStyleData;
+    }
+
+    public static void setDb(@NonNull FirebaseFirestore db) {
+        FirebaseDB.db = db;
+    }
+
+    public static KMLData getKmlData() {
+        return kmlData;
+    }
+
+    public static void setKmlData(KMLData kmlData) {
+        FirebaseDB.kmlData = kmlData;
+    }
+
+    public static void setGames(@NonNull CollectionReference games) {
+        FirebaseDB.games = games;
+    }
+
+    public static CollectionReference getKml() {
+        return kml;
+    }
+
+    public static void setKml(CollectionReference kml) {
+        FirebaseDB.kml = kml;
+    }
 }

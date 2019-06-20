@@ -8,67 +8,88 @@
     tools:context=".Activitys.JoinGameActivity"
     tools:showIn="@layout/activity_join_game_activity">
 
-    <EditText
-        android:id="@+id/nickName"
-        android:layout_width="wrap_content"
-        android:layout_height="0dp"
-        android:layout_marginTop="25dp"
-        android:ems="10"
-        android:hint="Nickname"
-        android:inputType="textPersonName"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/scanGameID" />
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
-    <EditText
-        android:id="@+id/joinGameID"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="25dp"
-        android:ems="10"
-        android:hint="Game ID"
-        android:inputType="textPersonName"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        <android.support.constraint.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
 
-    <Button
-        android:id="@+id/joinGame"
-        android:layout_width="wrap_content"
-        android:layout_height="0dp"
-        android:layout_marginTop="25dp"
-        android:background="#3366CC"
-        android:text="Join Game"
-        android:textColor="@android:color/white"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/nickName" />
+            <EditText
+                android:id="@+id/nickName"
+                android:layout_width="wrap_content"
+                android:layout_height="0dp"
+                android:layout_marginTop="25dp"
+                android:ems="10"
+                android:hint="Nickname"
+                android:inputType="textPersonName"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/scanGameID" />
 
-    <Button
-        android:id="@+id/switchToCreateGame"
-        android:layout_width="wrap_content"
-        android:layout_height="0dp"
-        android:layout_marginTop="50dp"
-        android:text="Create Game"
-        android:background="#3366CC"
-        android:textColor="@android:color/white"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/joinGame" />
+            <EditText
+                android:id="@+id/joinGameID"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="25dp"
+                android:ems="10"
+                android:hint="Game ID"
+                android:inputType="textPersonName"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
-    <Button
-        android:id="@+id/scanGameID"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:layout_marginBottom="10dp"
-        android:background="#3366CC"
-        android:text="Scan Game ID"
-        android:textColor="@android:color/white"
-        app:layout_constraintBottom_toTopOf="@+id/nickName"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/joinGameID" />
+            <Button
+                android:id="@+id/joinGame"
+                android:layout_width="wrap_content"
+                android:layout_height="0dp"
+                android:layout_marginTop="25dp"
+                android:background="#3366CC"
+                android:text="Join Game"
+                android:textColor="@android:color/white"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/password" />
 
+            <Button
+                android:id="@+id/switchToCreateGame"
+                android:layout_width="wrap_content"
+                android:layout_height="0dp"
+                android:layout_marginTop="50dp"
+                android:background="#3366CC"
+                android:text="Create Game"
+                android:textColor="@android:color/white"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/joinGame" />
+
+            <Button
+                android:id="@+id/scanGameID"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="10dp"
+                android:background="#3366CC"
+                android:text="Scan Game ID"
+                android:textColor="@android:color/white"
+                app:layout_constraintBottom_toTopOf="@+id/nickName"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/joinGameID" />
+
+            <EditText
+                android:id="@+id/password"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="25dp"
+                android:ems="10"
+                android:hint="Password"
+                android:inputType="textPassword"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/nickName" />
+        </android.support.constraint.ConstraintLayout>
+    </ScrollView>
 
 </android.support.constraint.ConstraintLayout>

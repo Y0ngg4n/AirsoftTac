@@ -186,7 +186,6 @@ public class RecyclerViewTeamListAdapter extends RecyclerView.Adapter<RecyclerVi
                             }
                             final AssignRadioChannelDialogFragment assignRadioChannelDialogFragment = AssignRadioChannelDialogFragment.newInstance("Assign Radio Channel", teamData, teamFragment);
                             assignRadioChannelDialogFragment.show(fragmentManager, "assign_team_marker");
-
                         });
 
 

@@ -17,7 +17,7 @@
         <item
             android:id="@+id/settings_show_not_assigned"
             android:orderInCategory="100"
-            android:title="Show not only assigned"
+            android:title="Show only unassigned"
             app:showAsAction="never" />
     </group>
 </menu>

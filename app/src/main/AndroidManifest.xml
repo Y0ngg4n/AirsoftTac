@@ -24,18 +24,22 @@
         <activity
             android:name=".Activitys.MainActivity"
             android:label=""
+            android:configChanges="keyboardHidden|orientation|screenSize"
             android:theme="@style/AppTheme.NoActionBar"></activity>
         <activity
             android:name=".Activitys.JoinGameActivity"
             android:label="Join or Create Game"
+            android:configChanges="keyboardHidden|orientation|screenSize"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".Activitys.CreateGameActivity"
             android:label="Create Game"
+            android:configChanges="keyboardHidden|orientation|screenSize"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".Activitys.LoginActivity"
             android:label="Login"
+            android:configChanges="keyboardHidden|orientation|screenSize"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="AirsoftTac" />

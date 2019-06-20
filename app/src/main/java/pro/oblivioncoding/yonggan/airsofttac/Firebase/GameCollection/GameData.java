@@ -17,7 +17,7 @@ import pro.oblivioncoding.yonggan.airsofttac.Firebase.GameCollection.User.UserDa
 
 public class GameData {
 
-    private String GameID, creatorEmail;
+    private String GameID, creatorEmail, password;
 
     private Timestamp startTime;
 
@@ -34,12 +34,13 @@ public class GameData {
 
     private ArrayList<ChatMessage> chatMessages;
 
-    public GameData(final String gameID, final String creatorEmail, final Timestamp startTime, final Timestamp endTime, final ArrayList<UserData> users) {
+    public GameData(final String gameID, final String creatorEmail, final Timestamp startTime, final Timestamp endTime, final ArrayList<UserData> users, String password) {
         GameID = gameID;
         this.creatorEmail = creatorEmail;
         this.startTime = startTime;
         this.endTime = endTime;
         this.users = users;
+        this.password = password;
     }
 
     public GameData() {
@@ -47,10 +48,12 @@ public class GameData {
 
 
     public GameData(final String gameID, final String creatorEmail, final Timestamp startTime, final Timestamp endTime,
+                    final String password,
                     final ArrayList<UserData> users, final ArrayList<FlagMarkerData> flagMarkerData,
                     final ArrayList<HQMarkerData> hqMarkerData, final ArrayList<MissionMarkerData> missionMarkerData,
                     final ArrayList<RespawnMarkerData> respawnMarkerData, final ArrayList<TacticalMarkerData> tacticalMarkerData) {
         GameID = gameID;
+        this.password = password;
         this.creatorEmail = creatorEmail;
         this.startTime = startTime;
         this.endTime = endTime;
@@ -175,6 +178,14 @@ public class GameData {
 
     public void setChatMessages(final ArrayList<ChatMessage> chatMessages) {
         this.chatMessages = chatMessages;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
 }
 

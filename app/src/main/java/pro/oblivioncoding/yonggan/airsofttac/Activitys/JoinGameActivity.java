@@ -16,6 +16,9 @@ import android.widget.Toast;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.zxing.Result;
 
+import java.nio.charset.StandardCharsets;
+
+import at.favre.lib.crypto.bcrypt.BCrypt;
 import me.dm7.barcodescanner.zxing.ZXingScannerView;
 import pro.oblivioncoding.yonggan.airsofttac.Firebase.FirebaseAuthentication;
 import pro.oblivioncoding.yonggan.airsofttac.Firebase.FirebaseDB;
@@ -41,6 +44,7 @@ public class JoinGameActivity extends AppCompatActivity implements ZXingScannerV
         });
 
         findViewById(R.id.joinGame).setOnClickListener(v -> {
+            Toast.makeText(this, "Trying to connect to Game...", Toast.LENGTH_LONG).show();
             FirebaseDB.getGames().whereEqualTo("gameID", ((EditText) findViewById(R.id.joinGameID)).getText().toString())
                     .get().addOnCompleteListener(task -> {
                 if (task.isSuccessful()) {
@@ -50,22 +54,27 @@ public class JoinGameActivity extends AppCompatActivity implements ZXingScannerV
 
                             if (documentSnapshot != null && documentSnapshot.exists()) {
                                 FirebaseDB.setGameData(documentSnapshot.toObject(GameData.class));
-                                boolean allreadyExists = false;
-                                if (FirebaseDB.getGameData().getOwnUserData(FirebaseAuthentication.getFirebaseUser().getEmail()) != null)
-                                    allreadyExists = true;
-                                if (!allreadyExists) {
-                                    FirebaseDB.getGameData().getUsers().add(new UserData(
-                                            FirebaseAuthentication.getFirebaseUser().getEmail(), false,
-                                            ((TextView) findViewById(R.id.nickName)).getText().toString()));
+                                if (BCrypt.verifyer().verify(((EditText) findViewById(R.id.password)).getText().toString().getBytes(StandardCharsets.UTF_8),
+                                        FirebaseDB.getGameData().getPassword().getBytes(StandardCharsets.UTF_8)).verified) {
+                                    boolean allreadyExists = false;
+                                    if (FirebaseDB.getGameData().getOwnUserData(FirebaseAuthentication.getFirebaseUser().getEmail()) != null)
+                                        allreadyExists = true;
+                                    if (!allreadyExists) {
+                                        FirebaseDB.getGameData().getUsers().add(new UserData(
+                                                FirebaseAuthentication.getFirebaseUser().getEmail(), false,
+                                                ((TextView) findViewById(R.id.nickName)).getText().toString()));
 
+                                    } else {
+                                        FirebaseDB.getGameData().getOwnUserData(FirebaseAuthentication.getFirebaseUser().getEmail())
+                                                .setNickname(((TextView) findViewById(R.id.nickName)).getText().toString());
+                                    }
+                                    FirebaseDB.updateObject(documentSnapshot, "users",
+                                            FirebaseDB.getGameData().getUsers());
+                                    JoinGameActivity.this.startActivity(new Intent(JoinGameActivity.this,
+                                            MainActivity.class));
                                 } else {
-                                    FirebaseDB.getGameData().getOwnUserData(FirebaseAuthentication.getFirebaseUser().getEmail())
-                                            .setNickname(((TextView) findViewById(R.id.nickName)).getText().toString());
+                                    Toast.makeText(getApplicationContext(), "Password wrong!", Toast.LENGTH_LONG).show();
                                 }
-                                FirebaseDB.updateObject(documentSnapshot, "users",
-                                        FirebaseDB.getGameData().getUsers());
-                                JoinGameActivity.this.startActivity(new Intent(JoinGameActivity.this,
-                                        MainActivity.class));
                             }
                         } else {
                             Toast.makeText(getApplicationContext(), "Please enter Nickname!",
