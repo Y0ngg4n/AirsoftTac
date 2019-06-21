@@ -26,7 +26,7 @@
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/mapstylelist"
                 android:layout_width="match_parent"
-                android:layout_height="0dp"
+                android:layout_height="wrap_content"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/searchMapStyle" />
 
@@ -42,33 +42,6 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/mapstylelist" />
 
-            <EditText
-                android:id="@+id/searchCustomMap"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="10dp"
-                android:hint="Search Custom Map"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/addMapStyle" />
-
-            <android.support.v7.widget.RecyclerView
-                android:id="@+id/custommaplist"
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/searchCustomMap" />
-
-            <Button
-                android:id="@+id/addCustomMap"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="10dp"
-                android:layout_marginTop="10dp"
-                android:background="#3366CC"
-                android:text="Add Custom Map"
-                android:textColor="@android:color/white"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/custommaplist" />
         </android.support.constraint.ConstraintLayout>
     </ScrollView>
 

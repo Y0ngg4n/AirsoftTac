@@ -8,6 +8,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,7 +20,6 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import java.util.ArrayList;
 import java.util.List;
 
-import pro.oblivioncoding.yonggan.airsofttac.Adapter.RecyclerViewKML;
 import pro.oblivioncoding.yonggan.airsofttac.Adapter.RecyclerViewMapStyle;
 import pro.oblivioncoding.yonggan.airsofttac.Firebase.FirebaseDB;
 import pro.oblivioncoding.yonggan.airsofttac.Fragments.Dialog.AddMapStyleDialogFragment;
@@ -68,7 +68,6 @@ public class SettingsFragment extends Fragment {
         // Inflate the layout for this fragment
         rootView = inflater.inflate(R.layout.fragment_settings, container, false);
         recyclerView = rootView.findViewById(R.id.mapstylelist);
-        customMapRecyclerView = rootView.findViewById(R.id.custommaplist);
         FirebaseDB.getMapStyles().get().addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
                 if (task.getResult().size() > 0) {
@@ -83,20 +82,7 @@ public class SettingsFragment extends Fragment {
                         Toast.LENGTH_LONG).show();
             }
         });
-        FirebaseDB.getKml().get().addOnCompleteListener(task -> {
-            if (task.isSuccessful()) {
-                if (task.getResult().size() > 0) {
-                    List<DocumentSnapshot> documents = task.getResult().getDocuments();
-                    setKMLAdapter(documents);
-                } else {
-                    Toast.makeText(getContext(), "Couldn´t find Document with this Title!",
-                            Toast.LENGTH_LONG).show();
-                }
-            } else {
-                Toast.makeText(getContext(), "Couldn´t query Database!",
-                        Toast.LENGTH_LONG).show();
-            }
-        });
+
         ((EditText) rootView.findViewById(R.id.searchMapStyle)).addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -130,35 +116,6 @@ public class SettingsFragment extends Fragment {
             final AddMapStyleDialogFragment addMapStyleDialogFragment = AddMapStyleDialogFragment.newInstance("Add Map Style");
             addMapStyleDialogFragment.show(getFragmentManager(), "add_map_style");
         });
-        ((EditText) rootView.findViewById(R.id.searchCustomMap)).addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                if (!s.toString().isEmpty()) {
-                    FirebaseDB.getKml().whereEqualTo("title", s.toString().toLowerCase()).get().addOnCompleteListener(task -> {
-                        if (task.isSuccessful()) {
-                            if (task.getResult().size() > 0) {
-                                List<DocumentSnapshot> documents = task.getResult().getDocuments();
-                                setKMLAdapter(documents);
-                            } else {
-                                Toast.makeText(getContext(), "Couldn´t find Document this Title!",
-                                        Toast.LENGTH_LONG).show();
-                            }
-                        } else {
-                            Toast.makeText(getContext(), "Couldn´t query Database!",
-                                    Toast.LENGTH_LONG).show();
-                        }
-                    });
-                }
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-            }
-        });
 
         return rootView;
     }
@@ -188,16 +145,12 @@ public class SettingsFragment extends Fragment {
     }
 
     private void setAdapter(final List<DocumentSnapshot> mapStyles) {
+        Log.i("KML", "MapStyle");
         final RecyclerViewMapStyle recyclerViewMapStyle = new RecyclerViewMapStyle(new ArrayList<DocumentSnapshot>(mapStyles));
         recyclerView.setAdapter(recyclerViewMapStyle);
         recyclerView.setLayoutManager(new LinearLayoutManager(rootView.getContext()));
     }
 
-    private void setKMLAdapter(final List<DocumentSnapshot> customMaps) {
-        final RecyclerViewKML recyclerViewKML = new RecyclerViewKML(new ArrayList<DocumentSnapshot>(customMaps));
-        recyclerView.setAdapter(recyclerViewKML);
-        recyclerView.setLayoutManager(new LinearLayoutManager(rootView.getContext()));
-    }
 
     /**
      * This interface must be implemented by activities that contain this

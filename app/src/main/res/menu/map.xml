@@ -20,4 +20,21 @@
             android:title="Show only unassigned"
             app:showAsAction="never" />
     </group>
+    <group
+        android:id="@+id/kmlSettings"
+        android:checkableBehavior="all">
+        <item
+            android:id="@+id/showKmlLayer"
+            android:checked="true"
+            android:orderInCategory="100"
+            android:title="Show Ground Overlays"
+            app:showAsAction="never" />
+        <item
+            android:id="@+id/showHeatMap"
+            android:checked="true"
+            android:orderInCategory="100"
+            android:title="Show Heatmap"
+            app:showAsAction="never" />
+    </group>
+
 </menu>

@@ -18,7 +18,7 @@ import pro.oblivioncoding.yonggan.airsofttac.R;
 
 public class RecyclerViewMapStyle extends RecyclerView.Adapter<RecyclerViewMapStyle.ViewHolder> {
 
-    ArrayList<DocumentSnapshot> mapStyleData;
+    private ArrayList<DocumentSnapshot> mapStyleData;
 
     public RecyclerViewMapStyle(final ArrayList<DocumentSnapshot> mapStyleData) {
         this.mapStyleData = mapStyleData;

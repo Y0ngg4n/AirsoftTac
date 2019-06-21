@@ -27,15 +27,29 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+import com.google.android.gms.maps.model.GroundOverlay;
+import com.google.android.gms.maps.model.GroundOverlayOptions;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MapStyleOptions;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
+import com.google.android.gms.maps.model.TileOverlayOptions;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.maps.android.clustering.ClusterManager;
+import com.google.maps.android.data.kml.KmlGroundOverlay;
+import com.google.maps.android.data.kml.KmlLayer;
+import com.google.maps.android.data.kml.KmlPlacemark;
+import com.google.maps.android.heatmaps.HeatmapTileProvider;
 
+import org.xmlpull.v1.XmlPullParserException;
+
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -50,10 +64,12 @@ import pro.oblivioncoding.yonggan.airsofttac.Firebase.GameCollection.Marker.Mark
 import pro.oblivioncoding.yonggan.airsofttac.Firebase.GameCollection.Marker.MarkerTypes.TacticalMarkerData;
 import pro.oblivioncoding.yonggan.airsofttac.Firebase.GameCollection.Teams.TeamData;
 import pro.oblivioncoding.yonggan.airsofttac.Firebase.GameCollection.User.UserData;
+import pro.oblivioncoding.yonggan.airsofttac.Firebase.KMLCollection.KMLData;
 import pro.oblivioncoding.yonggan.airsofttac.Fragments.Dialog.OrgaAddMarkerDialogFragment;
 import pro.oblivioncoding.yonggan.airsofttac.InfoWindowAdapter.CustomMarkerInfoWindowAdapter;
 import pro.oblivioncoding.yonggan.airsofttac.InfoWindowAdapter.CustomMarkerOwnInfoWindowAdapter;
 import pro.oblivioncoding.yonggan.airsofttac.InfoWindowAdapter.CustomMarkerTeamInfoWindowAdapter;
+import pro.oblivioncoding.yonggan.airsofttac.MapUtils.ClusterMarkerItem;
 import pro.oblivioncoding.yonggan.airsofttac.R;
 
 public class MapFragment extends Fragment implements OnMapReadyCallback {
@@ -88,9 +104,16 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
     private HashMap<Marker, UserData> userMarkerDataHashMap = new HashMap<>();
     private HashMap<UserData, Polyline> userMarkerPolyline = new HashMap<>();
 
+    public boolean showKmlLayer = true, showHeatMap = false;
+    private KmlLayer kmlLayer;
+    private ArrayList<Marker> kmlMarker = new ArrayList<>();
+
     public enum ShowSettings {
         AllPlayer, ShowTeamOnly, ShowOnlyNotAssigned
     }
+
+    private ArrayList<GroundOverlay> groundOverlays = new ArrayList<>();
+    private ClusterManager<ClusterMarkerItem> clusterManager;
 
     @NonNull
     public static MapFragment newInstance() {
@@ -443,6 +466,9 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
     public void setMarker() {
         if (googleMap != null) {
             googleMap.clear();
+            addKmlLayer();
+            showHeatMap();
+            setClusterItems();
             setAllPositionMarker();
 
             setAlTacticalMarker();
@@ -638,6 +664,9 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
             googleMap.setMapStyle(mapStyleOptions);
         }
 
+        addKmlLayer();
+        setClusterManager();
+
         googleMap.setOnMarkerClickListener(marker ->
         {
             if (userMarkerDataHashMap.containsKey(marker)) {
@@ -701,6 +730,8 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
 
         googleMap.setOnCameraIdleListener(() -> {
             scaleView.update(googleMap.getCameraPosition().zoom, googleMap.getCameraPosition().target.latitude);
+            if (clusterManager != null)
+                clusterManager.onCameraIdle();
         });
 
         googleMap.setOnCameraMoveStartedListener(i -> {
@@ -883,5 +914,94 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
             swapFlagfb.hide();
         }
     }
-}
 
+    public void addKmlLayer() {
+        //TODO: Fix removing of KML Layer after Seconds
+        if (googleMap != null) {
+            if (kmlLayer == null) {
+                FirebaseDB.getKml().whereEqualTo("title", FirebaseDB.getGameData().getKmlTitle()).get().addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        if (task.getResult().size() > 0) {
+                            try {
+                                kmlLayer = new KmlLayer(googleMap, new ByteArrayInputStream(task.getResult().toObjects(KMLData.class).get(0).getKml().getBytes(StandardCharsets.UTF_8)),
+                                        getActivity().getApplicationContext());
+                                setKmlLayer();
+                            } catch (XmlPullParserException e) {
+                                Toast.makeText(getContext(), "Couldn´t parse KML Data!",
+                                        Toast.LENGTH_LONG).show();
+                            } catch (IOException e) {
+                                Toast.makeText(getContext(), "Couldn´t get inputstream from KML Data!",
+                                        Toast.LENGTH_LONG).show();
+                            }
+                        } else {
+                            Toast.makeText(getContext(), "Couldn´t get KML Data!",
+                                    Toast.LENGTH_LONG).show();
+                        }
+                    } else {
+                        Toast.makeText(getContext(), "Couldn´t query Database!",
+                                Toast.LENGTH_LONG).show();
+                    }
+                });
+            } else
+                setKmlLayer();
+        }
+    }
+
+    private void setKmlLayer() {
+        if (showKmlLayer) {
+            try {
+                if (!kmlLayer.isLayerOnMap()) {
+                    kmlLayer.addLayerToMap();
+                }
+
+                groundOverlays.clear();
+                kmlMarker.clear();
+
+                for (KmlGroundOverlay kmlGroundOverlay : kmlLayer.getGroundOverlays()) {
+                    groundOverlays.add(googleMap.addGroundOverlay(new GroundOverlayOptions()
+                            .positionFromBounds(kmlGroundOverlay.getLatLngBox())));
+                }
+
+                for (KmlPlacemark kmlPlacemark : kmlLayer.getPlacemarks()) {
+                    kmlMarker.add(googleMap.addMarker(kmlPlacemark.getMarkerOptions()));
+                }
+
+//                Toast.makeText(getContext(), "Added KMLLayer", Toast.LENGTH_LONG).show();
+            } catch (IOException e) {
+                Toast.makeText(getContext(), "Couldn´t parse KML Data!",
+                        Toast.LENGTH_LONG).show();
+            } catch (XmlPullParserException e) {
+                Toast.makeText(getContext(), "Couldn´t get inputstream from KML Data!",
+                        Toast.LENGTH_LONG).show();
+            }
+        }
+    }
+
+    private void showHeatMap() {
+        if (showHeatMap) {
+            ArrayList<LatLng> latLngArrayList = new ArrayList<>();
+            for (Marker marker : userMarkerDataHashMap.keySet()) {
+                latLngArrayList.add(marker.getPosition());
+            }
+            googleMap.addTileOverlay(new TileOverlayOptions().tileProvider(
+                    new HeatmapTileProvider.Builder().data(latLngArrayList).build()));
+        }
+    }
+
+    private void setClusterManager() {
+        if (googleMap != null) {
+            clusterManager = new ClusterManager<ClusterMarkerItem>(getContext(), googleMap);
+            setClusterItems();
+        }
+    }
+
+    private void setClusterItems() {
+        if (clusterManager != null) {
+            for (Marker marker : userMarkerDataHashMap.keySet()) {
+                ClusterMarkerItem clusterMarkerItem = new ClusterMarkerItem(marker.getPosition().latitude,
+                        marker.getPosition().longitude);
+                clusterManager.addItem(clusterMarkerItem);
+            }
+        }
+    }
+}

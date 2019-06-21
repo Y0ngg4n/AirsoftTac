@@ -63,7 +63,7 @@ public class MainActivity extends AppCompatActivity
         return locationManager;
     }
 
-    private static long updateTime = 10000;
+    private static long updateTime = 60000;
     private static float minDistance = 5;
 
     public static float getUpdateTime() {
@@ -157,6 +157,11 @@ public class MainActivity extends AppCompatActivity
         startService(new Intent(getApplicationContext(), googleLocationService.getClass()));
 
 
+    }
+
+    @Override
+    public void onUserInteraction() {
+        if (mapFragment != null) mapFragment.addKmlLayer();
     }
 
     public void queryUpdateData() {
@@ -268,7 +273,25 @@ public class MainActivity extends AppCompatActivity
                 item.setChecked(true);
                 teamFragment.showSettings = TeamFragment.ShowSettings.ShowOnlyNotAssigned;
                 break;
+            case R.id.showKmlLayer:
+                if (!mapFragment.showKmlLayer) {
+                    item.setChecked(true);
+                    mapFragment.showKmlLayer = true;
+                } else {
+                    item.setChecked(false);
+                    mapFragment.showKmlLayer = false;
+                }
+                break;
+            case R.id.showHeatMap:
+                if (!mapFragment.showHeatMap) {
+                    item.setChecked(true);
+                    mapFragment.showHeatMap = true;
+                } else {
+                    item.setChecked(false);
+                    mapFragment.showHeatMap = false;
+                }
         }
+
         mapFragment.setMarker();
         if (teamFragment.getRecyclerView() != null && FirebaseDB.getGameData().getTeams() != null)
             teamFragment.setRecyclerView(FirebaseDB.getGameData().getTeams(), teamFragment.getRecyclerView());
@@ -328,6 +351,5 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void onFragmentInteraction(final Uri uri) {
-
     }
 }

@@ -17,7 +17,7 @@ import pro.oblivioncoding.yonggan.airsofttac.Firebase.GameCollection.User.UserDa
 
 public class GameData {
 
-    private String GameID, creatorEmail, password;
+    private String GameID, creatorEmail, password, kmlTitle;
 
     private Timestamp startTime;
 
@@ -34,13 +34,14 @@ public class GameData {
 
     private ArrayList<ChatMessage> chatMessages;
 
-    public GameData(final String gameID, final String creatorEmail, final Timestamp startTime, final Timestamp endTime, final ArrayList<UserData> users, String password) {
+    public GameData(final String gameID, final String creatorEmail, final Timestamp startTime, final Timestamp endTime, final ArrayList<UserData> users, String password, String kmlTitle) {
         GameID = gameID;
         this.creatorEmail = creatorEmail;
         this.startTime = startTime;
         this.endTime = endTime;
         this.users = users;
         this.password = password;
+        this.kmlTitle = kmlTitle;
     }
 
     public GameData() {
@@ -48,7 +49,7 @@ public class GameData {
 
 
     public GameData(final String gameID, final String creatorEmail, final Timestamp startTime, final Timestamp endTime,
-                    final String password,
+                    final String password, final String kmlTitle,
                     final ArrayList<UserData> users, final ArrayList<FlagMarkerData> flagMarkerData,
                     final ArrayList<HQMarkerData> hqMarkerData, final ArrayList<MissionMarkerData> missionMarkerData,
                     final ArrayList<RespawnMarkerData> respawnMarkerData, final ArrayList<TacticalMarkerData> tacticalMarkerData) {
@@ -58,6 +59,7 @@ public class GameData {
         this.startTime = startTime;
         this.endTime = endTime;
         this.users = users;
+        this.kmlTitle = kmlTitle;
         this.flagMarkerData = flagMarkerData;
         this.hqMarkerData = hqMarkerData;
         this.missionMarkerData = missionMarkerData;
@@ -186,6 +188,14 @@ public class GameData {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public String getKmlTitle() {
+        return kmlTitle;
+    }
+
+    public void setKmlTitle(String kmlTitle) {
+        this.kmlTitle = kmlTitle;
     }
 }
 

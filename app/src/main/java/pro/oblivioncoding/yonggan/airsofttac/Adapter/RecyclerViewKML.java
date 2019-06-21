@@ -12,17 +12,19 @@ import com.google.firebase.firestore.DocumentSnapshot;
 
 import java.util.ArrayList;
 
+import pro.oblivioncoding.yonggan.airsofttac.Activitys.CreateGameActivity;
 import pro.oblivioncoding.yonggan.airsofttac.Firebase.KMLCollection.KMLData;
-import pro.oblivioncoding.yonggan.airsofttac.Fragments.MapFragment;
 import pro.oblivioncoding.yonggan.airsofttac.R;
 
 public class RecyclerViewKML extends RecyclerView.Adapter<RecyclerViewKML.ViewHolder> {
 
 
-    ArrayList<DocumentSnapshot> customMap;
+    private ArrayList<DocumentSnapshot> customMap;
+    private CreateGameActivity createGameActivity;
 
-    public RecyclerViewKML(final ArrayList<DocumentSnapshot> customMap) {
+    public RecyclerViewKML(final ArrayList<DocumentSnapshot> customMap, CreateGameActivity createGameActivity) {
         this.customMap = customMap;
+        this.createGameActivity = createGameActivity;
     }
 
     @NonNull
@@ -38,7 +40,7 @@ public class RecyclerViewKML extends RecyclerView.Adapter<RecyclerViewKML.ViewHo
         KMLData kmlData = this.customMap.get(i).toObject(KMLData.class);
         viewHolder.title.setText(kmlData.getTitle());
         viewHolder.applyButton.setOnClickListener(v -> {
-            MapFragment.setMapStyle(kmlData.getKml());
+            ((TextView) createGameActivity.findViewById(R.id.kmlTitleLabel)).setText(kmlData.getTitle());
         });
     }
 

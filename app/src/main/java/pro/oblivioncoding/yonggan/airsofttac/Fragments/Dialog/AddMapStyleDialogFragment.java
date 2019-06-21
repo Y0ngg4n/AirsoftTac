@@ -36,6 +36,7 @@ public class AddMapStyleDialogFragment extends DialogFragment {
                     ((EditText) rootView.findViewById(R.id.mapstyletitletext)).getText().toString(),
                     ((EditText) rootView.findViewById(R.id.jsonMapStyle)).getText().toString()
             ));
+            getFragmentManager().beginTransaction().remove(this).commit();
         });
         return rootView;
     }

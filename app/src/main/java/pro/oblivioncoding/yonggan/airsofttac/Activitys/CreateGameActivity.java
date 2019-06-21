@@ -25,9 +25,13 @@ import pro.oblivioncoding.yonggan.airsofttac.Firebase.FirebaseAuthentication;
 import pro.oblivioncoding.yonggan.airsofttac.Firebase.FirebaseDB;
 import pro.oblivioncoding.yonggan.airsofttac.Firebase.GameCollection.GameData;
 import pro.oblivioncoding.yonggan.airsofttac.Firebase.GameCollection.User.UserData;
+import pro.oblivioncoding.yonggan.airsofttac.Fragments.Dialog.AddCustomMapDialogFragment;
+import pro.oblivioncoding.yonggan.airsofttac.Fragments.Dialog.AssignKMLDialogFragment;
 import pro.oblivioncoding.yonggan.airsofttac.R;
 
 public class CreateGameActivity extends AppCompatActivity {
+
+    private String kmlTitle;
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
@@ -75,7 +79,7 @@ public class CreateGameActivity extends AppCompatActivity {
             if (task.isSuccessful()) {
                 if (task == null || task.getResult().size() <= 0) {
                     (findViewById(R.id.createGame)).setOnClickListener(v -> {
-                        Toast.makeText(this, "Trying to create Game...", Toast.LENGTH_LONG);
+                        Toast.makeText(this, "Trying to create Game...", Toast.LENGTH_LONG).show();
                         final GameData gameData = createGame();
                         writeGameData(gameData);
                         FirebaseDB.setGameData(gameData);
@@ -91,6 +95,16 @@ public class CreateGameActivity extends AppCompatActivity {
                         Toast.LENGTH_LONG).show();
             }
         });
+
+        findViewById(R.id.createKML).setOnClickListener(v -> {
+            final AddCustomMapDialogFragment addCustomMapDialogFragment = AddCustomMapDialogFragment.newInstance("new Custom Map");
+            addCustomMapDialogFragment.show(getSupportFragmentManager(), "add_custom_map");
+        });
+
+        findViewById(R.id.selectKML).setOnClickListener(v -> {
+            final AssignKMLDialogFragment assignKMLDialogFragment = AssignKMLDialogFragment.newInstance("Assign KML", this);
+            assignKMLDialogFragment.show(getSupportFragmentManager(), "assign_custom_map");
+        });
     }
 
     private GameData createGame() {
@@ -104,12 +118,15 @@ public class CreateGameActivity extends AppCompatActivity {
             durationDate = new Date(startTime.getTime() + durationDate.getTime());
             final ArrayList<UserData> userData = new ArrayList<UserData>();
             userData.add(new UserData(FirebaseAuthentication.getFirebaseUser().getEmail(),
-                    true));
+                    true, ((EditText) findViewById(R.id.nickNameField)).getText().toString()));
+            String kmlTitle = ((TextView) findViewById(R.id.kmlTitleLabel)).getText().toString();
+            if (kmlTitle == null) kmlTitle = "";
             return new GameData(((EditText) findViewById(R.id.gameID)).getText().toString(),
                     FirebaseAuthentication.getFirebaseUser().getEmail(),
                     new Timestamp(startTime),
                     new Timestamp(durationDate),
-                    userData, BCrypt.withDefaults().hashToString(12, ((EditText) findViewById(R.id.passwordField)).getText().toString().toCharArray()));
+                    userData, BCrypt.withDefaults().hashToString(12, ((EditText) findViewById(R.id.passwordField)).getText().toString().toCharArray()),
+                    kmlTitle);
         } catch (final ParseException e) {
             Log.i("CreateGame", "Could not parse Date");
             Toast.makeText(getApplicationContext(), "Could not parse Date", Toast.LENGTH_LONG).show();

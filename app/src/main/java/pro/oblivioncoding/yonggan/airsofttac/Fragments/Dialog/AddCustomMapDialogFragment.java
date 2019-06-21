@@ -8,9 +8,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import pro.oblivioncoding.yonggan.airsofttac.Firebase.FirebaseDB;
-import pro.oblivioncoding.yonggan.airsofttac.Firebase.MapStyleCollection.MapStyleData;
+import pro.oblivioncoding.yonggan.airsofttac.Firebase.KMLCollection.KMLData;
 import pro.oblivioncoding.yonggan.airsofttac.R;
 
 public class AddCustomMapDialogFragment extends DialogFragment {
@@ -32,10 +33,22 @@ public class AddCustomMapDialogFragment extends DialogFragment {
                              final Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.add_custom_map_dialog, container, false);
         rootView.findViewById(R.id.addCustomMapButton).setOnClickListener(v -> {
-            FirebaseDB.getMapStyles().add(new MapStyleData(
-                    ((EditText) rootView.findViewById(R.id.customMapTitletext)).getText().toString(),
-                    ((EditText) rootView.findViewById(R.id.customMap)).getText().toString()
-            ));
+            String title = ((EditText) rootView.findViewById(R.id.customMapTitletext)).getText().toString();
+            FirebaseDB.getKml().whereEqualTo("title", title).get().addOnCompleteListener(task -> {
+                if (task.isSuccessful()) {
+                    if (task.getResult().size() > 0) {
+                        Toast.makeText(getContext(), "Title already exists", Toast.LENGTH_LONG).show();
+                    } else {
+                        FirebaseDB.getKml().add(new KMLData(title,
+                                ((EditText) rootView.findViewById(R.id.customMap)).getText().toString()));
+                        getFragmentManager().beginTransaction().remove(this).commit();
+                    }
+                } else {
+                    Toast.makeText(getContext(), "Couldn´t query Database!",
+                            Toast.LENGTH_LONG).show();
+                }
+            });
+
         });
         return rootView;
     }
