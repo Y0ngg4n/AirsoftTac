@@ -3,11 +3,6 @@ package pro.oblivioncoding.yonggan.airsofttac.Fragments;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
@@ -15,8 +10,19 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
+import com.google.android.gms.ads.AdListener;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.InterstitialAd;
+
 import java.util.ArrayList;
 
+import pro.oblivioncoding.yonggan.airsofttac.AdMob.AdMobIds;
 import pro.oblivioncoding.yonggan.airsofttac.Adapter.RecyclerViewPlayerListAdapter;
 import pro.oblivioncoding.yonggan.airsofttac.Firebase.FirebaseDB;
 import pro.oblivioncoding.yonggan.airsofttac.Firebase.GameCollection.User.UserData;
@@ -67,7 +73,7 @@ public class PlayerFragment extends Fragment {
             }
 
             @Override
-            public void onTextChanged(final CharSequence s, final int start, final int before, final int count) {
+            public void onTextChanged(@NonNull final CharSequence s, final int start, final int before, final int count) {
                 ArrayList<UserData> userDataArrayList = FirebaseDB.getGameData().getUsers();
                 if (!s.toString().isEmpty()) {
                     userDataArrayList = new ArrayList<>();
@@ -86,6 +92,18 @@ public class PlayerFragment extends Fragment {
             }
         });
         setRecyclerView(FirebaseDB.getGameData().getUsers(), recyclerView);
+
+        final InterstitialAd interstitialAd = new InterstitialAd(getContext());
+        interstitialAd.setAdUnitId(AdMobIds.InterstialAll15Min);
+        interstitialAd.setAdListener(new AdListener() {
+            @Override
+            public void onAdLoaded() {
+                interstitialAd.show();
+            }
+
+        });
+        interstitialAd.loadAd(new AdRequest.Builder().build());
+
         return rootView;
     }
 
@@ -112,6 +130,12 @@ public class PlayerFragment extends Fragment {
         mListener = null;
     }
 
+    private void setRecyclerView(final ArrayList<UserData> userData, final RecyclerView recyclerView) {
+        final RecyclerViewPlayerListAdapter recyclerViewPlayerListAdapter = new RecyclerViewPlayerListAdapter(userData, rootView.getContext(), this);
+        recyclerView.setAdapter(recyclerViewPlayerListAdapter);
+        recyclerView.setLayoutManager(new LinearLayoutManager(rootView.getContext()));
+    }
+
     /**
      * This interface must be implemented by activities that contain this
      * fragment to allow an interaction in this fragment to be communicated
@@ -125,11 +149,5 @@ public class PlayerFragment extends Fragment {
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
-    }
-
-    private void setRecyclerView(final ArrayList<UserData> userData, final RecyclerView recyclerView) {
-        final RecyclerViewPlayerListAdapter recyclerViewPlayerListAdapter = new RecyclerViewPlayerListAdapter(userData, rootView.getContext(), this);
-        recyclerView.setAdapter(recyclerViewPlayerListAdapter);
-        recyclerView.setLayoutManager(new LinearLayoutManager(rootView.getContext()));
     }
 }

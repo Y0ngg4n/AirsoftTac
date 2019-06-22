@@ -1,24 +1,28 @@
 package pro.oblivioncoding.yonggan.airsofttac.MapUtils;
 
+import androidx.annotation.NonNull;
+
 import com.google.android.gms.maps.model.LatLng;
 import com.google.maps.android.clustering.ClusterItem;
 
 public class ClusterMarkerItem implements ClusterItem {
 
+    @NonNull
     private final LatLng mPosition;
     private String mTitle;
     private String mSnippet;
 
-    public ClusterMarkerItem(double lat, double lng) {
+    public ClusterMarkerItem(final double lat, final double lng) {
         mPosition = new LatLng(lat, lng);
     }
 
-    public ClusterMarkerItem(double lat, double lng, String title, String snippet) {
+    public ClusterMarkerItem(final double lat, final double lng, final String title, final String snippet) {
         mPosition = new LatLng(lat, lng);
         mTitle = title;
         mSnippet = snippet;
     }
 
+    @NonNull
     @Override
     public LatLng getPosition() {
         return mPosition;

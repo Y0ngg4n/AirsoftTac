@@ -9,29 +9,35 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.design.widget.NavigationView;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
-import android.support.v4.content.ContextCompat;
-import android.support.v4.view.GravityCompat;
-import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBarDrawerToggle;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBarDrawerToggle;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
+import androidx.core.view.GravityCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
+
+import com.google.android.gms.ads.AdListener;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.InterstitialAd;
+import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.firestore.DocumentSnapshot;
 
+import pro.oblivioncoding.yonggan.airsofttac.AdMob.AdMobIds;
 import pro.oblivioncoding.yonggan.airsofttac.Firebase.FirebaseAuthentication;
 import pro.oblivioncoding.yonggan.airsofttac.Firebase.FirebaseDB;
 import pro.oblivioncoding.yonggan.airsofttac.Firebase.GameCollection.GameData;
+import pro.oblivioncoding.yonggan.airsofttac.Fragments.BeerFragment;
 import pro.oblivioncoding.yonggan.airsofttac.Fragments.ChatFragment;
 import pro.oblivioncoding.yonggan.airsofttac.Fragments.MapFragment;
 import pro.oblivioncoding.yonggan.airsofttac.Fragments.PlayerFragment;
@@ -41,19 +47,24 @@ import pro.oblivioncoding.yonggan.airsofttac.R;
 import pro.oblivioncoding.yonggan.airsofttac.Services.GoogleLocationService;
 
 public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener, MapFragment.OnFragmentInteractionListener, PlayerFragment.OnFragmentInteractionListener, TeamFragment.OnFragmentInteractionListener, ChatFragment.OnFragmentInteractionListener, SettingsFragment.OnFragmentInteractionListener {
+        implements NavigationView.OnNavigationItemSelectedListener, MapFragment.OnFragmentInteractionListener, PlayerFragment.OnFragmentInteractionListener, TeamFragment.OnFragmentInteractionListener, ChatFragment.OnFragmentInteractionListener, SettingsFragment.OnFragmentInteractionListener, BeerFragment.OnFragmentInteractionListener {
 
+    private static MainActivity instance;
+    private static LocationManager locationManager;
+    private static LocationListener locationListener;
+    private static long updateTime = 60000;
+    private static float minDistance = 5;
     private Fragment currentFragment;
     private MapFragment mapFragment;
     private PlayerFragment playerFragment;
     private ChatFragment chatFragment;
     private SettingsFragment settingsFragment;
-    private static MainActivity instance;
-
-    private static LocationManager locationManager;
-    private static LocationListener locationListener;
+    private BeerFragment beerFragment;
     private Criteria locationManagerCriteria;
     private TeamFragment teamFragment;
+    private Menu menu;
+    @NonNull
+    private GoogleLocationService googleLocationService = new GoogleLocationService();
 
     public static LocationListener getLocationListener() {
         return locationListener;
@@ -63,9 +74,6 @@ public class MainActivity extends AppCompatActivity
         return locationManager;
     }
 
-    private static long updateTime = 60000;
-    private static float minDistance = 5;
-
     public static float getUpdateTime() {
         return updateTime;
     }
@@ -74,14 +82,9 @@ public class MainActivity extends AppCompatActivity
         return minDistance;
     }
 
-    private Menu menu;
-
     public static MainActivity getInstance() {
         return instance;
     }
-
-    @NonNull
-    private GoogleLocationService googleLocationService = new GoogleLocationService();
 
     @Override
     public void onRequestPermissionsResult(final int requestCode, @NonNull final String[] permissions, @NonNull final int[] grantResults) {
@@ -120,6 +123,7 @@ public class MainActivity extends AppCompatActivity
         teamFragment = new TeamFragment();
         chatFragment = new ChatFragment();
         settingsFragment = new SettingsFragment();
+//        beerFragment = new BeerFragment();
 
         final FragmentManager fragmentManager = getSupportFragmentManager();
 
@@ -130,11 +134,13 @@ public class MainActivity extends AppCompatActivity
         fragmentTransaction.add(R.id.content_main, teamFragment);
         fragmentTransaction.add(R.id.content_main, chatFragment);
         fragmentTransaction.add(R.id.content_main, settingsFragment);
+//        fragmentTransaction.add(R.id.content_main, beerFragment);
 
         fragmentTransaction.detach(playerFragment);
         fragmentTransaction.detach(teamFragment);
         fragmentTransaction.detach(chatFragment);
         fragmentTransaction.detach(settingsFragment);
+//        fragmentTransaction.detach(beerFragment);
         fragmentTransaction.commit();
 
         currentFragment = mapFragment;
@@ -156,6 +162,16 @@ public class MainActivity extends AppCompatActivity
 
         startService(new Intent(getApplicationContext(), googleLocationService.getClass()));
 
+        final InterstitialAd interstitialAd = new InterstitialAd(getApplicationContext());
+        interstitialAd.setAdUnitId(AdMobIds.InterstialAll15Min);
+        interstitialAd.setAdListener(new AdListener() {
+            @Override
+            public void onAdLoaded() {
+                interstitialAd.show();
+            }
+
+        });
+        interstitialAd.loadAd(new AdRequest.Builder().build());
 
     }
 
@@ -211,7 +227,7 @@ public class MainActivity extends AppCompatActivity
         });
     }
 
-    public void updateData(final DocumentSnapshot documentSnapshot) {
+    public void updateData(@NonNull final DocumentSnapshot documentSnapshot) {
         Log.d("UpdateDB", "Current data: " + documentSnapshot.getData());
         FirebaseDB.setGameData(documentSnapshot.toObject(GameData.class));
         mapFragment.setMarker();
@@ -341,6 +357,12 @@ public class MainActivity extends AppCompatActivity
             fragmentTransaction.attach(settingsFragment);
             currentFragment = settingsFragment;
         }
+//        else if(id == R.id.nav_beer){
+//            if(menu != null)
+//                getMenuInflater().inflate(R.menu.main, menu);
+//            fragmentTransaction.attach(beerFragment);
+//            currentFragment = beerFragment;
+//        }
 
         fragmentTransaction.commit();
         queryUpdateData();

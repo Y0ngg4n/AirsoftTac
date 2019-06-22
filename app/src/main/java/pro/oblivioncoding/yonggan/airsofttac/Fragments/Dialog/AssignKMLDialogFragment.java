@@ -1,11 +1,6 @@
 package pro.oblivioncoding.yonggan.airsofttac.Fragments.Dialog;
 
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.v4.app.DialogFragment;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -14,6 +9,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.DialogFragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.firebase.firestore.DocumentSnapshot;
 
@@ -37,7 +38,7 @@ public class AssignKMLDialogFragment extends DialogFragment {
         // Use `newInstance` instead as shown below
     }
 
-    public static AssignKMLDialogFragment newInstance(final String title, CreateGameActivity pCreateGameActivity) {
+    public static AssignKMLDialogFragment newInstance(final String title, final CreateGameActivity pCreateGameActivity) {
         createGameActivity = pCreateGameActivity;
         return new AssignKMLDialogFragment();
     }
@@ -50,7 +51,7 @@ public class AssignKMLDialogFragment extends DialogFragment {
         FirebaseDB.getKml().get().addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
                 if (task.getResult().size() > 0) {
-                    List<DocumentSnapshot> documents = task.getResult().getDocuments();
+                    final List<DocumentSnapshot> documents = task.getResult().getDocuments();
                     setKMLAdapter(documents, createGameActivity);
                 } else {
                     Toast.makeText(getContext(), "Couldn´t find Document with this Title!",
@@ -64,16 +65,16 @@ public class AssignKMLDialogFragment extends DialogFragment {
 
         ((EditText) rootView.findViewById(R.id.searchCustomMap)).addTextChangedListener(new TextWatcher() {
             @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            public void beforeTextChanged(final CharSequence s, final int start, final int count, final int after) {
             }
 
             @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
+            public void onTextChanged(@NonNull final CharSequence s, final int start, final int before, final int count) {
                 if (!s.toString().isEmpty()) {
                     FirebaseDB.getKml().whereEqualTo("title", s.toString().toLowerCase()).get().addOnCompleteListener(task -> {
                         if (task.isSuccessful()) {
                             if (task.getResult().size() > 0) {
-                                List<DocumentSnapshot> documents = task.getResult().getDocuments();
+                                final List<DocumentSnapshot> documents = task.getResult().getDocuments();
                                 setKMLAdapter(documents, createGameActivity);
                             } else {
                                 Toast.makeText(getContext(), "Couldn´t find Document this Title!",
@@ -88,7 +89,7 @@ public class AssignKMLDialogFragment extends DialogFragment {
             }
 
             @Override
-            public void afterTextChanged(Editable s) {
+            public void afterTextChanged(final Editable s) {
             }
         });
 
@@ -100,7 +101,7 @@ public class AssignKMLDialogFragment extends DialogFragment {
         super.onViewCreated(view, savedInstanceState);
     }
 
-    private void setKMLAdapter(final List<DocumentSnapshot> customMaps, CreateGameActivity createGameActivity) {
+    private void setKMLAdapter(@NonNull final List<DocumentSnapshot> customMaps, final CreateGameActivity createGameActivity) {
         Log.i("KML", "CustomMap");
         final RecyclerViewKML recyclerViewKML = new RecyclerViewKML(new ArrayList<DocumentSnapshot>(customMaps), createGameActivity);
         customMapRecyclerView.setAdapter(recyclerViewKML);

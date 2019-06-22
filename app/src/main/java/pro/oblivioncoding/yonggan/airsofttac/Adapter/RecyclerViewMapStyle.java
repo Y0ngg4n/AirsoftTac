@@ -1,12 +1,13 @@
 package pro.oblivioncoding.yonggan.airsofttac.Adapter;
 
-import android.support.annotation.NonNull;
-import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
+
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.firebase.firestore.DocumentSnapshot;
 
@@ -34,7 +35,7 @@ public class RecyclerViewMapStyle extends RecyclerView.Adapter<RecyclerViewMapSt
 
     @Override
     public void onBindViewHolder(@NonNull final RecyclerViewMapStyle.ViewHolder viewHolder, final int i) {
-        MapStyleData mapStyleData = this.mapStyleData.get(i).toObject(MapStyleData.class);
+        final MapStyleData mapStyleData = this.mapStyleData.get(i).toObject(MapStyleData.class);
         viewHolder.title.setText(mapStyleData.getTitle());
         viewHolder.applyButton.setOnClickListener(v -> {
             MapFragment.setMapStyle(mapStyleData.getJson());

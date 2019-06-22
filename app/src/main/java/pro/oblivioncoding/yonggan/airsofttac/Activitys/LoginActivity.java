@@ -2,17 +2,20 @@ package pro.oblivioncoding.yonggan.airsofttac.Activitys;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+
+import com.google.android.gms.ads.MobileAds;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
 import com.google.firebase.auth.FirebaseAuthUserCollisionException;
 import com.google.firebase.auth.FirebaseAuthWeakPasswordException;
 
+import pro.oblivioncoding.yonggan.airsofttac.AdMob.AdMobIds;
 import pro.oblivioncoding.yonggan.airsofttac.Firebase.FirebaseAuthentication;
 import pro.oblivioncoding.yonggan.airsofttac.R;
 
@@ -25,6 +28,8 @@ public class LoginActivity extends AppCompatActivity {
         final Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         FirebaseApp.initializeApp(getApplicationContext());
+        MobileAds.initialize(getApplicationContext(), AdMobIds.AdmobAppID);
+
         findViewById(R.id.login).setOnClickListener(v -> {
             final String email = ((EditText) findViewById(R.id.email)).getText().toString();
             final String password = ((EditText) findViewById(R.id.password)).getText().toString();
@@ -38,7 +43,7 @@ public class LoginActivity extends AppCompatActivity {
                         } else {
                             try {
                                 throw task.getException();
-                            } catch (FirebaseAuthUserCollisionException existEmail) {
+                            } catch (final FirebaseAuthUserCollisionException existEmail) {
                                 FirebaseAuthentication.getFirebaseAuth().signInWithEmailAndPassword(email, password)
                                         .addOnCompleteListener(this, task1 -> {
                                             if (task1.isSuccessful()) {
@@ -54,11 +59,11 @@ public class LoginActivity extends AppCompatActivity {
                                                         Toast.LENGTH_SHORT).show();
                                             }
                                         });
-                            } catch (FirebaseAuthWeakPasswordException weakPassword) {
+                            } catch (final FirebaseAuthWeakPasswordException weakPassword) {
                                 Toast.makeText(getApplicationContext(), "Password is too weak!", Toast.LENGTH_LONG).show();
-                            } catch (FirebaseAuthInvalidCredentialsException malformedEmail) {
+                            } catch (final FirebaseAuthInvalidCredentialsException malformedEmail) {
                                 Toast.makeText(getApplicationContext(), "Malformed Email!", Toast.LENGTH_LONG).show();
-                            } catch (Exception e) {
+                            } catch (final Exception e) {
                                 Log.i("LoginLogin", e.getMessage());
                             }
                         }

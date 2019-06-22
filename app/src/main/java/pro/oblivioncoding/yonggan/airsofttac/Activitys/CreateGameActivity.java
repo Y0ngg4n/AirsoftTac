@@ -4,14 +4,18 @@ import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+
+import com.google.android.gms.ads.AdListener;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.InterstitialAd;
 import com.google.firebase.Timestamp;
 
 import java.text.ParseException;
@@ -21,6 +25,7 @@ import java.util.Calendar;
 import java.util.Date;
 
 import at.favre.lib.crypto.bcrypt.BCrypt;
+import pro.oblivioncoding.yonggan.airsofttac.AdMob.AdMobIds;
 import pro.oblivioncoding.yonggan.airsofttac.Firebase.FirebaseAuthentication;
 import pro.oblivioncoding.yonggan.airsofttac.Firebase.FirebaseDB;
 import pro.oblivioncoding.yonggan.airsofttac.Firebase.GameCollection.GameData;
@@ -105,6 +110,19 @@ public class CreateGameActivity extends AppCompatActivity {
             final AssignKMLDialogFragment assignKMLDialogFragment = AssignKMLDialogFragment.newInstance("Assign KML", this);
             assignKMLDialogFragment.show(getSupportFragmentManager(), "assign_custom_map");
         });
+
+
+        final InterstitialAd interstitialAd = new InterstitialAd(this);
+        interstitialAd.setAdUnitId(AdMobIds.InterstialAll);
+        interstitialAd.setAdListener(new AdListener() {
+            @Override
+            public void onAdLoaded() {
+                interstitialAd.show();
+            }
+
+        });
+        interstitialAd.loadAd(new AdRequest.Builder().build());
+
     }
 
     private GameData createGame() {
@@ -127,8 +145,8 @@ public class CreateGameActivity extends AppCompatActivity {
                     new Timestamp(durationDate),
                     userData, BCrypt.withDefaults().hashToString(12, ((EditText) findViewById(R.id.passwordField)).getText().toString().toCharArray()),
                     kmlTitle);
-        } catch (final ParseException e) {
-            Log.i("CreateGame", "Could not parse Date");
+        } catch (@NonNull final ParseException e) {
+            Log.i("InterstialAll", "Could not parse Date");
             Toast.makeText(getApplicationContext(), "Could not parse Date", Toast.LENGTH_LONG).show();
         }
         return null;

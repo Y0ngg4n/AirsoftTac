@@ -13,11 +13,12 @@ import android.location.LocationManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.IBinder;
-import android.support.annotation.NonNull;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.core.app.ActivityCompat;
+import androidx.core.app.NotificationCompat;
 
 import com.google.firebase.firestore.DocumentReference;
 

@@ -5,7 +5,7 @@
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
-    <uses-permission android:name="android.permission.FOREGROUND_SERVICE"/>
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.INTERNET" />
 
@@ -23,32 +23,36 @@
 
         <activity
             android:name=".Activitys.MainActivity"
-            android:label=""
             android:configChanges="keyboardHidden|orientation|screenSize"
+            android:label=""
             android:theme="@style/AppTheme.NoActionBar"></activity>
         <activity
             android:name=".Activitys.JoinGameActivity"
-            android:label="Join or Create Game"
             android:configChanges="keyboardHidden|orientation|screenSize"
+            android:label="Join or Create Game"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".Activitys.CreateGameActivity"
-            android:label="Create Game"
             android:configChanges="keyboardHidden|orientation|screenSize"
+            android:label="Create Game"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".Activitys.LoginActivity"
-            android:label="Login"
             android:configChanges="keyboardHidden|orientation|screenSize"
+            android:label="Login"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="AirsoftTac" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="AIzaSyBpISd36fOhGUP2ZshBZkk0q8j0uKOnAKs"/>
+            android:value="AIzaSyBpISd36fOhGUP2ZshBZkk0q8j0uKOnAKs" />
+        <meta-data
+            android:name="com.google.android.gms.ads.APPLICATION_ID"
+            android:value="ca-app-pub-3654312013676295~6255448907" />
     </application>
 
 </manifest>

@@ -3,9 +3,6 @@ package pro.oblivioncoding.yonggan.airsofttac.Fragments;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -15,11 +12,21 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
+import com.google.android.gms.ads.AdListener;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.InterstitialAd;
 import com.google.firebase.firestore.DocumentSnapshot;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import pro.oblivioncoding.yonggan.airsofttac.AdMob.AdMobIds;
 import pro.oblivioncoding.yonggan.airsofttac.Adapter.RecyclerViewMapStyle;
 import pro.oblivioncoding.yonggan.airsofttac.Firebase.FirebaseDB;
 import pro.oblivioncoding.yonggan.airsofttac.Fragments.Dialog.AddMapStyleDialogFragment;
@@ -36,6 +43,7 @@ import pro.oblivioncoding.yonggan.airsofttac.R;
 public class SettingsFragment extends Fragment {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
+    @Nullable
     private OnFragmentInteractionListener mListener;
     private View rootView;
     private RecyclerView recyclerView;
@@ -52,26 +60,27 @@ public class SettingsFragment extends Fragment {
      * @return A new instance of fragment SettingsFragment.
      */
     // TODO: Rename and change types and number of parameters
+    @NonNull
     public static SettingsFragment newInstance() {
-        SettingsFragment fragment = new SettingsFragment();
+        final SettingsFragment fragment = new SettingsFragment();
         return fragment;
     }
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
+    public void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(@NonNull final LayoutInflater inflater, final ViewGroup container,
+                             final Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         rootView = inflater.inflate(R.layout.fragment_settings, container, false);
         recyclerView = rootView.findViewById(R.id.mapstylelist);
         FirebaseDB.getMapStyles().get().addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
                 if (task.getResult().size() > 0) {
-                    List<DocumentSnapshot> documents = task.getResult().getDocuments();
+                    final List<DocumentSnapshot> documents = task.getResult().getDocuments();
                     setAdapter(documents);
                 } else {
                     Toast.makeText(getContext(), "Couldn´t find Document with this Title!",
@@ -85,16 +94,16 @@ public class SettingsFragment extends Fragment {
 
         ((EditText) rootView.findViewById(R.id.searchMapStyle)).addTextChangedListener(new TextWatcher() {
             @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            public void beforeTextChanged(final CharSequence s, final int start, final int count, final int after) {
             }
 
             @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
+            public void onTextChanged(@NonNull final CharSequence s, final int start, final int before, final int count) {
                 if (!s.toString().isEmpty()) {
                     FirebaseDB.getMapStyles().whereEqualTo("title", s.toString().toLowerCase()).get().addOnCompleteListener(task -> {
                         if (task.isSuccessful()) {
                             if (task.getResult().size() > 0) {
-                                List<DocumentSnapshot> documents = task.getResult().getDocuments();
+                                final List<DocumentSnapshot> documents = task.getResult().getDocuments();
                                 setAdapter(documents);
                             } else {
                                 Toast.makeText(getContext(), "Couldn´t find Document this Title!",
@@ -109,7 +118,7 @@ public class SettingsFragment extends Fragment {
             }
 
             @Override
-            public void afterTextChanged(Editable s) {
+            public void afterTextChanged(final Editable s) {
             }
         });
         rootView.findViewById(R.id.addMapStyle).setOnClickListener(v -> {
@@ -117,18 +126,31 @@ public class SettingsFragment extends Fragment {
             addMapStyleDialogFragment.show(getFragmentManager(), "add_map_style");
         });
 
+
+        final InterstitialAd interstitialAd = new InterstitialAd(getContext());
+        interstitialAd.setAdUnitId(AdMobIds.InterstialAll);
+        interstitialAd.setAdListener(new AdListener() {
+            @Override
+            public void onAdLoaded() {
+                interstitialAd.show();
+            }
+
+        });
+        interstitialAd.loadAd(new AdRequest.Builder().build());
+
+
         return rootView;
     }
 
     // TODO: Rename method, update argument and hook method into UI event
-    public void onButtonPressed(Uri uri) {
+    public void onButtonPressed(final Uri uri) {
         if (mListener != null) {
             mListener.onFragmentInteraction(uri);
         }
     }
 
     @Override
-    public void onAttach(Context context) {
+    public void onAttach(final Context context) {
         super.onAttach(context);
         if (context instanceof OnFragmentInteractionListener) {
             mListener = (OnFragmentInteractionListener) context;
@@ -144,7 +166,7 @@ public class SettingsFragment extends Fragment {
         mListener = null;
     }
 
-    private void setAdapter(final List<DocumentSnapshot> mapStyles) {
+    private void setAdapter(@NonNull final List<DocumentSnapshot> mapStyles) {
         Log.i("KML", "MapStyle");
         final RecyclerViewMapStyle recyclerViewMapStyle = new RecyclerViewMapStyle(new ArrayList<DocumentSnapshot>(mapStyles));
         recyclerView.setAdapter(recyclerViewMapStyle);

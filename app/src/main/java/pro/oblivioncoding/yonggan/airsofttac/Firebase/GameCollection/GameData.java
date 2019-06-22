@@ -1,6 +1,6 @@
 package pro.oblivioncoding.yonggan.airsofttac.Firebase.GameCollection;
 
-import android.support.annotation.Nullable;
+import androidx.annotation.Nullable;
 
 import com.google.firebase.Timestamp;
 
@@ -34,7 +34,7 @@ public class GameData {
 
     private ArrayList<ChatMessage> chatMessages;
 
-    public GameData(final String gameID, final String creatorEmail, final Timestamp startTime, final Timestamp endTime, final ArrayList<UserData> users, String password, String kmlTitle) {
+    public GameData(final String gameID, final String creatorEmail, final Timestamp startTime, final Timestamp endTime, final ArrayList<UserData> users, final String password, final String kmlTitle) {
         GameID = gameID;
         this.creatorEmail = creatorEmail;
         this.startTime = startTime;
@@ -160,6 +160,10 @@ public class GameData {
         return tacticalMarkerData;
     }
 
+    public void setTacticalMarkerData(final ArrayList<TacticalMarkerData> tacticalMarkerData) {
+        this.tacticalMarkerData = tacticalMarkerData;
+    }
+
     public ArrayList<TeamData> getTeams() {
         if (teams == null) teams = new ArrayList<>();
         return teams;
@@ -167,10 +171,6 @@ public class GameData {
 
     public void setTeams(final ArrayList<TeamData> teams) {
         this.teams = teams;
-    }
-
-    public void setTacticalMarkerData(final ArrayList<TacticalMarkerData> tacticalMarkerData) {
-        this.tacticalMarkerData = tacticalMarkerData;
     }
 
     public ArrayList<ChatMessage> getChatMessages() {
@@ -186,7 +186,7 @@ public class GameData {
         return password;
     }
 
-    public void setPassword(String password) {
+    public void setPassword(final String password) {
         this.password = password;
     }
 
@@ -194,7 +194,7 @@ public class GameData {
         return kmlTitle;
     }
 
-    public void setKmlTitle(String kmlTitle) {
+    public void setKmlTitle(final String kmlTitle) {
         this.kmlTitle = kmlTitle;
     }
 }

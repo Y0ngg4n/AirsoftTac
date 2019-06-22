@@ -1,14 +1,15 @@
 package pro.oblivioncoding.yonggan.airsofttac.Adapter;
 
 import android.content.Context;
-import android.support.annotation.NonNull;
-import android.support.constraint.ConstraintLayout;
-import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Switch;
 import android.widget.TextView;
+
+import androidx.annotation.NonNull;
+import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.firebase.firestore.DocumentSnapshot;
 
@@ -54,7 +55,7 @@ public class RecyclerViewPlayerListAdapter extends RecyclerView.Adapter<Recycler
         return userDataArrayList.size();
     }
 
-    private void showAfterTime(final Switch button, final long delay) {
+    private void showAfterTime(@NonNull final Switch button, final long delay) {
         new Timer().schedule(new TimerTask() {
             @Override
             public void run() {

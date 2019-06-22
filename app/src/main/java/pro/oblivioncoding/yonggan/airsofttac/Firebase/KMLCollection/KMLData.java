@@ -7,7 +7,7 @@ public class KMLData {
     public KMLData() {
     }
 
-    public KMLData(String title, String kml) {
+    public KMLData(final String title, final String kml) {
         this.title = title;
         this.kml = kml;
     }
@@ -16,7 +16,7 @@ public class KMLData {
         return title;
     }
 
-    public void setTitle(String title) {
+    public void setTitle(final String title) {
         this.title = title;
     }
 
@@ -24,7 +24,7 @@ public class KMLData {
         return kml;
     }
 
-    public void setKml(String kml) {
+    public void setKml(final String kml) {
         this.kml = kml;
     }
 }

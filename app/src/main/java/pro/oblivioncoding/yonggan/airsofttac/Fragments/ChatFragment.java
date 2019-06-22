@@ -3,20 +3,27 @@ package pro.oblivioncoding.yonggan.airsofttac.Fragments;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
+import com.google.android.gms.ads.AdListener;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.InterstitialAd;
 import com.google.firebase.firestore.DocumentReference;
 
 import java.util.ArrayList;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import pro.oblivioncoding.yonggan.airsofttac.AdMob.AdMobIds;
 import pro.oblivioncoding.yonggan.airsofttac.Adapter.RecyclerViewChatMessage;
 import pro.oblivioncoding.yonggan.airsofttac.Firebase.FirebaseAuthentication;
 import pro.oblivioncoding.yonggan.airsofttac.Firebase.FirebaseDB;
@@ -35,6 +42,7 @@ public class ChatFragment extends Fragment {
     // TODO: Rename parameter arguments, choose names that match
 
     private static String chatChannelID;
+    @Nullable
     private OnFragmentInteractionListener mListener;
     private View rootView;
     private RecyclerView recyclerView;
@@ -50,6 +58,7 @@ public class ChatFragment extends Fragment {
      * @return A new instance of fragment ChatFragment.
      */
     // TODO: Rename and change types and number of parameters
+    @NonNull
     public static ChatFragment newInstance(final String pChatChannelID) {
         final ChatFragment fragment = new ChatFragment();
         final Bundle args = new Bundle();
@@ -64,7 +73,7 @@ public class ChatFragment extends Fragment {
     }
 
     @Override
-    public View onCreateView(final LayoutInflater inflater, final ViewGroup container,
+    public View onCreateView(@NonNull final LayoutInflater inflater, final ViewGroup container,
                              final Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         rootView = inflater.inflate(R.layout.fragment_chat, container, false);
@@ -102,6 +111,18 @@ public class ChatFragment extends Fragment {
                 }
             }
         });
+
+        final InterstitialAd interstitialAd = new InterstitialAd(getContext());
+        interstitialAd.setAdUnitId(AdMobIds.InterstialAll15Min);
+        interstitialAd.setAdListener(new AdListener() {
+            @Override
+            public void onAdLoaded() {
+                interstitialAd.show();
+            }
+
+        });
+        interstitialAd.loadAd(new AdRequest.Builder().build());
+
         return rootView;
     }
 

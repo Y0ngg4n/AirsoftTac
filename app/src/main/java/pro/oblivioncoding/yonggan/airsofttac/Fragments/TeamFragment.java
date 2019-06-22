@@ -3,10 +3,6 @@ package pro.oblivioncoding.yonggan.airsofttac.Fragments;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.v4.app.Fragment;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
@@ -14,10 +10,22 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
+import com.google.android.gms.ads.AdListener;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.InterstitialAd;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+
 import java.util.ArrayList;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import pro.oblivioncoding.yonggan.airsofttac.AdMob.AdMobIds;
 import pro.oblivioncoding.yonggan.airsofttac.Adapter.RecyclerViewTeamListAdapter;
 import pro.oblivioncoding.yonggan.airsofttac.Firebase.FirebaseAuthentication;
 import pro.oblivioncoding.yonggan.airsofttac.Firebase.FirebaseDB;
@@ -39,19 +47,20 @@ public class TeamFragment extends Fragment {
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
-
+    @NonNull
+    public TeamFragment.ShowSettings showSettings = TeamFragment.ShowSettings.AllPlayer;
     // TODO: Rename and change types of parameters
+    @Nullable
     private String mParam1;
+    @Nullable
     private String mParam2;
-
+    @Nullable
     private OnFragmentInteractionListener mListener;
     private View rootView;
-
-    public TeamFragment.ShowSettings showSettings = TeamFragment.ShowSettings.AllPlayer;
     private RecyclerView recyclerView;
 
-    public RecyclerView getRecyclerView() {
-        return recyclerView;
+    public TeamFragment() {
+        // Required empty public constructor
     }
 
     /**
@@ -63,6 +72,7 @@ public class TeamFragment extends Fragment {
      * @return A new instance of fragment TeamFragment.
      */
     // TODO: Rename and change types and number of parameters
+    @NonNull
     public static TeamFragment newInstance(final String param1, final String param2) {
         final TeamFragment fragment = new TeamFragment();
         final Bundle args = new Bundle();
@@ -72,12 +82,12 @@ public class TeamFragment extends Fragment {
         return fragment;
     }
 
-    public TeamFragment() {
-        // Required empty public constructor
+    public RecyclerView getRecyclerView() {
+        return recyclerView;
     }
 
     @Override
-    public View onCreateView(final LayoutInflater inflater, final ViewGroup container,
+    public View onCreateView(@NonNull final LayoutInflater inflater, final ViewGroup container,
                              final Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         rootView = inflater.inflate(R.layout.fragment_team, container, false);
@@ -101,14 +111,14 @@ public class TeamFragment extends Fragment {
             }
 
             @Override
-            public void onTextChanged(final CharSequence s, final int start, final int before, final int count) {
+            public void onTextChanged(@NonNull final CharSequence s, final int start, final int before, final int count) {
                 ArrayList<TeamData> teamDataArrayList = FirebaseDB.getGameData().getTeams();
                 if (!s.toString().isEmpty()) {
                     teamDataArrayList = new ArrayList<>();
                     for (final TeamData teamData : FirebaseDB.getGameData().getTeams()) {
                         if (teamData.getTeamName().toLowerCase().contains(s.toString().toLowerCase())
-                        || String.valueOf(teamData.getMinorRadioChannel()).toLowerCase().contains(s.toString().toLowerCase())
-                        || String.valueOf(teamData.getMajorRadioChannel()).toLowerCase().contains(s.toString().toLowerCase())) {
+                                || String.valueOf(teamData.getMinorRadioChannel()).toLowerCase().contains(s.toString().toLowerCase())
+                                || String.valueOf(teamData.getMajorRadioChannel()).toLowerCase().contains(s.toString().toLowerCase())) {
                             teamDataArrayList.add(teamData);
                         }
                     }
@@ -121,6 +131,18 @@ public class TeamFragment extends Fragment {
             }
         });
         setRecyclerView(FirebaseDB.getGameData().getTeams(), recyclerView);
+
+        final InterstitialAd interstitialAd = new InterstitialAd(getContext());
+        interstitialAd.setAdUnitId(AdMobIds.InterstialAll15Min);
+        interstitialAd.setAdListener(new AdListener() {
+            @Override
+            public void onAdLoaded() {
+                interstitialAd.show();
+            }
+
+        });
+        interstitialAd.loadAd(new AdRequest.Builder().build());
+
         return rootView;
     }
 
@@ -133,7 +155,7 @@ public class TeamFragment extends Fragment {
         }
     }
 
-    public void setRecyclerView(final ArrayList<TeamData> teamData, final RecyclerView recyclerView) {
+    public void setRecyclerView(@NonNull final ArrayList<TeamData> teamData, final RecyclerView recyclerView) {
         final UserData ownUserData = FirebaseDB.getGameData().getOwnUserData(FirebaseAuthentication.getFirebaseUser().getEmail());
         ArrayList<TeamData> teamDataBuffer = new ArrayList<>();
         if (showSettings.equals(ShowSettings.ShowTeamOnly)) {
@@ -182,6 +204,23 @@ public class TeamFragment extends Fragment {
         mListener = null;
     }
 
+    private void setAdapter(final ArrayList<TeamData> teamData) {
+        final RecyclerViewTeamListAdapter recyclerViewTeamListAdapter = new RecyclerViewTeamListAdapter(getFragmentManager(), teamData, rootView.getContext(), this);
+        recyclerView.setAdapter(recyclerViewTeamListAdapter);
+        recyclerView.setLayoutManager(new LinearLayoutManager(rootView.getContext()));
+    }
+
+    private void showAfterTime(@NonNull final FloatingActionButton button, final long delay) {
+        new Timer().schedule(new TimerTask() {
+            @Override
+            public void run() {
+                getActivity().runOnUiThread(() -> {
+                    button.show();
+                });
+            }
+        }, delay);
+    }
+
     public enum ShowSettings {
         AllPlayer, ShowTeamOnly, ShowOnlyNotAssigned
     }
@@ -199,23 +238,6 @@ public class TeamFragment extends Fragment {
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
-    }
-
-    private void setAdapter(final ArrayList<TeamData> teamData) {
-        final RecyclerViewTeamListAdapter recyclerViewTeamListAdapter = new RecyclerViewTeamListAdapter(getFragmentManager(), teamData, rootView.getContext(), this);
-        recyclerView.setAdapter(recyclerViewTeamListAdapter);
-        recyclerView.setLayoutManager(new LinearLayoutManager(rootView.getContext()));
-    }
-
-    private void showAfterTime(final FloatingActionButton button, final long delay) {
-        new Timer().schedule(new TimerTask() {
-            @Override
-            public void run() {
-                getActivity().runOnUiThread(() -> {
-                    button.show();
-                });
-            }
-        }, delay);
     }
 
 }

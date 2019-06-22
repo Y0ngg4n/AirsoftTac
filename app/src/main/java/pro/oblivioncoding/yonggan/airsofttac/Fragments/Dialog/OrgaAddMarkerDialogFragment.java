@@ -1,9 +1,6 @@
 package pro.oblivioncoding.yonggan.airsofttac.Fragments.Dialog;
 
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.v4.app.DialogFragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,6 +12,10 @@ import android.widget.Spinner;
 import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.DialogFragment;
 
 import com.google.firebase.firestore.DocumentSnapshot;
 
@@ -102,7 +103,7 @@ public class OrgaAddMarkerDialogFragment extends DialogFragment {
                             switch (spinner.getSelectedItemPosition()) {
                                 case 0:
                                     for (final TacticalMarkerData tacticalMarkerData : FirebaseDB.getGameData().getTacticalMarkerData()) {
-                                        if(tacticalMarkerData.getTitle().equals(title)) {
+                                        if (tacticalMarkerData.getTitle().equals(title)) {
                                             Toast.makeText(getContext(), "Title allready exists!", Toast.LENGTH_LONG).show();
                                             return;
                                         }
@@ -112,7 +113,7 @@ public class OrgaAddMarkerDialogFragment extends DialogFragment {
                                     break;
                                 case 1:
                                     for (final MissionMarkerData missionMarkerData : FirebaseDB.getGameData().getMissionMarkerData()) {
-                                        if(missionMarkerData.getTitle().equals(title)) {
+                                        if (missionMarkerData.getTitle().equals(title)) {
                                             Toast.makeText(getContext(), "Title allready exists!", Toast.LENGTH_LONG).show();
                                             return;
                                         }
@@ -123,7 +124,7 @@ public class OrgaAddMarkerDialogFragment extends DialogFragment {
                                     break;
                                 case 2:
                                     for (final RespawnMarkerData respawnMarkerData : FirebaseDB.getGameData().getRespawnMarkerData()) {
-                                        if(respawnMarkerData.getTitle().equals(title)) {
+                                        if (respawnMarkerData.getTitle().equals(title)) {
                                             Toast.makeText(getContext(), "Title allready exists!", Toast.LENGTH_LONG).show();
                                             return;
                                         }
@@ -135,7 +136,7 @@ public class OrgaAddMarkerDialogFragment extends DialogFragment {
                                     break;
                                 case 3:
                                     for (final HQMarkerData hqMarkerData : FirebaseDB.getGameData().getHqMarkerData()) {
-                                        if(hqMarkerData.getTitle().equals(title)) {
+                                        if (hqMarkerData.getTitle().equals(title)) {
                                             Toast.makeText(getContext(), "Title allready exists!", Toast.LENGTH_LONG).show();
                                             return;
                                         }
@@ -147,7 +148,7 @@ public class OrgaAddMarkerDialogFragment extends DialogFragment {
                                     break;
                                 case 4:
                                     for (final FlagMarkerData flagMarkerData : FirebaseDB.getGameData().getFlagMarkerData()) {
-                                        if(flagMarkerData.getTitle().equals(title)) {
+                                        if (flagMarkerData.getTitle().equals(title)) {
                                             Toast.makeText(getContext(), "Title allready exists!", Toast.LENGTH_LONG).show();
                                             return;
                                         }

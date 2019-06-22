@@ -7,7 +7,7 @@ public class MapStyleData {
     public MapStyleData() {
     }
 
-    public MapStyleData(String title, String json) {
+    public MapStyleData(final String title, final String json) {
         this.title = title;
         this.json = json;
     }
@@ -16,7 +16,7 @@ public class MapStyleData {
         return title;
     }
 
-    public void setTitle(String title) {
+    public void setTitle(final String title) {
         this.title = title;
     }
 
@@ -24,7 +24,7 @@ public class MapStyleData {
         return json;
     }
 
-    public void setJson(String json) {
+    public void setJson(final String json) {
         this.json = json;
     }
 }

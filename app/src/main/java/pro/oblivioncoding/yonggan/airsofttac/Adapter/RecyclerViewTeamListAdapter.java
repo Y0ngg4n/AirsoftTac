@@ -1,10 +1,6 @@
 package pro.oblivioncoding.yonggan.airsofttac.Adapter;
 
 import android.content.Context;
-import android.support.annotation.NonNull;
-import android.support.constraint.ConstraintLayout;
-import android.support.v4.app.FragmentManager;
-import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,6 +8,12 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.fragment.app.FragmentManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.firebase.firestore.DocumentSnapshot;
 
@@ -62,7 +64,7 @@ public class RecyclerViewTeamListAdapter extends RecyclerView.Adapter<RecyclerVi
         return teamDataArrayList.size();
     }
 
-    private void setButtonJointLeave(final Button button, final UserData ownUserdata, final String teamName) {
+    private void setButtonJointLeave(@NonNull final Button button, final UserData ownUserdata, @NonNull final String teamName) {
         if (ownUserdata.getTeam() == null || !teamName.equals(teamName)) {
             button.setText("Join");
         } else {
@@ -70,7 +72,7 @@ public class RecyclerViewTeamListAdapter extends RecyclerView.Adapter<RecyclerVi
         }
     }
 
-    private void toggleRadioAssignButton(final Button assignRadioChannel, final TextView teamName) {
+    private void toggleRadioAssignButton(@NonNull final Button assignRadioChannel, @NonNull final TextView teamName) {
         {
             TeamData teamData = null;
             for (final TeamData team : FirebaseDB.getGameData().getTeams()) {
@@ -88,7 +90,7 @@ public class RecyclerViewTeamListAdapter extends RecyclerView.Adapter<RecyclerVi
         }
     }
 
-    private void toggleRadioAssignButton(final Button assignRadioChannel, final TextView teamName, final TeamData teamData) {
+    private void toggleRadioAssignButton(@NonNull final Button assignRadioChannel, final TextView teamName, @Nullable final TeamData teamData) {
         {
             if (teamData != null && (teamData.getUsers().contains(FirebaseAuthentication.getFirebaseUser().getEmail())
                     || FirebaseDB.getGameData().getOwnUserData(FirebaseAuthentication.getFirebaseUser().getEmail()).isOrga())) {
@@ -101,7 +103,7 @@ public class RecyclerViewTeamListAdapter extends RecyclerView.Adapter<RecyclerVi
         }
     }
 
-    private void showAfterTime(final Button button, final long delay) {
+    private void showAfterTime(@NonNull final Button button, final long delay) {
         new Timer().schedule(new TimerTask() {
             @Override
             public void run() {

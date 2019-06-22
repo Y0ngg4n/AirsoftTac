@@ -4,15 +4,19 @@ import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
+
+import com.google.android.gms.ads.AdListener;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.InterstitialAd;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.zxing.Result;
 
@@ -20,6 +24,7 @@ import java.nio.charset.StandardCharsets;
 
 import at.favre.lib.crypto.bcrypt.BCrypt;
 import me.dm7.barcodescanner.zxing.ZXingScannerView;
+import pro.oblivioncoding.yonggan.airsofttac.AdMob.AdMobIds;
 import pro.oblivioncoding.yonggan.airsofttac.Firebase.FirebaseAuthentication;
 import pro.oblivioncoding.yonggan.airsofttac.Firebase.FirebaseDB;
 import pro.oblivioncoding.yonggan.airsofttac.Firebase.GameCollection.GameData;
@@ -94,6 +99,17 @@ public class JoinGameActivity extends AppCompatActivity implements ZXingScannerV
         findViewById(R.id.switchToCreateGame)
                 .setOnClickListener(v -> JoinGameActivity.this.startActivity(new Intent(
                         JoinGameActivity.this, CreateGameActivity.class)));
+
+        final InterstitialAd interstitialAd = new InterstitialAd(this);
+        interstitialAd.setAdUnitId(AdMobIds.InterstialAll);
+        interstitialAd.setAdListener(new AdListener() {
+            @Override
+            public void onAdLoaded() {
+                interstitialAd.show();
+            }
+
+        });
+        interstitialAd.loadAd(new AdRequest.Builder().build());
     }
 
 
@@ -130,7 +146,7 @@ public class JoinGameActivity extends AppCompatActivity implements ZXingScannerV
     }
 
     @Override
-    public void handleResult(final Result rawResult) {
+    public void handleResult(@NonNull final Result rawResult) {
         // Do something with the result here
         setContentView(R.layout.activity_join_game_activity);
         final Toolbar toolbar = findViewById(R.id.toolbar);

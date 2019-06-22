@@ -1,14 +1,15 @@
 package pro.oblivioncoding.yonggan.airsofttac.Fragments.Dialog;
 
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.v4.app.DialogFragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.DialogFragment;
 
 import pro.oblivioncoding.yonggan.airsofttac.Firebase.FirebaseDB;
 import pro.oblivioncoding.yonggan.airsofttac.Firebase.KMLCollection.KMLData;
@@ -33,7 +34,7 @@ public class AddCustomMapDialogFragment extends DialogFragment {
                              final Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.add_custom_map_dialog, container, false);
         rootView.findViewById(R.id.addCustomMapButton).setOnClickListener(v -> {
-            String title = ((EditText) rootView.findViewById(R.id.customMapTitletext)).getText().toString();
+            final String title = ((EditText) rootView.findViewById(R.id.customMapTitletext)).getText().toString();
             FirebaseDB.getKml().whereEqualTo("title", title).get().addOnCompleteListener(task -> {
                 if (task.isSuccessful()) {
                     if (task.getResult().size() > 0) {

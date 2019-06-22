@@ -9,16 +9,16 @@ import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.design.widget.FloatingActionButton;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.core.app.ActivityCompat;
+import androidx.fragment.app.Fragment;
 
 import com.github.pengrad.mapscaleview.MapScaleView;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -36,6 +36,7 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.android.gms.maps.model.TileOverlayOptions;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.maps.android.clustering.ClusterManager;
@@ -74,23 +75,21 @@ import pro.oblivioncoding.yonggan.airsofttac.R;
 
 public class MapFragment extends Fragment implements OnMapReadyCallback {
 
-    @Nullable
-    private PlayerFragment.OnFragmentInteractionListener mListener;
-
     private static GoogleMap googleMap;
     private static MapScaleView scaleView;
-
     private static FloatingActionButton hitfb, underfirefb, supportfb, missionfb;
-
     private static FloatingActionButton reloadfb, setMarkerfb, removeMarkerfb, swapFlagfb;
     private static int MapType = GoogleMap.MAP_TYPE_HYBRID;
-
+    private static MapStyleOptions mapStyleOptions;
+    @NonNull
     public ShowSettings showSettings = ShowSettings.AllPlayer;
+    public boolean showKmlLayer = true, showHeatMap = false;
+    @Nullable
+    private PlayerFragment.OnFragmentInteractionListener mListener;
+    @Nullable
     private Marker currentMarker;
     private View rootView;
-    private static MapStyleOptions mapStyleOptions;
     private FloatingActionButton currentlocationfb, toggleMap;
-
     @NonNull
     private HashMap<Marker, TacticalMarkerData> tacticalMarkerDataHashMap = new HashMap<>();
     @NonNull
@@ -101,19 +100,21 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
     private HashMap<Marker, FlagMarkerData> flagDataHashMap = new HashMap<>();
     @NonNull
     private HashMap<Marker, HQMarkerData> hqMarkerDataHashMap = new HashMap<>();
+    @NonNull
     private HashMap<Marker, UserData> userMarkerDataHashMap = new HashMap<>();
+    @NonNull
     private HashMap<UserData, Polyline> userMarkerPolyline = new HashMap<>();
-
-    public boolean showKmlLayer = true, showHeatMap = false;
     private KmlLayer kmlLayer;
+    @NonNull
     private ArrayList<Marker> kmlMarker = new ArrayList<>();
-
-    public enum ShowSettings {
-        AllPlayer, ShowTeamOnly, ShowOnlyNotAssigned
-    }
-
+    @NonNull
     private ArrayList<GroundOverlay> groundOverlays = new ArrayList<>();
+    @Nullable
     private ClusterManager<ClusterMarkerItem> clusterManager;
+
+    public MapFragment() {
+        // Required empty public constructor
+    }
 
     @NonNull
     public static MapFragment newInstance() {
@@ -123,17 +124,13 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         return fragment;
     }
 
-    public MapFragment() {
-        // Required empty public constructor
-    }
-
     private static float dpTopixel(final Context c, final float dp) {
         final float density = c.getResources().getDisplayMetrics().density;
         final float pixel = dp * density;
         return pixel;
     }
 
-    public static void setMapStyle(String json) {
+    public static void setMapStyle(final String json) {
         if (googleMap != null) {
             mapStyleOptions = new MapStyleOptions(json);
         }
@@ -468,7 +465,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
             googleMap.clear();
             addKmlLayer();
             showHeatMap();
-            setClusterItems();
+//            setClusterItems();
             setAllPositionMarker();
 
             setAlTacticalMarker();
@@ -477,22 +474,6 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
             setAllRespawnMarker();
             setAllFlagMarker();
         }
-    }
-
-
-    /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     * <p>
-     * See the Android Training lesson <a href=
-     * "http://developer.android.com/training/basics/fragments/communicating.html"
-     * >Communicating with Other Fragments</a> for more information.
-     */
-    public interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
-        void onFragmentInteraction(Uri uri);
     }
 
     private void setPositionMarker(final UserData userData) {
@@ -601,7 +582,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         return BitmapDescriptorFactory.fromBitmap(bm);
     }
 
-    private void showAfterTime(final FloatingActionButton button, final long delay) {
+    private void showAfterTime(@NonNull final FloatingActionButton button, final long delay) {
         new Timer().schedule(new TimerTask() {
             @Override
             public void run() {
@@ -665,7 +646,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         }
 
         addKmlLayer();
-        setClusterManager();
+//        setClusterManager();
 
         googleMap.setOnMarkerClickListener(marker ->
         {
@@ -832,12 +813,12 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
 
                         googleMap.setOnMarkerDragListener(new GoogleMap.OnMarkerDragListener() {
                             @Override
-                            public void onMarkerDragStart(final Marker marker) {
+                            public void onMarkerDragStart(@NonNull final Marker marker) {
                                 marker.hideInfoWindow();
                             }
 
                             @Override
-                            public void onMarkerDrag(final Marker marker) {
+                            public void onMarkerDrag(@NonNull final Marker marker) {
                                 marker.hideInfoWindow();
                             }
 
@@ -926,10 +907,10 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                                 kmlLayer = new KmlLayer(googleMap, new ByteArrayInputStream(task.getResult().toObjects(KMLData.class).get(0).getKml().getBytes(StandardCharsets.UTF_8)),
                                         getActivity().getApplicationContext());
                                 setKmlLayer();
-                            } catch (XmlPullParserException e) {
+                            } catch (final XmlPullParserException e) {
                                 Toast.makeText(getContext(), "Couldn´t parse KML Data!",
                                         Toast.LENGTH_LONG).show();
-                            } catch (IOException e) {
+                            } catch (final IOException e) {
                                 Toast.makeText(getContext(), "Couldn´t get inputstream from KML Data!",
                                         Toast.LENGTH_LONG).show();
                             }
@@ -957,20 +938,20 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                 groundOverlays.clear();
                 kmlMarker.clear();
 
-                for (KmlGroundOverlay kmlGroundOverlay : kmlLayer.getGroundOverlays()) {
+                for (final KmlGroundOverlay kmlGroundOverlay : kmlLayer.getGroundOverlays()) {
                     groundOverlays.add(googleMap.addGroundOverlay(new GroundOverlayOptions()
                             .positionFromBounds(kmlGroundOverlay.getLatLngBox())));
                 }
 
-                for (KmlPlacemark kmlPlacemark : kmlLayer.getPlacemarks()) {
+                for (final KmlPlacemark kmlPlacemark : kmlLayer.getPlacemarks()) {
                     kmlMarker.add(googleMap.addMarker(kmlPlacemark.getMarkerOptions()));
                 }
 
 //                Toast.makeText(getContext(), "Added KMLLayer", Toast.LENGTH_LONG).show();
-            } catch (IOException e) {
+            } catch (final IOException e) {
                 Toast.makeText(getContext(), "Couldn´t parse KML Data!",
                         Toast.LENGTH_LONG).show();
-            } catch (XmlPullParserException e) {
+            } catch (final XmlPullParserException e) {
                 Toast.makeText(getContext(), "Couldn´t get inputstream from KML Data!",
                         Toast.LENGTH_LONG).show();
             }
@@ -979,8 +960,8 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
 
     private void showHeatMap() {
         if (showHeatMap) {
-            ArrayList<LatLng> latLngArrayList = new ArrayList<>();
-            for (Marker marker : userMarkerDataHashMap.keySet()) {
+            final ArrayList<LatLng> latLngArrayList = new ArrayList<>();
+            for (final Marker marker : userMarkerDataHashMap.keySet()) {
                 latLngArrayList.add(marker.getPosition());
             }
             googleMap.addTileOverlay(new TileOverlayOptions().tileProvider(
@@ -997,11 +978,30 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
 
     private void setClusterItems() {
         if (clusterManager != null) {
-            for (Marker marker : userMarkerDataHashMap.keySet()) {
-                ClusterMarkerItem clusterMarkerItem = new ClusterMarkerItem(marker.getPosition().latitude,
+            for (final Marker marker : userMarkerDataHashMap.keySet()) {
+                final ClusterMarkerItem clusterMarkerItem = new ClusterMarkerItem(marker.getPosition().latitude,
                         marker.getPosition().longitude);
                 clusterManager.addItem(clusterMarkerItem);
             }
         }
+    }
+
+    public enum ShowSettings {
+        AllPlayer, ShowTeamOnly, ShowOnlyNotAssigned
+    }
+
+    /**
+     * This interface must be implemented by activities that contain this
+     * fragment to allow an interaction in this fragment to be communicated
+     * to the activity and potentially other fragments contained in that
+     * activity.
+     * <p>
+     * See the Android Training lesson <a href=
+     * "http://developer.android.com/training/basics/fragments/communicating.html"
+     * >Communicating with Other Fragments</a> for more information.
+     */
+    public interface OnFragmentInteractionListener {
+        // TODO: Update argument type and name
+        void onFragmentInteraction(Uri uri);
     }
 }

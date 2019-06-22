@@ -11,8 +11,7 @@ import com.google.android.gms.maps.model.Marker;
 import pro.oblivioncoding.yonggan.airsofttac.R;
 
 
-public class CustomMarkerInfoWindowAdapter implements GoogleMap.InfoWindowAdapter
-{
+public class CustomMarkerInfoWindowAdapter implements GoogleMap.InfoWindowAdapter {
 
     private View mWindow;
     private Context mContext;
