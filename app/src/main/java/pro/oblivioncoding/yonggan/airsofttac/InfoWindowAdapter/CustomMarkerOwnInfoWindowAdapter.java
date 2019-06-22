@@ -18,11 +18,11 @@ public class CustomMarkerOwnInfoWindowAdapter implements GoogleMap.InfoWindowAda
 
     private double latitude, longitude;
 
-    private String title, description;
+    private String title, description, distance;
 
     private boolean own;
 
-    public CustomMarkerOwnInfoWindowAdapter(final Context mContext, final double latitude, final double longitude, final String title, final String description, final boolean own) {
+    public CustomMarkerOwnInfoWindowAdapter(final Context mContext, final double latitude, final double longitude, final String title, final String description, final boolean own, final String distance) {
         this.mContext = mContext;
         mWindow = LayoutInflater.from(mContext).inflate(R.layout.fragment_custom_marker_own_info_window_adapter, null);
         this.latitude = latitude;
@@ -30,6 +30,7 @@ public class CustomMarkerOwnInfoWindowAdapter implements GoogleMap.InfoWindowAda
         this.title = title;
         this.description = description;
         this.own = own;
+        this.distance = distance;
     }
 
     @Override
@@ -49,5 +50,6 @@ public class CustomMarkerOwnInfoWindowAdapter implements GoogleMap.InfoWindowAda
         ((TextView) view.findViewById(R.id.longitude)).setText(String.valueOf(longitude));
         ((TextView) view.findViewById(R.id.description)).setText(description);
         ((TextView) view.findViewById(R.id.own)).setText(String.valueOf(own));
+        ((TextView) view.findViewById(R.id.distance)).setText(distance);
     }
 }

@@ -7,6 +7,7 @@ import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
+import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
@@ -648,40 +649,44 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
 
         googleMap.setOnMarkerClickListener(marker ->
         {
+            final float[] distanceResults = new float[1];
+            Location.distanceBetween(ownUserData.getPositionLat(), ownUserData.getPositionLong(),
+                    marker.getPosition().latitude, marker.getPosition().longitude, distanceResults);
+            final String distance = distanceResults[0] + "m";
             if (userMarkerDataHashMap.containsKey(marker)) {
                 final UserData userData = userMarkerDataHashMap.get(marker);
                 googleMap.setInfoWindowAdapter(new CustomMarkerTeamInfoWindowAdapter(getContext(),
                         userData.getPositionLat(), userData.getPositionLong(),
-                        userData.getEmail(), userData.getEmail(), userData.getTeam()));
+                        userData.getEmail(), userData.getEmail(), userData.getTeam(), distance));
             } else if (tacticalMarkerDataHashMap.containsKey(marker)) {
                 final TacticalMarkerData tacticalMarkerData = tacticalMarkerDataHashMap.get(marker);
                 googleMap.setInfoWindowAdapter(new CustomMarkerInfoWindowAdapter(getContext(),
                         tacticalMarkerData.getLatitude(), tacticalMarkerData.getLongitude(),
-                        tacticalMarkerData.getTitle(), tacticalMarkerData.getDescription()));
+                        tacticalMarkerData.getTitle(), tacticalMarkerData.getDescription(), distance));
                 currentMarker = marker;
             } else if (missionMarkerDataHashMap.containsKey(marker)) {
                 final MissionMarkerData missionMarkerData = missionMarkerDataHashMap.get(marker);
                 googleMap.setInfoWindowAdapter(new CustomMarkerInfoWindowAdapter(getContext(),
                         missionMarkerData.getLatitude(), missionMarkerData.getLongitude(),
-                        missionMarkerData.getTitle(), missionMarkerData.getDescription()));
+                        missionMarkerData.getTitle(), missionMarkerData.getDescription(), distance));
                 currentMarker = marker;
             } else if (respawnMarkerDataHashMap.containsKey(marker)) {
                 final RespawnMarkerData respawnMarkerData = respawnMarkerDataHashMap.get(marker);
                 googleMap.setInfoWindowAdapter(new CustomMarkerOwnInfoWindowAdapter(getContext(),
                         respawnMarkerData.getLatitude(), respawnMarkerData.getLongitude(),
-                        respawnMarkerData.getTitle(), respawnMarkerData.getDescription(), respawnMarkerData.isOwn()));
+                        respawnMarkerData.getTitle(), respawnMarkerData.getDescription(), respawnMarkerData.isOwn(), distance));
                 currentMarker = marker;
             } else if (hqMarkerDataHashMap.containsKey(marker)) {
                 final HQMarkerData hqMarkerData = hqMarkerDataHashMap.get(marker);
                 googleMap.setInfoWindowAdapter(new CustomMarkerOwnInfoWindowAdapter(getContext(),
                         hqMarkerData.getLatitude(), hqMarkerData.getLongitude(),
-                        hqMarkerData.getTitle(), hqMarkerData.getDescription(), hqMarkerData.isOwn()));
+                        hqMarkerData.getTitle(), hqMarkerData.getDescription(), hqMarkerData.isOwn(), distance));
                 currentMarker = marker;
             } else if (flagDataHashMap.containsKey(marker)) {
                 final FlagMarkerData flagMarkerData = flagDataHashMap.get(marker);
                 googleMap.setInfoWindowAdapter(new CustomMarkerOwnInfoWindowAdapter(getContext(),
                         flagMarkerData.getLatitude(), flagMarkerData.getLongitude(),
-                        flagMarkerData.getTitle(), flagMarkerData.getDescription(), flagMarkerData.isOwn()));
+                        flagMarkerData.getTitle(), flagMarkerData.getDescription(), flagMarkerData.isOwn(), distance));
                 if (FirebaseDB.getGameData().getOwnUserData(FirebaseAuthentication.getFirebaseUser().getEmail()).isOrga()) {
                     swapFlagfb.show();
                 }

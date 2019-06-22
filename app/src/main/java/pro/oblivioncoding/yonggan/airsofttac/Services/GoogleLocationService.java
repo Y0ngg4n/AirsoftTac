@@ -34,6 +34,8 @@ public class GoogleLocationService extends Service implements LocationListener {
 
     private Intent notificationIntent;
 
+    private DocumentReference gameDocumentReference;
+
     public GoogleLocationService() {
     }
 
@@ -45,27 +47,31 @@ public class GoogleLocationService extends Service implements LocationListener {
 
     @Override
     public void onLocationChanged(@NonNull final Location location) {
-        Log.i("Location", "OnLocationChanged");
         final UserData ownUserData = FirebaseDB.getGameData().getOwnUserData(FirebaseAuthentication.getFirebaseUser().getEmail());
+        Log.i("Location", "OnLocationChanged");
         if (ownUserData != null) {
             ownUserData.setPositionLat(location.getLatitude());
             ownUserData.setPositionLong(location.getLongitude());
         }
-
-        FirebaseDB.getGames().whereEqualTo("gameID", FirebaseDB.getGameData().getGameID())
-                .get().addOnCompleteListener(task -> {
-            if (task.isSuccessful()) {
-                if (task.getResult().size() > 0) {
-                    final DocumentReference documentReference = FirebaseDB.getGames().document(task.getResult().getDocuments().get(0).getId());
-                    if (documentReference != null)
-                        FirebaseDB.updateObject(documentReference, "users",
+        if (gameDocumentReference != null) {
+            Log.i("Location", "Updated");
+            FirebaseDB.updateObject(gameDocumentReference, "users",
+                    FirebaseDB.getGameData().getUsers());
+        } else {
+            FirebaseDB.getGames().whereEqualTo("gameID", FirebaseDB.getGameData().getGameID())
+                    .get().addOnCompleteListener(task -> {
+                if (task.isSuccessful()) {
+                    if (task.getResult().size() > 0) {
+                        gameDocumentReference = FirebaseDB.getGames().document(task.getResult().getDocuments().get(0).getId());
+                        FirebaseDB.updateObject(gameDocumentReference, "users",
                                 FirebaseDB.getGameData().getUsers());
+                    }
+                } else {
+                    Toast.makeText(getApplicationContext(), "Couldn´t query Database!",
+                            Toast.LENGTH_LONG).show();
                 }
-            } else {
-                Toast.makeText(getApplicationContext(), "Couldn´t query Database!",
-                        Toast.LENGTH_LONG).show();
-            }
-        });
+            });
+        }
     }
 
     @Override
@@ -86,7 +92,18 @@ public class GoogleLocationService extends Service implements LocationListener {
     @Override
     public int onStartCommand(final Intent intent, final int flags, final int startId) {
         startForeground();
-        requestLocation();
+        FirebaseDB.getGames().whereEqualTo("gameID", FirebaseDB.getGameData().getGameID())
+                .get().addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                if (task.getResult().size() > 0) {
+                    gameDocumentReference = FirebaseDB.getGames().document(task.getResult().getDocuments().get(0).getId());
+                    requestLocation();
+                }
+            } else {
+                Toast.makeText(getApplicationContext(), "Couldn´t query Database!",
+                        Toast.LENGTH_LONG).show();
+            }
+        });
         return super.onStartCommand(intent, flags, startId);
     }
 

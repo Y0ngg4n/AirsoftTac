@@ -59,7 +59,7 @@ public class MainActivity extends AppCompatActivity
     private static LocationManager locationManager;
     private static LocationListener locationListener;
     private static long updateTime = 60000;
-    private static float minDistance = 5;
+    private static float minDistance = 10;
     private Fragment currentFragment;
     private MapFragment mapFragment;
     private PlayerFragment playerFragment;
@@ -117,28 +117,28 @@ public class MainActivity extends AppCompatActivity
         final NavigationView navigationView = findViewById(R.id.nav_view);
         ((TextView) navigationView.getHeaderView(0).findViewById(R.id.nav_header_title)).setText(FirebaseDB.getGameData().getOwnUserData(FirebaseAuthentication.getFirebaseUser().getEmail()).getNickname());
         ((TextView) navigationView.getHeaderView(0).findViewById(R.id.nav_header_email)).setText(FirebaseAuthentication.getFirebaseUser().getEmail());
-        TextView timeView = navigationView.getHeaderView(0).findViewById(R.id.nav_header_timeView);
+        final TextView timeView = navigationView.getHeaderView(0).findViewById(R.id.nav_header_timeView);
         new Timer().scheduleAtFixedRate(new TimerTask() {
             @Override
             public void run() {
-                Date currentTime = new Date(System.currentTimeMillis());
-                Date startDate = FirebaseDB.getGameData().getStartTime().toDate();
-                Date endDate = FirebaseDB.getGameData().getEndTime().toDate();
+                final Date currentTime = new Date(System.currentTimeMillis());
+                final Date startDate = FirebaseDB.getGameData().getStartTime().toDate();
+                final Date endDate = FirebaseDB.getGameData().getEndTime().toDate();
 
                 if (currentTime.compareTo(startDate) < 0) {
                     runOnUiThread(() -> {
-                        Calendar calendar = Calendar.getInstance();
+                        final Calendar calendar = Calendar.getInstance();
                         calendar.setTime(new Date(startDate.getTime() - currentTime.getTime() - TimeUnit.HOURS.toMillis(1)));
-                        String hours = String.format("%02d", calendar.get(Calendar.HOUR));
-                        String minutes = String.format("%02d", calendar.get(Calendar.MINUTE));
+                        final String hours = String.format("%02d", calendar.get(Calendar.HOUR));
+                        final String minutes = String.format("%02d", calendar.get(Calendar.MINUTE));
                         timeView.setText("Start of Game: T - " + hours + minutes);
                     });
                 } else {
                     runOnUiThread(() -> {
-                        Calendar calendar = Calendar.getInstance();
+                        final Calendar calendar = Calendar.getInstance();
                         calendar.setTime(new Date(endDate.getTime() - currentTime.getTime() - TimeUnit.HOURS.toMillis(1)));
-                        String hours = String.format("%02d", calendar.get(Calendar.HOUR));
-                        String minutes = String.format("%02d", calendar.get(Calendar.MINUTE));
+                        final String hours = String.format("%02d", calendar.get(Calendar.HOUR));
+                        final String minutes = String.format("%02d", calendar.get(Calendar.MINUTE));
                         timeView.setText("End of Game: T - " + hours + minutes);
                     });
                 }

@@ -18,15 +18,16 @@ public class CustomMarkerInfoWindowAdapter implements GoogleMap.InfoWindowAdapte
 
     private double latitude, longitude;
 
-    private String title, description;
+    private String title, description, distance;
 
-    public CustomMarkerInfoWindowAdapter(final Context mContext, final double latitude, final double longitude, final String title, final String description) {
+    public CustomMarkerInfoWindowAdapter(final Context mContext, final double latitude, final double longitude, final String title, final String description, final String distance) {
         this.mContext = mContext;
         mWindow = LayoutInflater.from(mContext).inflate(R.layout.fragment_custom_marker_info_window_adapter, null);
         this.latitude = latitude;
         this.longitude = longitude;
         this.title = title;
         this.description = description;
+        this.distance = distance;
     }
 
     @Override
@@ -45,5 +46,6 @@ public class CustomMarkerInfoWindowAdapter implements GoogleMap.InfoWindowAdapte
         ((TextView) view.findViewById(R.id.latitudeLabel)).setText(String.valueOf(latitude));
         ((TextView) view.findViewById(R.id.longitude)).setText(String.valueOf(longitude));
         ((TextView) view.findViewById(R.id.description)).setText(description);
+        ((TextView) view.findViewById(R.id.distance)).setText(distance);
     }
 }

@@ -116,7 +116,7 @@ public class JoinGameActivity extends AppCompatActivity implements ZXingScannerV
         FirebaseDB.getGames().whereLessThanOrEqualTo("endTime", Timestamp.now()).get().addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
                 if (task.getResult().size() > 0) {
-                    for (DocumentSnapshot documentSnapshot : task.getResult().getDocuments()) {
+                    for (final DocumentSnapshot documentSnapshot : task.getResult().getDocuments()) {
                         documentSnapshot.getReference().delete();
                     }
                 }

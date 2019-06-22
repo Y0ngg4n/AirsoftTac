@@ -87,9 +87,11 @@ public class CreateGameActivity extends AppCompatActivity {
                         Toast.makeText(this, "Trying to create Game...", Toast.LENGTH_LONG).show();
                         final GameData gameData = createGame();
                         writeGameData(gameData);
-                        FirebaseDB.setGameData(gameData);
-                        CreateGameActivity.this.startActivity(new Intent(
-                                CreateGameActivity.this, MainActivity.class));
+                        if (gameData != null) {
+                            FirebaseDB.setGameData(gameData);
+                            CreateGameActivity.this.startActivity(new Intent(
+                                    CreateGameActivity.this, MainActivity.class));
+                        }
                     });
                 } else {
                     Toast.makeText(getApplicationContext(), "GameID allready existing!",
