@@ -37,6 +37,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.concurrent.TimeUnit;
 
 import pro.oblivioncoding.yonggan.airsofttac.AdMob.AdMobIds;
 import pro.oblivioncoding.yonggan.airsofttac.Firebase.FirebaseAuthentication;
@@ -127,21 +128,17 @@ public class MainActivity extends AppCompatActivity
                 if (currentTime.compareTo(startDate) < 0) {
                     runOnUiThread(() -> {
                         Calendar calendar = Calendar.getInstance();
-                        calendar.setTime(new Date(startDate.getTime() - currentTime.getTime()));
-                        String hours = String.valueOf(calendar.get(Calendar.HOUR));
-                        if (hours.length() < 2) hours = 0 + hours;
-                        String minutes = String.valueOf(calendar.get(Calendar.MINUTE));
-                        if (minutes.length() < 2) minutes = 0 + minutes;
+                        calendar.setTime(new Date(startDate.getTime() - currentTime.getTime() - TimeUnit.HOURS.toMillis(1)));
+                        String hours = String.format("%02d", calendar.get(Calendar.HOUR));
+                        String minutes = String.format("%02d", calendar.get(Calendar.MINUTE));
                         timeView.setText("Start of Game: T - " + hours + minutes);
                     });
                 } else {
                     runOnUiThread(() -> {
                         Calendar calendar = Calendar.getInstance();
-                        calendar.setTime(new Date(endDate.getTime() - currentTime.getTime()));
-                        String hours = String.valueOf(calendar.get(Calendar.HOUR));
-                        if (hours.length() < 2) hours = 0 + hours;
-                        String minutes = String.valueOf(calendar.get(Calendar.MINUTE));
-                        if (minutes.length() < 2) minutes = 0 + minutes;
+                        calendar.setTime(new Date(endDate.getTime() - currentTime.getTime() - TimeUnit.HOURS.toMillis(1)));
+                        String hours = String.format("%02d", calendar.get(Calendar.HOUR));
+                        String minutes = String.format("%02d", calendar.get(Calendar.MINUTE));
                         timeView.setText("End of Game: T - " + hours + minutes);
                     });
                 }
@@ -209,7 +206,6 @@ public class MainActivity extends AppCompatActivity
 
         });
         interstitialAd.loadAd(new AdRequest.Builder().build());
-
     }
 
     @Override
@@ -265,7 +261,6 @@ public class MainActivity extends AppCompatActivity
     }
 
     public void updateData(@NonNull final DocumentSnapshot documentSnapshot) {
-        Log.d("UpdateDB", "Current data: " + documentSnapshot.getData());
         FirebaseDB.setGameData(documentSnapshot.toObject(GameData.class));
         mapFragment.setMarker();
     }

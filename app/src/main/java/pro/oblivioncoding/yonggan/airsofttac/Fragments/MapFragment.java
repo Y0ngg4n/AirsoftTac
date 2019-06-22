@@ -416,7 +416,6 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                 }
 
                 if (teamData != null) {
-//                        Log.i("Poly", "!showTeamAssignOnly");
                     LatLng latLng = null;
                     if (teamData.getFlagMarkerData() != null) {
                         final FlagMarkerData flagMarkerData = teamData.getFlagMarkerData();
@@ -555,7 +554,6 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
     }
 
     private void setMarkerIcon(@NonNull final MarkerOptions markerOptions, final UserData userData) {
-        Log.i("Marker", "Setting Icon of Marker");
         if (userData.isMission()) {
             markerOptions.icon(getBitmapDescriptor(R.drawable.ic_marker_alivemission));
         } else if (userData.isAlive() && userData.isUnderfire() && userData.isSupport()) {
@@ -914,9 +912,6 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                                 Toast.makeText(getContext(), "Couldn´t get inputstream from KML Data!",
                                         Toast.LENGTH_LONG).show();
                             }
-                        } else {
-                            Toast.makeText(getContext(), "Couldn´t get KML Data!",
-                                    Toast.LENGTH_LONG).show();
                         }
                     } else {
                         Toast.makeText(getContext(), "Couldn´t query Database!",

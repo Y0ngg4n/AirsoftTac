@@ -17,6 +17,7 @@ import androidx.core.content.ContextCompat;
 import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.InterstitialAd;
+import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.zxing.Result;
 
@@ -41,11 +42,12 @@ public class JoinGameActivity extends AppCompatActivity implements ZXingScannerV
         setContentView(R.layout.activity_join_game_activity);
         final Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
+        requestCameraPermissions();
         mScannerView = new ZXingScannerView(this);
         findViewById(R.id.scanGameID).setOnClickListener(v -> {
-            requestCameraPermissions();
             setContentView(mScannerView);
+            mScannerView.startCamera();
+            mScannerView.setResultHandler(this::handleResult);
         });
 
         findViewById(R.id.joinGame).setOnClickListener(v -> {
@@ -110,16 +112,25 @@ public class JoinGameActivity extends AppCompatActivity implements ZXingScannerV
 
         });
         interstitialAd.loadAd(new AdRequest.Builder().build());
+
+        FirebaseDB.getGames().whereLessThanOrEqualTo("endTime", Timestamp.now()).get().addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                if (task.getResult().size() > 0) {
+                    for (DocumentSnapshot documentSnapshot : task.getResult().getDocuments()) {
+                        documentSnapshot.getReference().delete();
+                    }
+                }
+            }
+        });
     }
 
 
     @Override
     public void onRequestPermissionsResult(final int requestCode, @NonNull final String[] permissions, @NonNull final int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-
         if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED &&
-                ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED &&
-                ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+                ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED) {
+            mScannerView = new ZXingScannerView(this);
         } else {
             requestCameraPermissions();
         }

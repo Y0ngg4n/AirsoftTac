@@ -1,7 +1,6 @@
 package pro.oblivioncoding.yonggan.airsofttac.Adapter;
 
 import android.content.Context;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -158,8 +157,6 @@ public class RecyclerViewTeamListAdapter extends RecyclerView.Adapter<RecyclerVi
                                 if (ownUserData.getTeam() == null) {
                                     teamData.getUsers().add(ownUserData.getEmail());
                                     ownUserData.setTeam(teamData.getTeamName());
-                                    Log.i("JoinLeave", FirebaseDB.getGameData().getOwnUserData(FirebaseAuthentication
-                                            .getFirebaseUser().getEmail()).getTeam());
                                 } else {
                                     if (ownUserData.getTeam().equals(teamData.getTeamName())) {
                                         teamData.getUsers().remove(ownUserData.getEmail());

@@ -62,7 +62,6 @@ public class OrgaAddMarkerDialogFragment extends DialogFragment {
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(final AdapterView<?> parent, final View view, final int position, final long id) {
-                Log.i("Spinner", position + " selected");
 
                 if (position == 2 || position == 3 || position == 4) {
                     getView().findViewById(R.id.orgaaddmarkerdialogown).setVisibility(View.VISIBLE);
@@ -99,7 +98,6 @@ public class OrgaAddMarkerDialogFragment extends DialogFragment {
                             final String title = ((EditText) view.findViewById(R.id.orgaaddmarkerdialogtitle)).getText().toString();
                             final String description = ((EditText) view.findViewById(R.id.orgaaddmarkerdialogdescription)).getText().toString();
                             final boolean own = ((Switch) view.findViewById(R.id.orgaaddmarkerdialogown)).isChecked();
-                            Log.i("Owned", String.valueOf(own));
                             switch (spinner.getSelectedItemPosition()) {
                                 case 0:
                                     for (final TacticalMarkerData tacticalMarkerData : FirebaseDB.getGameData().getTacticalMarkerData()) {

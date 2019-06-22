@@ -64,7 +64,7 @@ public class LoginActivity extends AppCompatActivity {
                             } catch (final FirebaseAuthInvalidCredentialsException malformedEmail) {
                                 Toast.makeText(getApplicationContext(), "Malformed Email!", Toast.LENGTH_LONG).show();
                             } catch (final Exception e) {
-                                Log.i("LoginLogin", e.getMessage());
+                                Log.e("Login", e.getMessage());
                             }
                         }
                     });

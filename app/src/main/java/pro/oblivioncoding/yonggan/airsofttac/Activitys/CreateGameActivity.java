@@ -4,7 +4,6 @@ import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -23,6 +22,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.concurrent.TimeUnit;
 
 import at.favre.lib.crypto.bcrypt.BCrypt;
 import pro.oblivioncoding.yonggan.airsofttac.AdMob.AdMobIds;
@@ -134,6 +134,7 @@ public class CreateGameActivity extends AppCompatActivity {
             simpleDateFormat = new SimpleDateFormat("HH:mm:ss");
             Date durationDate = simpleDateFormat.parse(((EditText) findViewById(R.id.duration)).getText().toString());
             durationDate = new Date(startTime.getTime() + durationDate.getTime());
+            durationDate = new Date(durationDate.getTime() + TimeUnit.HOURS.toMillis(1));
             final ArrayList<UserData> userData = new ArrayList<UserData>();
             userData.add(new UserData(FirebaseAuthentication.getFirebaseUser().getEmail(),
                     true, ((EditText) findViewById(R.id.nickNameField)).getText().toString()));
@@ -146,7 +147,6 @@ public class CreateGameActivity extends AppCompatActivity {
                     userData, BCrypt.withDefaults().hashToString(12, ((EditText) findViewById(R.id.passwordField)).getText().toString().toCharArray()),
                     kmlTitle);
         } catch (@NonNull final ParseException e) {
-            Log.i("InterstialAll", "Could not parse Date");
             Toast.makeText(getApplicationContext(), "Could not parse Date", Toast.LENGTH_LONG).show();
         }
         return null;

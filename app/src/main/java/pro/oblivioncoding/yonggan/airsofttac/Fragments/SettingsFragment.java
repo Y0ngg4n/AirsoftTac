@@ -5,7 +5,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -167,7 +166,6 @@ public class SettingsFragment extends Fragment {
     }
 
     private void setAdapter(@NonNull final List<DocumentSnapshot> mapStyles) {
-        Log.i("KML", "MapStyle");
         final RecyclerViewMapStyle recyclerViewMapStyle = new RecyclerViewMapStyle(new ArrayList<DocumentSnapshot>(mapStyles));
         recyclerView.setAdapter(recyclerViewMapStyle);
         recyclerView.setLayoutManager(new LinearLayoutManager(rootView.getContext()));

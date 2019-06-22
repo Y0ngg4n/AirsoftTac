@@ -3,7 +3,6 @@ package pro.oblivioncoding.yonggan.airsofttac.Fragments.Dialog;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -102,7 +101,6 @@ public class AssignKMLDialogFragment extends DialogFragment {
     }
 
     private void setKMLAdapter(@NonNull final List<DocumentSnapshot> customMaps, final CreateGameActivity createGameActivity) {
-        Log.i("KML", "CustomMap");
         final RecyclerViewKML recyclerViewKML = new RecyclerViewKML(new ArrayList<DocumentSnapshot>(customMaps), createGameActivity);
         customMapRecyclerView.setAdapter(recyclerViewKML);
         customMapRecyclerView.setLayoutManager(new LinearLayoutManager(rootView.getContext()));
