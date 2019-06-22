@@ -33,6 +33,11 @@ import com.google.android.gms.ads.InterstitialAd;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.firestore.DocumentSnapshot;
 
+import java.util.Calendar;
+import java.util.Date;
+import java.util.Timer;
+import java.util.TimerTask;
+
 import pro.oblivioncoding.yonggan.airsofttac.AdMob.AdMobIds;
 import pro.oblivioncoding.yonggan.airsofttac.Firebase.FirebaseAuthentication;
 import pro.oblivioncoding.yonggan.airsofttac.Firebase.FirebaseDB;
@@ -111,6 +116,38 @@ public class MainActivity extends AppCompatActivity
         final NavigationView navigationView = findViewById(R.id.nav_view);
         ((TextView) navigationView.getHeaderView(0).findViewById(R.id.nav_header_title)).setText(FirebaseDB.getGameData().getOwnUserData(FirebaseAuthentication.getFirebaseUser().getEmail()).getNickname());
         ((TextView) navigationView.getHeaderView(0).findViewById(R.id.nav_header_email)).setText(FirebaseAuthentication.getFirebaseUser().getEmail());
+        TextView timeView = navigationView.getHeaderView(0).findViewById(R.id.nav_header_timeView);
+        new Timer().scheduleAtFixedRate(new TimerTask() {
+            @Override
+            public void run() {
+                Date currentTime = new Date(System.currentTimeMillis());
+                Date startDate = FirebaseDB.getGameData().getStartTime().toDate();
+                Date endDate = FirebaseDB.getGameData().getEndTime().toDate();
+
+                if (currentTime.compareTo(startDate) < 0) {
+                    runOnUiThread(() -> {
+                        Calendar calendar = Calendar.getInstance();
+                        calendar.setTime(new Date(startDate.getTime() - currentTime.getTime()));
+                        String hours = String.valueOf(calendar.get(Calendar.HOUR));
+                        if (hours.length() < 2) hours = 0 + hours;
+                        String minutes = String.valueOf(calendar.get(Calendar.MINUTE));
+                        if (minutes.length() < 2) minutes = 0 + minutes;
+                        timeView.setText("Start of Game: T - " + hours + minutes);
+                    });
+                } else {
+                    runOnUiThread(() -> {
+                        Calendar calendar = Calendar.getInstance();
+                        calendar.setTime(new Date(endDate.getTime() - currentTime.getTime()));
+                        String hours = String.valueOf(calendar.get(Calendar.HOUR));
+                        if (hours.length() < 2) hours = 0 + hours;
+                        String minutes = String.valueOf(calendar.get(Calendar.MINUTE));
+                        if (minutes.length() < 2) minutes = 0 + minutes;
+                        timeView.setText("End of Game: T - " + hours + minutes);
+                    });
+                }
+            }
+        }, 0L, 60000L);
+
         final ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
