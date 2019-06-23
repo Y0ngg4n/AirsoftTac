@@ -1,7 +1,9 @@
 package pro.oblivioncoding.yonggan.airsofttac.Activitys;
 
 import android.Manifest;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.widget.EditText;
@@ -17,7 +19,6 @@ import androidx.core.content.ContextCompat;
 import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.InterstitialAd;
-import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.zxing.Result;
 
@@ -36,6 +37,11 @@ public class JoinGameActivity extends AppCompatActivity implements ZXingScannerV
 
     private ZXingScannerView mScannerView;
 
+    private static final String sharedPrefs = "JoinGameData";
+    private static final String gameIDPref = "gameID";
+    private static final String nickNamePref = "nickname";
+    private static final String passwordPref = "password";
+
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -50,18 +56,27 @@ public class JoinGameActivity extends AppCompatActivity implements ZXingScannerV
             mScannerView.setResultHandler(this::handleResult);
         });
 
+        SharedPreferences sharedPreferences = getSharedPreferences(sharedPrefs, Context.MODE_PRIVATE);
+        EditText passwordField = findViewById(R.id.password);
+        TextView nickNameField = findViewById(R.id.nickName);
+        EditText joinGameID = findViewById(R.id.joinGameID);
+
+        passwordField.setText(sharedPreferences.getString(passwordPref, ""));
+        nickNameField.setText(sharedPreferences.getString(nickNamePref, ""));
+        joinGameID.setText(sharedPreferences.getString(gameIDPref, ""));
+
         findViewById(R.id.joinGame).setOnClickListener(v -> {
             Toast.makeText(this, "Trying to connect to Game...", Toast.LENGTH_LONG).show();
-            FirebaseDB.getGames().whereEqualTo("gameID", ((EditText) findViewById(R.id.joinGameID)).getText().toString())
+            FirebaseDB.getGames().whereEqualTo("gameID", joinGameID.getText().toString())
                     .get().addOnCompleteListener(task -> {
                 if (task.isSuccessful()) {
                     if (task.getResult().size() > 0) {
-                        if (!((TextView) findViewById(R.id.nickName)).getText().toString().isEmpty()) {
+                        if (!nickNameField.getText().toString().isEmpty()) {
                             final DocumentSnapshot documentSnapshot = task.getResult().getDocuments().get(0);
 
                             if (documentSnapshot != null && documentSnapshot.exists()) {
                                 FirebaseDB.setGameData(documentSnapshot.toObject(GameData.class));
-                                if (BCrypt.verifyer().verify(((EditText) findViewById(R.id.password)).getText().toString().getBytes(StandardCharsets.UTF_8),
+                                if (BCrypt.verifyer().verify(passwordField.getText().toString().getBytes(StandardCharsets.UTF_8),
                                         FirebaseDB.getGameData().getPassword().getBytes(StandardCharsets.UTF_8)).verified) {
                                     boolean allreadyExists = false;
                                     if (FirebaseDB.getGameData().getOwnUserData(FirebaseAuthentication.getFirebaseUser().getEmail()) != null)
@@ -69,12 +84,18 @@ public class JoinGameActivity extends AppCompatActivity implements ZXingScannerV
                                     if (!allreadyExists) {
                                         FirebaseDB.getGameData().getUsers().add(new UserData(
                                                 FirebaseAuthentication.getFirebaseUser().getEmail(), false,
-                                                ((TextView) findViewById(R.id.nickName)).getText().toString()));
+                                                nickNameField.getText().toString()));
 
                                     } else {
                                         FirebaseDB.getGameData().getOwnUserData(FirebaseAuthentication.getFirebaseUser().getEmail())
-                                                .setNickname(((TextView) findViewById(R.id.nickName)).getText().toString());
+                                                .setNickname(nickNameField.getText().toString());
                                     }
+                                    SharedPreferences.Editor editor = sharedPreferences.edit();
+                                    editor.putString(passwordPref, passwordField.getText().toString());
+                                    editor.putString(nickNamePref, nickNameField.getText().toString());
+                                    editor.putString(gameIDPref, joinGameID.getText().toString());
+                                    editor.commit();
+
                                     FirebaseDB.updateObject(documentSnapshot, "users",
                                             FirebaseDB.getGameData().getUsers());
                                     JoinGameActivity.this.startActivity(new Intent(JoinGameActivity.this,
@@ -112,16 +133,6 @@ public class JoinGameActivity extends AppCompatActivity implements ZXingScannerV
 
         });
         interstitialAd.loadAd(new AdRequest.Builder().build());
-
-        FirebaseDB.getGames().whereLessThanOrEqualTo("endTime", Timestamp.now()).get().addOnCompleteListener(task -> {
-            if (task.isSuccessful()) {
-                if (task.getResult().size() > 0) {
-                    for (final DocumentSnapshot documentSnapshot : task.getResult().getDocuments()) {
-                        documentSnapshot.getReference().delete();
-                    }
-                }
-            }
-        });
     }
 
 

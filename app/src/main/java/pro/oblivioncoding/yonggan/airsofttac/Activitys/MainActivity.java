@@ -31,13 +31,13 @@ import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.InterstitialAd;
 import com.google.android.material.navigation.NavigationView;
+import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.DocumentSnapshot;
 
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Timer;
 import java.util.TimerTask;
-import java.util.concurrent.TimeUnit;
 
 import pro.oblivioncoding.yonggan.airsofttac.AdMob.AdMobIds;
 import pro.oblivioncoding.yonggan.airsofttac.Firebase.FirebaseAuthentication;
@@ -45,6 +45,7 @@ import pro.oblivioncoding.yonggan.airsofttac.Firebase.FirebaseDB;
 import pro.oblivioncoding.yonggan.airsofttac.Firebase.GameCollection.GameData;
 import pro.oblivioncoding.yonggan.airsofttac.Fragments.BeerFragment;
 import pro.oblivioncoding.yonggan.airsofttac.Fragments.ChatFragment;
+import pro.oblivioncoding.yonggan.airsofttac.Fragments.GameIDFragment;
 import pro.oblivioncoding.yonggan.airsofttac.Fragments.MapFragment;
 import pro.oblivioncoding.yonggan.airsofttac.Fragments.PlayerFragment;
 import pro.oblivioncoding.yonggan.airsofttac.Fragments.SettingsFragment;
@@ -53,7 +54,7 @@ import pro.oblivioncoding.yonggan.airsofttac.R;
 import pro.oblivioncoding.yonggan.airsofttac.Services.GoogleLocationService;
 
 public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener, MapFragment.OnFragmentInteractionListener, PlayerFragment.OnFragmentInteractionListener, TeamFragment.OnFragmentInteractionListener, ChatFragment.OnFragmentInteractionListener, SettingsFragment.OnFragmentInteractionListener, BeerFragment.OnFragmentInteractionListener {
+        implements NavigationView.OnNavigationItemSelectedListener, MapFragment.OnFragmentInteractionListener, PlayerFragment.OnFragmentInteractionListener, TeamFragment.OnFragmentInteractionListener, ChatFragment.OnFragmentInteractionListener, SettingsFragment.OnFragmentInteractionListener, BeerFragment.OnFragmentInteractionListener, GameIDFragment.OnFragmentInteractionListener {
 
     private static MainActivity instance;
     private static LocationManager locationManager;
@@ -66,6 +67,8 @@ public class MainActivity extends AppCompatActivity
     private ChatFragment chatFragment;
     private SettingsFragment settingsFragment;
     private BeerFragment beerFragment;
+    private GameIDFragment gameIDFragment;
+
     private Criteria locationManagerCriteria;
     private TeamFragment teamFragment;
     private Menu menu;
@@ -121,25 +124,21 @@ public class MainActivity extends AppCompatActivity
         new Timer().scheduleAtFixedRate(new TimerTask() {
             @Override
             public void run() {
-                final Date currentTime = new Date(System.currentTimeMillis());
+                final Date currentTime = Timestamp.now().toDate();
                 final Date startDate = FirebaseDB.getGameData().getStartTime().toDate();
                 final Date endDate = FirebaseDB.getGameData().getEndTime().toDate();
-
-                if (currentTime.compareTo(startDate) < 0) {
+                Calendar calendar = Calendar.getInstance();
+                if (currentTime.before(startDate)) {
+                    calendar.setTime(startDate);
                     runOnUiThread(() -> {
-                        final Calendar calendar = Calendar.getInstance();
-                        calendar.setTime(new Date(startDate.getTime() - currentTime.getTime() - TimeUnit.HOURS.toMillis(1)));
-                        final String hours = String.format("%02d", calendar.get(Calendar.HOUR));
-                        final String minutes = String.format("%02d", calendar.get(Calendar.MINUTE));
-                        timeView.setText("Start of Game: T - " + hours + minutes);
+                        timeView.setText("Start of Game at " + calendar.get(Calendar.DATE) + "." + (calendar.get(Calendar.MONTH) + 1) + " at " +
+                                calendar.get(Calendar.HOUR_OF_DAY) + ":" + calendar.get(Calendar.MINUTE));
                     });
                 } else {
+                    calendar.setTime(endDate);
                     runOnUiThread(() -> {
-                        final Calendar calendar = Calendar.getInstance();
-                        calendar.setTime(new Date(endDate.getTime() - currentTime.getTime() - TimeUnit.HOURS.toMillis(1)));
-                        final String hours = String.format("%02d", calendar.get(Calendar.HOUR));
-                        final String minutes = String.format("%02d", calendar.get(Calendar.MINUTE));
-                        timeView.setText("End of Game: T - " + hours + minutes);
+                        timeView.setText("End of Game at " + calendar.get(Calendar.DATE) + "." + (calendar.get(Calendar.MONTH) + 1) + " at " +
+                                calendar.get(Calendar.HOUR_OF_DAY) + ":" + calendar.get(Calendar.MINUTE));
                     });
                 }
             }
@@ -158,6 +157,7 @@ public class MainActivity extends AppCompatActivity
         chatFragment = new ChatFragment();
         settingsFragment = new SettingsFragment();
 //        beerFragment = new BeerFragment();
+        gameIDFragment = new GameIDFragment();
 
         final FragmentManager fragmentManager = getSupportFragmentManager();
 
@@ -169,12 +169,14 @@ public class MainActivity extends AppCompatActivity
         fragmentTransaction.add(R.id.content_main, chatFragment);
         fragmentTransaction.add(R.id.content_main, settingsFragment);
 //        fragmentTransaction.add(R.id.content_main, beerFragment);
+        fragmentTransaction.add(R.id.content_main, gameIDFragment);
 
         fragmentTransaction.detach(playerFragment);
         fragmentTransaction.detach(teamFragment);
         fragmentTransaction.detach(chatFragment);
         fragmentTransaction.detach(settingsFragment);
 //        fragmentTransaction.detach(beerFragment);
+        fragmentTransaction.detach(gameIDFragment);
         fragmentTransaction.commit();
 
         currentFragment = mapFragment;
@@ -395,6 +397,12 @@ public class MainActivity extends AppCompatActivity
 //            fragmentTransaction.attach(beerFragment);
 //            currentFragment = beerFragment;
 //        }
+        else if (id == R.id.nav_gameID) {
+            if (menu != null)
+                getMenuInflater().inflate(R.menu.main, menu);
+            fragmentTransaction.attach(gameIDFragment);
+            currentFragment = gameIDFragment;
+        }
 
         fragmentTransaction.commit();
         queryUpdateData();
@@ -406,4 +414,5 @@ public class MainActivity extends AppCompatActivity
     @Override
     public void onFragmentInteraction(final Uri uri) {
     }
+
 }

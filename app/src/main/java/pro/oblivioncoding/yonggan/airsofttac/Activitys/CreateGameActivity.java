@@ -22,7 +22,6 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.concurrent.TimeUnit;
 
 import at.favre.lib.crypto.bcrypt.BCrypt;
 import pro.oblivioncoding.yonggan.airsofttac.AdMob.AdMobIds;
@@ -35,8 +34,6 @@ import pro.oblivioncoding.yonggan.airsofttac.Fragments.Dialog.AssignKMLDialogFra
 import pro.oblivioncoding.yonggan.airsofttac.R;
 
 public class CreateGameActivity extends AppCompatActivity {
-
-    private String kmlTitle;
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
@@ -58,7 +55,7 @@ public class CreateGameActivity extends AppCompatActivity {
             new DatePickerDialog(this,
                     (view, year, month, dayOfMonth) -> {
                         ((EditText) findViewById(R.id.date))
-                                .setText(year + "-" + String.format("%02d", month)
+                                .setText(year + "-" + String.format("%02d", month + 1)
                                         + "-" + String.format("%02d", dayOfMonth));
                     }, mYear, mMonth, mDay).show();
         });
@@ -86,8 +83,8 @@ public class CreateGameActivity extends AppCompatActivity {
                     (findViewById(R.id.createGame)).setOnClickListener(v -> {
                         Toast.makeText(this, "Trying to create Game...", Toast.LENGTH_LONG).show();
                         final GameData gameData = createGame();
-                        writeGameData(gameData);
                         if (gameData != null) {
+                            writeGameData(gameData);
                             FirebaseDB.setGameData(gameData);
                             CreateGameActivity.this.startActivity(new Intent(
                                     CreateGameActivity.this, MainActivity.class));
@@ -133,15 +130,27 @@ public class CreateGameActivity extends AppCompatActivity {
             final Date startTime = simpleDateFormat.parse(((EditText) findViewById(R.id.date))
                     .getText().toString()
                     + " " + ((EditText) findViewById(R.id.startTime)).getText().toString());
-            simpleDateFormat = new SimpleDateFormat("HH:mm:ss");
-            Date durationDate = simpleDateFormat.parse(((EditText) findViewById(R.id.duration)).getText().toString());
-            durationDate = new Date(startTime.getTime() + durationDate.getTime());
-            durationDate = new Date(durationDate.getTime() + TimeUnit.HOURS.toMillis(1));
+            final Date durationDate = simpleDateFormat.parse(((EditText) findViewById(R.id.date))
+                    .getText().toString()
+                    + " " + ((EditText) findViewById(R.id.duration)).getText().toString());
+
+            if (durationDate.compareTo(startTime) <= 0) {
+                Toast.makeText(this, "Please make shure duration Time is after start time!", Toast.LENGTH_LONG).show();
+                return null;
+            }
+
+            if (((EditText) findViewById(R.id.nickNameField)).getText().toString().isEmpty()) {
+                Toast.makeText(this, "Please fill Nickname!", Toast.LENGTH_LONG).show();
+                return null;
+            }
+
             final ArrayList<UserData> userData = new ArrayList<UserData>();
             userData.add(new UserData(FirebaseAuthentication.getFirebaseUser().getEmail(),
                     true, ((EditText) findViewById(R.id.nickNameField)).getText().toString()));
+
             String kmlTitle = ((TextView) findViewById(R.id.kmlTitleLabel)).getText().toString();
             if (kmlTitle == null) kmlTitle = "";
+
             return new GameData(((EditText) findViewById(R.id.gameID)).getText().toString(),
                     FirebaseAuthentication.getFirebaseUser().getEmail(),
                     new Timestamp(startTime),
