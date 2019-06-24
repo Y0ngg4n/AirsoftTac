@@ -202,6 +202,7 @@ public class GoogleLocationService extends Service implements LocationListener, 
     }
 
     private void updateLocationData(final Location location) {
+        if (location == null) return;
         final UserData ownUserData = FirebaseDB.getGameData().getOwnUserData(FirebaseAuthentication.getFirebaseUser().getEmail());
         Log.d("LocationService", "OnLocationChanged");
         if (ownUserData != null) {
