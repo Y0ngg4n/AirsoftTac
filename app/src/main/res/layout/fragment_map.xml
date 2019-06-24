@@ -36,6 +36,16 @@
         app:srcCompat="@drawable/ic_map_white" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/togglemaprotation"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="150dp"
+        app:layout_constraintEnd_toEndOf="@id/currentlocationfb"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/ic_map_rotation" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/currentlocationfb"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -129,6 +139,18 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:srcCompat="@drawable/ic_fb_hit" />
+
+    <TextView
+        android:id="@+id/rotationDegrees"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="150dp"
+        android:text="Degrees"
+        android:textColor="@android:color/white"
+        android:visibility="invisible"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/togglemaprotation" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

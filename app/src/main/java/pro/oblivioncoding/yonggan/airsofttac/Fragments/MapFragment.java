@@ -14,6 +14,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -73,6 +74,7 @@ import pro.oblivioncoding.yonggan.airsofttac.InfoWindowAdapter.CustomMarkerOwnIn
 import pro.oblivioncoding.yonggan.airsofttac.InfoWindowAdapter.CustomMarkerTeamInfoWindowAdapter;
 import pro.oblivioncoding.yonggan.airsofttac.MapUtils.ClusterMarkerItem;
 import pro.oblivioncoding.yonggan.airsofttac.R;
+import pro.oblivioncoding.yonggan.airsofttac.Services.GoogleLocationService;
 
 public class MapFragment extends Fragment implements OnMapReadyCallback {
 
@@ -80,6 +82,9 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
     private static MapScaleView scaleView;
     private static FloatingActionButton hitfb, underfirefb, supportfb, missionfb;
     private static FloatingActionButton reloadfb, setMarkerfb, removeMarkerfb, swapFlagfb;
+    private static TextView rotationDegrees;
+    private FloatingActionButton currentlocationfb, toggleMap, toggleMapRotation;
+
     private static int MapType = GoogleMap.MAP_TYPE_HYBRID;
     private static MapStyleOptions mapStyleOptions;
     @NonNull
@@ -90,7 +95,10 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
     @Nullable
     private Marker currentMarker;
     private View rootView;
-    private FloatingActionButton currentlocationfb, toggleMap;
+
+    public static TextView getRotationDegrees() {
+        return rotationDegrees;
+    }
     @NonNull
     private HashMap<Marker, TacticalMarkerData> tacticalMarkerDataHashMap = new HashMap<>();
     @NonNull
@@ -112,6 +120,10 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
     private ArrayList<GroundOverlay> groundOverlays = new ArrayList<>();
     @Nullable
     private ClusterManager<ClusterMarkerItem> clusterManager;
+
+    public static GoogleMap getGoogleMap() {
+        return googleMap;
+    }
 
     public MapFragment() {
         // Required empty public constructor
@@ -164,7 +176,8 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
 
         scaleView = rootView.findViewById(R.id.scaleView);
         toggleMap = rootView.findViewById(R.id.togglemapfb);
-
+        toggleMapRotation = rootView.findViewById(R.id.togglemaprotation);
+        rotationDegrees = rootView.findViewById(R.id.rotationDegrees);
         hitfb = rootView.findViewById(R.id.hitfb);
         underfirefb = rootView.findViewById(R.id.underfirefb);
         supportfb = rootView.findViewById(R.id.supportfb);
@@ -639,6 +652,15 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
             }
         });
 
+        toggleMapRotation.setOnClickListener(v -> {
+            GoogleLocationService.mapsRotate = !GoogleLocationService.mapsRotate;
+            if (GoogleLocationService.mapsRotate) {
+                rotationDegrees.setVisibility(View.VISIBLE);
+            } else {
+                rotationDegrees.setVisibility(View.INVISIBLE);
+            }
+        });
+
         if (mapStyleOptions != null) {
             googleMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
             googleMap.setMapStyle(mapStyleOptions);
@@ -657,7 +679,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                 final UserData userData = userMarkerDataHashMap.get(marker);
                 googleMap.setInfoWindowAdapter(new CustomMarkerTeamInfoWindowAdapter(getContext(),
                         userData.getPositionLat(), userData.getPositionLong(),
-                        userData.getEmail(), userData.getEmail(), userData.getTeam(), distance));
+                        userData.getEmail(), userData.getNickname(), userData.getTeam(), distance));
             } else if (tacticalMarkerDataHashMap.containsKey(marker)) {
                 final TacticalMarkerData tacticalMarkerData = tacticalMarkerDataHashMap.get(marker);
                 googleMap.setInfoWindowAdapter(new CustomMarkerInfoWindowAdapter(getContext(),

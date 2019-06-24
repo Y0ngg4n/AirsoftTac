@@ -49,38 +49,38 @@ public class GameIDFragment extends Fragment {
      * @return A new instance of fragment GameIDFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static GameIDFragment newInstance(String param1, String param2) {
-        GameIDFragment fragment = new GameIDFragment();
+    public static GameIDFragment newInstance(final String param1, final String param2) {
+        final GameIDFragment fragment = new GameIDFragment();
         return fragment;
     }
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
+    public void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(final LayoutInflater inflater, final ViewGroup container,
+                             final Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View rootView = inflater.inflate(R.layout.fragment_game_id, container, false);
+        final View rootView = inflater.inflate(R.layout.fragment_game_id, container, false);
         getActivity().runOnUiThread(() -> {
-            String gameID = FirebaseDB.getGameData().getGameID();
+            final String gameID = FirebaseDB.getGameData().getGameID();
             ((TextView) rootView.findViewById(R.id.gameIDTitle)).setText(gameID);
-            ImageView gameIDQRCode = rootView.findViewById(R.id.gameIDQRCode);
-            QRCodeWriter qrCodeWriter = new QRCodeWriter();
-            Point point = new Point();
+            final ImageView gameIDQRCode = rootView.findViewById(R.id.gameIDQRCode);
+            final QRCodeWriter qrCodeWriter = new QRCodeWriter();
+            final Point point = new Point();
             getActivity().getWindowManager().getDefaultDisplay().getSize(point);
             try {
-                BitMatrix bitMatrix = qrCodeWriter.encode(gameID, BarcodeFormat.QR_CODE, point.x - 50, point.x - 50);
-                Bitmap bitmap = Bitmap.createBitmap(bitMatrix.getWidth(), bitMatrix.getHeight(), Bitmap.Config.RGB_565);
+                final BitMatrix bitMatrix = qrCodeWriter.encode(gameID, BarcodeFormat.QR_CODE, point.x - 50, point.x - 50);
+                final Bitmap bitmap = Bitmap.createBitmap(bitMatrix.getWidth(), bitMatrix.getHeight(), Bitmap.Config.RGB_565);
                 for (int x = 0; x < bitMatrix.getWidth(); x++) {
                     for (int y = 0; y < bitMatrix.getHeight(); y++) {
                         bitmap.setPixel(x, y, bitMatrix.get(x, y) ? Color.BLACK : Color.WHITE);
                     }
                 }
                 gameIDQRCode.setImageBitmap(bitmap);
-            } catch (WriterException e) {
+            } catch (final WriterException e) {
                 Log.e("QRCode", "Could not generate QR Code!");
                 Log.e("QRCode", e.getMessage());
                 Toast.makeText(getContext(), "Could not generate QR Code!", Toast.LENGTH_LONG).show();
@@ -90,14 +90,14 @@ public class GameIDFragment extends Fragment {
     }
 
     // TODO: Rename method, update argument and hook method into UI event
-    public void onButtonPressed(Uri uri) {
+    public void onButtonPressed(final Uri uri) {
         if (mListener != null) {
             mListener.onFragmentInteraction(uri);
         }
     }
 
     @Override
-    public void onAttach(Context context) {
+    public void onAttach(final Context context) {
         super.onAttach(context);
         if (context instanceof OnFragmentInteractionListener) {
             mListener = (OnFragmentInteractionListener) context;

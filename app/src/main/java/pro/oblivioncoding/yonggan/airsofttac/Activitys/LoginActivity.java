@@ -39,9 +39,9 @@ public class LoginActivity extends AppCompatActivity {
         FirebaseApp.initializeApp(getApplicationContext());
         MobileAds.initialize(getApplicationContext(), AdMobIds.AdmobAppID);
 
-        EditText emailField = findViewById(R.id.email);
-        EditText passwordField = findViewById(R.id.password);
-        SharedPreferences sharedPreferences = getSharedPreferences(sharedPrefs, Context.MODE_PRIVATE);
+        final EditText emailField = findViewById(R.id.email);
+        final EditText passwordField = findViewById(R.id.password);
+        final SharedPreferences sharedPreferences = getSharedPreferences(sharedPrefs, Context.MODE_PRIVATE);
 
         emailField.setText(sharedPreferences.getString(emailPref, ""));
         passwordField.setText(sharedPreferences.getString(passwordPref, ""));
@@ -67,7 +67,7 @@ public class LoginActivity extends AppCompatActivity {
                                                 Log.d("FirebaseLogin", "signInWithEmail:success");
                                                 FirebaseAuthentication.setFirebaseUser(
                                                         FirebaseAuthentication.getFirebaseAuth().getCurrentUser());
-                                                SharedPreferences.Editor editor = sharedPreferences.edit();
+                                                final SharedPreferences.Editor editor = sharedPreferences.edit();
                                                 editor.putString(emailPref, email);
                                                 editor.putString(passwordPref, password);
                                                 editor.commit();

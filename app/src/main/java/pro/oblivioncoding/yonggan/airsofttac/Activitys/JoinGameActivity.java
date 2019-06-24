@@ -56,10 +56,10 @@ public class JoinGameActivity extends AppCompatActivity implements ZXingScannerV
             mScannerView.setResultHandler(this::handleResult);
         });
 
-        SharedPreferences sharedPreferences = getSharedPreferences(sharedPrefs, Context.MODE_PRIVATE);
-        EditText passwordField = findViewById(R.id.password);
-        TextView nickNameField = findViewById(R.id.nickName);
-        EditText joinGameID = findViewById(R.id.joinGameID);
+        final SharedPreferences sharedPreferences = getSharedPreferences(sharedPrefs, Context.MODE_PRIVATE);
+        final EditText passwordField = findViewById(R.id.password);
+        final TextView nickNameField = findViewById(R.id.nickName);
+        final EditText joinGameID = findViewById(R.id.joinGameID);
 
         passwordField.setText(sharedPreferences.getString(passwordPref, ""));
         nickNameField.setText(sharedPreferences.getString(nickNamePref, ""));
@@ -90,7 +90,7 @@ public class JoinGameActivity extends AppCompatActivity implements ZXingScannerV
                                         FirebaseDB.getGameData().getOwnUserData(FirebaseAuthentication.getFirebaseUser().getEmail())
                                                 .setNickname(nickNameField.getText().toString());
                                     }
-                                    SharedPreferences.Editor editor = sharedPreferences.edit();
+                                    final SharedPreferences.Editor editor = sharedPreferences.edit();
                                     editor.putString(passwordPref, passwordField.getText().toString());
                                     editor.putString(nickNamePref, nickNameField.getText().toString());
                                     editor.putString(gameIDPref, joinGameID.getText().toString());

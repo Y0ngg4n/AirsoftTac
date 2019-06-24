@@ -126,7 +126,7 @@ public class CreateGameActivity extends AppCompatActivity {
 
     private GameData createGame() {
         try {
-            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            final SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
             final Date startTime = simpleDateFormat.parse(((EditText) findViewById(R.id.date))
                     .getText().toString()
                     + " " + ((EditText) findViewById(R.id.startTime)).getText().toString());

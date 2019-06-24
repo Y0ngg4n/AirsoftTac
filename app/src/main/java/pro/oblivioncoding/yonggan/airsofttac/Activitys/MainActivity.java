@@ -1,12 +1,8 @@
 package pro.oblivioncoding.yonggan.airsofttac.Activitys;
 
 import android.Manifest;
-import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.location.Criteria;
-import android.location.LocationListener;
-import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
@@ -57,10 +53,8 @@ public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, MapFragment.OnFragmentInteractionListener, PlayerFragment.OnFragmentInteractionListener, TeamFragment.OnFragmentInteractionListener, ChatFragment.OnFragmentInteractionListener, SettingsFragment.OnFragmentInteractionListener, BeerFragment.OnFragmentInteractionListener, GameIDFragment.OnFragmentInteractionListener {
 
     private static MainActivity instance;
-    private static LocationManager locationManager;
-    private static LocationListener locationListener;
-    private static long updateTime = 60000;
-    private static float minDistance = 10;
+
+
     private Fragment currentFragment;
     private MapFragment mapFragment;
     private PlayerFragment playerFragment;
@@ -69,26 +63,19 @@ public class MainActivity extends AppCompatActivity
     private BeerFragment beerFragment;
     private GameIDFragment gameIDFragment;
 
-    private Criteria locationManagerCriteria;
+    public MapFragment getMapFragment() {
+        return mapFragment;
+    }
+
     private TeamFragment teamFragment;
     private Menu menu;
+
     @NonNull
     private GoogleLocationService googleLocationService = new GoogleLocationService();
 
-    public static LocationListener getLocationListener() {
-        return locationListener;
-    }
-
-    public static LocationManager getLocationManager() {
-        return locationManager;
-    }
-
-    public static float getUpdateTime() {
-        return updateTime;
-    }
-
-    public static float getMinDistance() {
-        return minDistance;
+    @NonNull
+    public GoogleLocationService getGoogleLocationService() {
+        return googleLocationService;
     }
 
     public static MainActivity getInstance() {
@@ -127,7 +114,7 @@ public class MainActivity extends AppCompatActivity
                 final Date currentTime = Timestamp.now().toDate();
                 final Date startDate = FirebaseDB.getGameData().getStartTime().toDate();
                 final Date endDate = FirebaseDB.getGameData().getEndTime().toDate();
-                Calendar calendar = Calendar.getInstance();
+                final Calendar calendar = Calendar.getInstance();
                 if (currentTime.before(startDate)) {
                     calendar.setTime(startDate);
                     runOnUiThread(() -> {
@@ -186,15 +173,6 @@ public class MainActivity extends AppCompatActivity
             navigationView.getMenu().getItem(1).setVisible(true);
         }
         requestLocationPermissions();
-
-        locationManager = (LocationManager) this.
-
-                getSystemService(Context.LOCATION_SERVICE);
-
-        locationManagerCriteria = new Criteria();
-        locationManagerCriteria.setAccuracy(Criteria.ACCURACY_FINE);
-        locationManager.getBestProvider(locationManagerCriteria, true);
-        locationListener = googleLocationService;
 
         startService(new Intent(getApplicationContext(), googleLocationService.getClass()));
 
@@ -267,7 +245,7 @@ public class MainActivity extends AppCompatActivity
         mapFragment.setMarker();
     }
 
-    private void requestLocationPermissions() {
+    public void requestLocationPermissions() {
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_COARSE_LOCATION}, 1);
         } else {
