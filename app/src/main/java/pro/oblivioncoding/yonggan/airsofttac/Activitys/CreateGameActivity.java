@@ -84,15 +84,20 @@ public class CreateGameActivity extends AppCompatActivity {
                         Toast.makeText(this, "Trying to create Game...", Toast.LENGTH_LONG).show();
                         final GameData gameData = createGame();
                         if (gameData != null) {
-                            writeGameData(gameData);
-                            FirebaseDB.setGameData(gameData);
-                            CreateGameActivity.this.startActivity(new Intent(
-                                    CreateGameActivity.this, MainActivity.class));
+                            FirebaseDB.getGames().document().set(gameData).addOnCompleteListener(task -> {
+                                if (task.isSuccessful()) {
+                                    FirebaseDB.setGameData(gameData);
+                                    CreateGameActivity.this.startActivity(new Intent(
+                                            CreateGameActivity.this, MainActivity.class));
+                                } else {
+                                    Toast.makeText(getApplicationContext(), "Couldn´t create Game", Toast.LENGTH_LONG).show();
+                                }
+                            });
                         }
                     });
                 } else {
                     Toast.makeText(getApplicationContext(), "GameID allready existing!",
-                            Toast.LENGTH_LONG);
+                            Toast.LENGTH_LONG).show();
                 }
             } else {
                 Toast.makeText(getApplicationContext(), "Couldn´t query Database!",
@@ -164,6 +169,6 @@ public class CreateGameActivity extends AppCompatActivity {
     }
 
     private void writeGameData(@NonNull final GameData gameData) {
-        FirebaseDB.getGames().document().set(gameData);
+
     }
 }
