@@ -84,8 +84,8 @@ public class CreateGameActivity extends AppCompatActivity {
                         Toast.makeText(this, "Trying to create Game...", Toast.LENGTH_LONG).show();
                         final GameData gameData = createGame();
                         if (gameData != null) {
-                            FirebaseDB.getGames().document().set(gameData).addOnCompleteListener(task -> {
-                                if (task.isSuccessful()) {
+                            FirebaseDB.getGames().document().set(gameData).addOnCompleteListener(task1 -> {
+                                if (task1.isSuccessful()) {
                                     FirebaseDB.setGameData(gameData);
                                     CreateGameActivity.this.startActivity(new Intent(
                                             CreateGameActivity.this, MainActivity.class));

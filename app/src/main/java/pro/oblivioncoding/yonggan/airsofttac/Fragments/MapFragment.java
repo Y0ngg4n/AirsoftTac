@@ -57,6 +57,7 @@ import java.util.HashMap;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import pro.oblivioncoding.yonggan.airsofttac.Activitys.MainActivity;
 import pro.oblivioncoding.yonggan.airsofttac.Firebase.FirebaseAuthentication;
 import pro.oblivioncoding.yonggan.airsofttac.Firebase.FirebaseDB;
 import pro.oblivioncoding.yonggan.airsofttac.Firebase.GameCollection.GameData;
@@ -333,6 +334,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                     if (task.getResult().size() > 0) {
                         final DocumentSnapshot documentSnapshot = task.getResult().getDocuments().get(0);
                         if (documentSnapshot != null && documentSnapshot.exists()) {
+                            MainActivity.getInstance().getGoogleLocationService().updateLastKnowLocation();
                             updateData(documentSnapshot);
                         } else {
                             Log.d("UpdateDB", "Current data: null");

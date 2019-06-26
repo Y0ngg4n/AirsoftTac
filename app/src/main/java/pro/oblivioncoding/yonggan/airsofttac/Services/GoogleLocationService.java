@@ -55,8 +55,13 @@ public class GoogleLocationService extends Service implements LocationListener, 
     private float[] mRotationMatrix = new float[16];
     private Sensor gsensor;
     private float mDeclination;
+    private static MainActivity mainActivity;
 
     public GoogleLocationService() {
+    }
+
+    public GoogleLocationService(final MainActivity mainActivity) {
+        GoogleLocationService.mainActivity = mainActivity;
     }
 
     @Override
@@ -69,7 +74,7 @@ public class GoogleLocationService extends Service implements LocationListener, 
     public void onLocationChanged(@NonNull final Location location) {
         updateLocationData(location);
         if (mapsRotate) {
-            GeomagneticField field = new GeomagneticField(
+            final GeomagneticField field = new GeomagneticField(
                     (float) location.getLatitude(),
                     (float) location.getLongitude(),
                     (float) location.getAltitude(),
@@ -81,12 +86,10 @@ public class GoogleLocationService extends Service implements LocationListener, 
 
     @Override
     public void onStatusChanged(final String provider, final int status, final Bundle extras) {
-        if (ActivityCompat.checkSelfPermission(getApplicationContext(),
-                Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED
-                && ActivityCompat.checkSelfPermission(getApplicationContext(),
-                Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+        if (ActivityCompat.checkSelfPermission(mainActivity, android.Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED
+                && ActivityCompat.checkSelfPermission(mainActivity, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
             Log.d("LocationService", "Starting request of Location");
-            updateLocationData(locationManager.getLastKnownLocation(locationManager.getBestProvider(locationManagerCriteria, true)));
+            updateLastKnowLocation();
             locationManager.requestLocationUpdates(locationManager.getBestProvider(
                     locationManagerCriteria, true),
                     updateTime, minDistance, locationListener
@@ -99,12 +102,10 @@ public class GoogleLocationService extends Service implements LocationListener, 
 
     @Override
     public void onProviderEnabled(final String provider) {
-        if (ActivityCompat.checkSelfPermission(getApplicationContext(),
-                Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED
-                && ActivityCompat.checkSelfPermission(getApplicationContext(),
-                Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+        if (ActivityCompat.checkSelfPermission(mainActivity, android.Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED
+                && ActivityCompat.checkSelfPermission(mainActivity, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
             Log.d("LocationService", "Starting request of Location");
-            updateLocationData(locationManager.getLastKnownLocation(locationManager.getBestProvider(locationManagerCriteria, true)));
+            updateLastKnowLocation();
             locationManager.requestLocationUpdates(locationManager.getBestProvider(
                     locationManagerCriteria, true),
                     updateTime, minDistance, locationListener
@@ -118,12 +119,10 @@ public class GoogleLocationService extends Service implements LocationListener, 
 
     @Override
     public void onProviderDisabled(final String provider) {
-        if (ActivityCompat.checkSelfPermission(getApplicationContext(),
-                Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED
-                && ActivityCompat.checkSelfPermission(getApplicationContext(),
-                Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+        if (ActivityCompat.checkSelfPermission(mainActivity, android.Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED
+                && ActivityCompat.checkSelfPermission(mainActivity, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
             Log.d("LocationService", "Starting request of Location");
-            updateLocationData(locationManager.getLastKnownLocation(locationManager.getBestProvider(locationManagerCriteria, true)));
+            updateLastKnowLocation();
             locationManager.requestLocationUpdates(locationManager.getBestProvider(
                     locationManagerCriteria, true),
                     updateTime, minDistance, locationListener
@@ -143,22 +142,22 @@ public class GoogleLocationService extends Service implements LocationListener, 
     }
 
     private void startForeground() {
-        notificationIntent = new Intent(getApplicationContext(), MainActivity.class);
+        notificationIntent = new Intent(this, MainActivity.class);
 
-        final PendingIntent pendingIntent = PendingIntent.getActivity(getApplicationContext(), 0,
+        final PendingIntent pendingIntent = PendingIntent.getActivity(this, 0,
                 notificationIntent, 0);
 
         if (Build.VERSION.SDK_INT >= 26) {
             final NotificationManager notificationManager =
-                    (NotificationManager) getApplicationContext().getSystemService(
-                            getApplicationContext().NOTIFICATION_SERVICE);
+                    (NotificationManager) this.getSystemService(
+                            NOTIFICATION_SERVICE);
             final NotificationChannel channel = new NotificationChannel("airsofttaclocationservice",
                     NOTIF_CHANNEL_ID,
                     NotificationManager.IMPORTANCE_DEFAULT);
             channel.setDescription("This Notification Channel is for the AirsoftTacLocationService Notification");
             notificationManager.createNotificationChannel(channel);
         }
-        startForeground(NOTIF_ID, new NotificationCompat.Builder(getApplicationContext(),
+        startForeground(NOTIF_ID, new NotificationCompat.Builder(this,
                 "airsofttaclocationservice") // don't forget create a notification channel first
                 .setOngoing(true)
                 .setSmallIcon(pro.oblivioncoding.yonggan.airsofttac.R.drawable.ic_pin_drop_black_24dp)
@@ -179,12 +178,10 @@ public class GoogleLocationService extends Service implements LocationListener, 
         locationManagerCriteria.setAccuracy(Criteria.ACCURACY_FINE);
         locationManager.getBestProvider(locationManagerCriteria, true);
         locationListener = this;
-        if (ActivityCompat.checkSelfPermission(getApplicationContext(),
-                Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED
-                && ActivityCompat.checkSelfPermission(getApplicationContext(),
-                Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+        if (ActivityCompat.checkSelfPermission(mainActivity, android.Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED
+                && ActivityCompat.checkSelfPermission(mainActivity, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
             Log.d("LocationService", "Starting request of Location");
-            updateLocationData(locationManager.getLastKnownLocation(locationManager.getBestProvider(locationManagerCriteria, true)));
+            updateLastKnowLocation();
             locationManager.requestLocationUpdates(locationManager.getBestProvider(
                     locationManagerCriteria, true),
                     updateTime, minDistance, locationListener
@@ -224,10 +221,20 @@ public class GoogleLocationService extends Service implements LocationListener, 
                     }
                 } else {
                     Log.d("LocationService", "GameID not found!");
-                    Toast.makeText(getApplicationContext(), "Couldn´t query Database!",
+                    Toast.makeText(this, "Couldn´t query Database!",
                             Toast.LENGTH_LONG).show();
                 }
             });
+        }
+    }
+
+    public void updateLastKnowLocation() {
+        if (ActivityCompat.checkSelfPermission(mainActivity, android.Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED
+                && ActivityCompat.checkSelfPermission(mainActivity, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+            if (locationManagerCriteria == null) return;
+            final Location lastKnownLocation = locationManager.getLastKnownLocation(locationManager.getBestProvider(locationManagerCriteria, true));
+            if (lastKnownLocation != null)
+                updateLocationData(lastKnownLocation);
         }
     }
 
@@ -237,27 +244,27 @@ public class GoogleLocationService extends Service implements LocationListener, 
     }
 
     @Override
-    public void onSensorChanged(SensorEvent event) {
+    public void onSensorChanged(final SensorEvent event) {
         if (event.sensor.getType() == Sensor.TYPE_ROTATION_VECTOR && mapsRotate) {
             SensorManager.getRotationMatrixFromVector(
                     mRotationMatrix, event.values);
-            float[] orientation = new float[3];
+            final float[] orientation = new float[3];
             SensorManager.getOrientation(mRotationMatrix, orientation);
-            float bearing = (float) Math.toDegrees(orientation[0]) + mDeclination;
+            final float bearing = (float) Math.toDegrees(orientation[0]) + mDeclination;
             updateCamera(bearing);
         }
     }
 
     @Override
-    public void onAccuracyChanged(Sensor sensor, int accuracy) {
+    public void onAccuracyChanged(final Sensor sensor, final int accuracy) {
 
     }
 
-    private void updateCamera(float bearing) {
-        MapFragment mapFragment = MainActivity.getInstance().getMapFragment();
+    private void updateCamera(final float bearing) {
+        final MapFragment mapFragment = MainActivity.getInstance().getMapFragment();
         if (MapFragment.getGoogleMap() != null && mapsRotate) {
-            CameraPosition oldPos = MapFragment.getGoogleMap().getCameraPosition();
-            CameraPosition pos = CameraPosition.builder(oldPos).bearing(bearing).build();
+            final CameraPosition oldPos = MapFragment.getGoogleMap().getCameraPosition();
+            final CameraPosition pos = CameraPosition.builder(oldPos).bearing(bearing).build();
             MapFragment.getGoogleMap().moveCamera(CameraUpdateFactory.newCameraPosition(pos));
             MapFragment.getRotationDegrees().setText(bearing + "°");
         }

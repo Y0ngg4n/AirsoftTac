@@ -71,7 +71,7 @@ public class MainActivity extends AppCompatActivity
     private Menu menu;
 
     @NonNull
-    private GoogleLocationService googleLocationService = new GoogleLocationService();
+    private GoogleLocationService googleLocationService = new GoogleLocationService(this);
 
     @NonNull
     public GoogleLocationService getGoogleLocationService() {
