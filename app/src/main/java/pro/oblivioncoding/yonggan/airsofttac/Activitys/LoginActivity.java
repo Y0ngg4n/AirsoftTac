@@ -3,6 +3,7 @@ package pro.oblivioncoding.yonggan.airsofttac.Activitys;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.EditText;
@@ -88,6 +89,14 @@ public class LoginActivity extends AppCompatActivity {
                             }
                         }
                     });
+        });
+
+        findViewById(R.id.privacyPolicy).setOnClickListener(v -> {
+            startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://airsofttac.oblivioncoding.pro/privacy_policy.html")));
+        });
+
+        findViewById(R.id.termsandConditions).setOnClickListener(v -> {
+            startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://airsofttac.oblivioncoding.pro/terms_and_conditions.html")));
         });
 
 
