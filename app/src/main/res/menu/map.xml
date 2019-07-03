@@ -37,4 +37,22 @@
             app:showAsAction="never" />
     </group>
 
+    <group
+        android:id="@+id/showRadials"
+        android:checkableBehavior="all">
+        <item
+            android:id="@+id/showFirstRadials"
+            android:checked="true"
+            android:orderInCategory="100"
+            android:title="Show first radial circles"
+            app:showAsAction="never" />
+
+        <item
+            android:id="@+id/showSecondRadials"
+            android:checked="true"
+            android:orderInCategory="100"
+            android:title="Show second radial circles"
+            app:showAsAction="never" />
+    </group>
+
 </menu>

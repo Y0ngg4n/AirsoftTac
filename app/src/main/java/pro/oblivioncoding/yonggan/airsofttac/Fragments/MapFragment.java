@@ -29,6 +29,8 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+import com.google.android.gms.maps.model.Circle;
+import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.GroundOverlay;
 import com.google.android.gms.maps.model.GroundOverlayOptions;
 import com.google.android.gms.maps.model.LatLng;
@@ -91,6 +93,8 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
     @NonNull
     public ShowSettings showSettings = ShowSettings.AllPlayer;
     public boolean showKmlLayer = true, showHeatMap = false;
+    public boolean showFirstRadials = true, showSecondRadials = true;
+
     @Nullable
     private PlayerFragment.OnFragmentInteractionListener mListener;
     @Nullable
@@ -100,6 +104,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
     public static TextView getRotationDegrees() {
         return rotationDegrees;
     }
+
     @NonNull
     private HashMap<Marker, TacticalMarkerData> tacticalMarkerDataHashMap = new HashMap<>();
     @NonNull
@@ -114,6 +119,11 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
     private HashMap<Marker, UserData> userMarkerDataHashMap = new HashMap<>();
     @NonNull
     private HashMap<UserData, Polyline> userMarkerPolyline = new HashMap<>();
+
+    private HashMap<UserData, Circle> userDataCircleFirstHashMap = new HashMap<>();
+
+    private HashMap<UserData, Circle> userDataCircleSecondHashMap = new HashMap<>();
+
     private KmlLayer kmlLayer;
     @NonNull
     private ArrayList<Marker> kmlMarker = new ArrayList<>();
@@ -327,6 +337,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         });
 
         reloadfb.setOnClickListener(v -> {
+            MainActivity.getInstance().getGoogleLocationService().requestLocation();
             reloadfb.hide();
             FirebaseDB.getGames().whereEqualTo("gameID", FirebaseDB.getGameData().getGameID())
                     .get().addOnCompleteListener(task -> {
@@ -385,6 +396,8 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
 
     public void setAllPositionMarker() {
         userMarkerDataHashMap.clear();
+        userDataCircleFirstHashMap.clear();
+        userDataCircleSecondHashMap.clear();
         userMarkerPolyline.clear();
         for (final UserData userData : FirebaseDB.getGameData().getUsers()) {
             if (showSettings.equals(ShowSettings.ShowTeamOnly)) {
@@ -470,6 +483,18 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                             && teamData.getFlagMarkerData() == null)
                         setPositionMarker(userData);
                 }
+            }
+
+            if (showFirstRadials && userData.isFirst()) {
+                userDataCircleFirstHashMap.put(userData, googleMap.addCircle(new CircleOptions().center(new LatLng(userData.getPositionLat(),
+                        userData.getPositionLong())).radius(50).fillColor(Color.argb(100, 50, 50, 255))
+                        .strokeColor(Color.WHITE)));
+            }
+
+            if (showSecondRadials && userData.isSecond()) {
+                userDataCircleSecondHashMap.put(userData, googleMap.addCircle(new CircleOptions().center(new LatLng(userData.getPositionLat(),
+                        userData.getPositionLong())).radius(100).fillColor(Color.argb(100, 255, 150, 50))
+                        .strokeColor(Color.WHITE)));
             }
         }
 
@@ -673,6 +698,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
 
         googleMap.setOnMarkerClickListener(marker ->
         {
+            Log.d("DDDD", "FFFFFF");
             final float[] distanceResults = new float[1];
             Location.distanceBetween(ownUserData.getPositionLat(), ownUserData.getPositionLong(),
                     marker.getPosition().latitude, marker.getPosition().longitude, distanceResults);
@@ -700,6 +726,9 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                         respawnMarkerData.getLatitude(), respawnMarkerData.getLongitude(),
                         respawnMarkerData.getTitle(), respawnMarkerData.getDescription(), respawnMarkerData.isOwn(), distance));
                 currentMarker = marker;
+                if (FirebaseDB.getGameData().getOwnUserData(FirebaseAuthentication.getFirebaseUser().getEmail()).isOrga()) {
+                    swapFlagfb.show();
+                }
             } else if (hqMarkerDataHashMap.containsKey(marker)) {
                 final HQMarkerData hqMarkerData = hqMarkerDataHashMap.get(marker);
                 googleMap.setInfoWindowAdapter(new CustomMarkerOwnInfoWindowAdapter(getContext(),
@@ -717,20 +746,20 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                 currentMarker = marker;
             }
             if (FirebaseDB.getGameData().getOwnUserData(FirebaseAuthentication.getFirebaseUser().getEmail()).isOrga()) {
+                Log.d("DDDD", "adas");
                 if (currentMarker != null)
                     removeMarkerfb.show();
                 else removeMarkerfb.hide();
-                marker.showInfoWindow();
             }
-
-            googleMap.setOnMapClickListener(e -> {
-                swapFlagfb.hide();
-                removeMarkerfb.show();
-            });
+            marker.showInfoWindow();
 
             return true;
         });
 
+        googleMap.setOnMapClickListener(e -> {
+            swapFlagfb.hide();
+            removeMarkerfb.hide();
+        });
 
         googleMap.setOnCameraMoveListener(() -> {
             scaleView.update(googleMap.getCameraPosition().zoom, googleMap.getCameraPosition().target.latitude);
@@ -825,7 +854,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                         });
 
                         swapFlagfb.setOnClickListener(e -> {
-                            if (flagDataHashMap.containsKey(currentMarker) && currentMarker != null) {
+                            if (currentMarker != null && flagDataHashMap.containsKey(currentMarker)) {
                                 final FlagMarkerData flagMarkerData =
                                         FirebaseDB.getGameData().getFlagMarkerData()
                                                 .get(FirebaseDB.getGameData().getFlagMarkerData()
@@ -833,6 +862,15 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                                 flagMarkerData.setOwn(!flagMarkerData.isOwn());
                                 FirebaseDB.updateObject(documentReference, "flagMarkerData",
                                         FirebaseDB.getGameData().getFlagMarkerData());
+                                currentMarker = null;
+                                swapFlagfb.hide();
+                            } else if (currentMarker != null && respawnMarkerDataHashMap.containsKey(currentMarker)) {
+                                final RespawnMarkerData respawnMarkerData = FirebaseDB.getGameData().getRespawnMarkerData()
+                                        .get(FirebaseDB.getGameData().getRespawnMarkerData()
+                                                .indexOf(respawnMarkerDataHashMap.get(currentMarker)));
+                                respawnMarkerData.setOwn(!respawnMarkerData.isOwn());
+                                FirebaseDB.updateObject(documentReference, "respawnMarkerData",
+                                        FirebaseDB.getGameData().getRespawnMarkerData());
                                 currentMarker = null;
                                 swapFlagfb.hide();
                             }

@@ -42,6 +42,8 @@ public class JoinGameActivity extends AppCompatActivity implements ZXingScannerV
     private static final String nickNamePref = "nickname";
     private static final String passwordPref = "password";
 
+    private boolean allreadyRequestPermission = false;
+
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -139,6 +141,7 @@ public class JoinGameActivity extends AppCompatActivity implements ZXingScannerV
     @Override
     public void onRequestPermissionsResult(final int requestCode, @NonNull final String[] permissions, @NonNull final int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        allreadyRequestPermission = false;
         if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED &&
                 ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED) {
             mScannerView = new ZXingScannerView(this);
@@ -148,8 +151,10 @@ public class JoinGameActivity extends AppCompatActivity implements ZXingScannerV
     }
 
     private void requestCameraPermissions() {
+        if (allreadyRequestPermission) return;
+        allreadyRequestPermission = true;
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.CAMERA}, 1);
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.CAMERA}, 3);
         }
     }
 

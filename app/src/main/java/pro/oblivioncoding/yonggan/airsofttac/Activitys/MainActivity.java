@@ -67,6 +67,8 @@ public class MainActivity extends AppCompatActivity
         return mapFragment;
     }
 
+    private boolean alreadyRequestingLocationPermissions = false;
+
     private TeamFragment teamFragment;
     private Menu menu;
 
@@ -85,7 +87,7 @@ public class MainActivity extends AppCompatActivity
     @Override
     public void onRequestPermissionsResult(final int requestCode, @NonNull final String[] permissions, @NonNull final int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-
+        alreadyRequestingLocationPermissions = false;
         if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED &&
                 ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED &&
                 ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
@@ -246,6 +248,8 @@ public class MainActivity extends AppCompatActivity
     }
 
     public void requestLocationPermissions() {
+        if (alreadyRequestingLocationPermissions) return;
+        alreadyRequestingLocationPermissions = true;
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_COARSE_LOCATION}, 1);
         } else {
@@ -317,6 +321,24 @@ public class MainActivity extends AppCompatActivity
                 } else {
                     item.setChecked(false);
                     mapFragment.showHeatMap = false;
+                }
+                break;
+            case R.id.showFirstRadials:
+                if (!mapFragment.showFirstRadials) {
+                    item.setChecked(true);
+                    mapFragment.showFirstRadials = true;
+                } else {
+                    item.setChecked(false);
+                    mapFragment.showFirstRadials = false;
+                }
+                break;
+            case R.id.showSecondRadials:
+                if (!mapFragment.showSecondRadials) {
+                    item.setChecked(true);
+                    mapFragment.showSecondRadials = true;
+                } else {
+                    item.setChecked(false);
+                    mapFragment.showSecondRadials = false;
                 }
         }
 

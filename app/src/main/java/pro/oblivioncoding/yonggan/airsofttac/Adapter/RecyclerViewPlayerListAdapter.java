@@ -46,6 +46,8 @@ public class RecyclerViewPlayerListAdapter extends RecyclerView.Adapter<Recycler
     public void onBindViewHolder(@NonNull final ViewHolder viewHolder, final int i) {
         final UserData userData = userDataArrayList.get(i);
         viewHolder.isOrga.setChecked(userData.isOrga());
+        viewHolder.first.setChecked(userData.isFirst());
+        viewHolder.second.setChecked(userData.isSecond());
         viewHolder.email.setText(userData.getEmail());
         viewHolder.nickname.setText(userData.getNickname());
     }
@@ -69,7 +71,7 @@ public class RecyclerViewPlayerListAdapter extends RecyclerView.Adapter<Recycler
     public class ViewHolder extends RecyclerView.ViewHolder {
 
         TextView email, nickname;
-        Switch isOrga;
+        Switch isOrga, first, second;
         ConstraintLayout constraintLayout;
 
         public ViewHolder(@NonNull final View itemView) {
@@ -77,6 +79,8 @@ public class RecyclerViewPlayerListAdapter extends RecyclerView.Adapter<Recycler
             email = itemView.findViewById(R.id.playerListEmail);
             nickname = itemView.findViewById(R.id.playerListNickName);
             isOrga = itemView.findViewById(R.id.playerOrgaSwitch);
+            first = itemView.findViewById(R.id.playerFirstSwitch);
+            second = itemView.findViewById(R.id.playerSecondSwitch);
             constraintLayout = itemView.findViewById(R.id.playerListLayout);
             FirebaseDB.getGames().whereEqualTo("gameID", FirebaseDB.getGameData().getGameID())
                     .get().addOnCompleteListener(task -> {
@@ -89,6 +93,22 @@ public class RecyclerViewPlayerListAdapter extends RecyclerView.Adapter<Recycler
                                     FirebaseDB.getGameData().getUsers());
                             isOrga.setVisibility(View.INVISIBLE);
                             showAfterTime(isOrga, 30000L);
+                        });
+
+                        first.setOnCheckedChangeListener((buttonView, isChecked) -> {
+                            FirebaseDB.getGameData().getOwnUserData(email.getText().toString()).setFirst(first.isChecked());
+                            FirebaseDB.updateObject(documentSnapshot, "users",
+                                    FirebaseDB.getGameData().getUsers());
+                            first.setVisibility(View.INVISIBLE);
+                            showAfterTime(first, 30000L);
+                        });
+
+                        second.setOnCheckedChangeListener((buttonView, isChecked) -> {
+                            FirebaseDB.getGameData().getOwnUserData(email.getText().toString()).setSecond(second.isChecked());
+                            FirebaseDB.updateObject(documentSnapshot, "users",
+                                    FirebaseDB.getGameData().getUsers());
+                            second.setVisibility(View.INVISIBLE);
+                            showAfterTime(second, 30000L);
                         });
                     }
                 }

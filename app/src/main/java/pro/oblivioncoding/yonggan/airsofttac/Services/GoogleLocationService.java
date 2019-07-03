@@ -134,8 +134,10 @@ public class GoogleLocationService extends Service implements LocationListener, 
         }
     }
 
+
     @Override
     public int onStartCommand(final Intent intent, final int flags, final int startId) {
+        setLocationManager();
         startForeground();
         requestLocation();
         return super.onStartCommand(intent, flags, startId);
@@ -149,7 +151,7 @@ public class GoogleLocationService extends Service implements LocationListener, 
 
         if (Build.VERSION.SDK_INT >= 26) {
             final NotificationManager notificationManager =
-                    (NotificationManager) this.getSystemService(
+                    (NotificationManager) mainActivity.getSystemService(
                             NOTIFICATION_SERVICE);
             final NotificationChannel channel = new NotificationChannel("airsofttaclocationservice",
                     NOTIF_CHANNEL_ID,
@@ -172,12 +174,19 @@ public class GoogleLocationService extends Service implements LocationListener, 
                 PendingIntent.FLAG_CANCEL_CURRENT);
     }
 
-    public void requestLocation() {
-        locationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
+
+    private void setLocationManager() {
+        if (this == null) return;
+        locationManager = (LocationManager) mainActivity.getSystemService(Context.LOCATION_SERVICE);
         locationManagerCriteria = new Criteria();
         locationManagerCriteria.setAccuracy(Criteria.ACCURACY_FINE);
         locationManager.getBestProvider(locationManagerCriteria, true);
         locationListener = this;
+    }
+
+    public void requestLocation() {
+        if (locationManager == null || locationManagerCriteria == null || locationListener == null)
+            setLocationManager();
         if (ActivityCompat.checkSelfPermission(mainActivity, android.Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED
                 && ActivityCompat.checkSelfPermission(mainActivity, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
             Log.d("LocationService", "Starting request of Location");
@@ -187,14 +196,13 @@ public class GoogleLocationService extends Service implements LocationListener, 
                     updateTime, minDistance, locationListener
             );
 
-            sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
+            sensorManager = (SensorManager) mainActivity.getSystemService(Context.SENSOR_SERVICE);
             gsensor = sensorManager.getDefaultSensor(Sensor.TYPE_ROTATION_VECTOR);
             startRotation();
-            Log.d("LocationService", "starte");
+            Log.d("LocationService", "Start Rotation");
         } else {
             Log.d("LocationService", "Requesting Location Permissions");
             MainActivity.getInstance().requestLocationPermissions();
-
         }
     }
 

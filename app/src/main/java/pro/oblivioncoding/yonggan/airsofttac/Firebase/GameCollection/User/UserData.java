@@ -5,7 +5,7 @@ public class UserData {
 
     private String email, nickname;
 
-    private boolean orga, alive = true, support, mission, underfire;
+    private boolean orga, alive = true, support, mission, underfire, first, second;
 
     private double positionLat, positionLong;
 
@@ -103,5 +103,21 @@ public class UserData {
 
     public void setTeam(final String team) {
         this.team = team;
+    }
+
+    public boolean isFirst() {
+        return first;
+    }
+
+    public void setFirst(boolean first) {
+        this.first = first;
+    }
+
+    public boolean isSecond() {
+        return second;
+    }
+
+    public void setSecond(boolean second) {
+        this.second = second;
     }
 }
