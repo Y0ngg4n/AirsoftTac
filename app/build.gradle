@@ -12,16 +12,7 @@ android {
         versionName "1.7"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
-    buildTypes {
-        release {
-            postprocessing {
-                removeUnusedCode true
-                removeUnusedResources true // <--
-                obfuscate false
-                optimizeCode true
-            }
-        }
-    }
+
     compileOptions {
         sourceCompatibility = '1.8'
         targetCompatibility = '1.8'

@@ -17,7 +17,7 @@ import pro.oblivioncoding.yonggan.airsofttac.Firebase.GameCollection.User.UserDa
 
 public class GameData {
 
-    private String GameID, creatorEmail, password, kmlTitle;
+    private String gameID, creatorEmail, password, kmlTitle;
 
     private Timestamp startTime;
 
@@ -35,7 +35,7 @@ public class GameData {
     private ArrayList<ChatMessage> chatMessages;
 
     public GameData(final String gameID, final String creatorEmail, final Timestamp startTime, final Timestamp endTime, final ArrayList<UserData> users, final String password, final String kmlTitle) {
-        GameID = gameID;
+        this.gameID = gameID;
         this.creatorEmail = creatorEmail;
         this.startTime = startTime;
         this.endTime = endTime;
@@ -53,7 +53,7 @@ public class GameData {
                     final ArrayList<UserData> users, final ArrayList<FlagMarkerData> flagMarkerData,
                     final ArrayList<HQMarkerData> hqMarkerData, final ArrayList<MissionMarkerData> missionMarkerData,
                     final ArrayList<RespawnMarkerData> respawnMarkerData, final ArrayList<TacticalMarkerData> tacticalMarkerData) {
-        GameID = gameID;
+        this.gameID = gameID;
         this.password = password;
         this.creatorEmail = creatorEmail;
         this.startTime = startTime;
@@ -79,11 +79,11 @@ public class GameData {
 
 
     public String getGameID() {
-        return GameID;
+        return gameID;
     }
 
     public void setGameID(final String gameID) {
-        GameID = gameID;
+        this.gameID = gameID;
     }
 
     public String getCreatorEmail() {
