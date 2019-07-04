@@ -160,7 +160,7 @@ public class TeamFragment extends Fragment {
         ArrayList<TeamData> teamDataBuffer = new ArrayList<>();
         if (showSettings.equals(ShowSettings.ShowTeamOnly)) {
             for (final TeamData team : teamData) {
-                if (!ownUserData.getTeam().isEmpty()) {
+                if (ownUserData.getTeam() != null && !ownUserData.getTeam().isEmpty()) {
                     if (ownUserData.getTeam().equals(team.getTeamName())) {
                         teamDataBuffer.add(team);
                     }

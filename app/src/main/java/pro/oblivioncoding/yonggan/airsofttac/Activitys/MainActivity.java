@@ -244,7 +244,10 @@ public class MainActivity extends AppCompatActivity
 
     public void updateData(@NonNull final DocumentSnapshot documentSnapshot) {
         FirebaseDB.setGameData(documentSnapshot.toObject(GameData.class));
-        mapFragment.setMarker();
+        if (mapFragment != null)
+            mapFragment.setMarker();
+        if (chatFragment != null && FirebaseDB.getGameData() != null && FirebaseDB.getGameData().getChatMessages() != null)
+            chatFragment.setRecyclerView(FirebaseDB.getGameData().getChatMessages());
     }
 
     public void requestLocationPermissions() {

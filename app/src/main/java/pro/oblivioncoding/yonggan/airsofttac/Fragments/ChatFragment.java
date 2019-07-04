@@ -150,7 +150,8 @@ public class ChatFragment extends Fragment {
         mListener = null;
     }
 
-    private void setRecyclerView(final ArrayList<ChatMessage> chatMessages) {
+    public void setRecyclerView(final ArrayList<ChatMessage> chatMessages) {
+        if (recyclerView == null) return;
         final RecyclerViewChatMessage recyclerViewChatMessage = new RecyclerViewChatMessage(FirebaseDB.getGameData().getChatMessages());
         recyclerView.setAdapter(recyclerViewChatMessage);
         recyclerView.setLayoutManager(new LinearLayoutManager(rootView.getContext()));

@@ -1,8 +1,6 @@
 package pro.oblivioncoding.yonggan.airsofttac.Fragments;
 
-import android.Manifest;
 import android.content.Context;
-import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -19,7 +17,6 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
 
 import com.github.pengrad.mapscaleview.MapScaleView;
@@ -487,13 +484,13 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
 
             if (showFirstRadials && userData.isFirst()) {
                 userDataCircleFirstHashMap.put(userData, googleMap.addCircle(new CircleOptions().center(new LatLng(userData.getPositionLat(),
-                        userData.getPositionLong())).radius(50).fillColor(Color.argb(100, 50, 50, 255))
+                        userData.getPositionLong())).radius(100).fillColor(Color.argb(100, 50, 50, 255))
                         .strokeColor(Color.WHITE)));
             }
 
             if (showSecondRadials && userData.isSecond()) {
                 userDataCircleSecondHashMap.put(userData, googleMap.addCircle(new CircleOptions().center(new LatLng(userData.getPositionLat(),
-                        userData.getPositionLong())).radius(100).fillColor(Color.argb(100, 255, 150, 50))
+                        userData.getPositionLong())).radius(50).fillColor(Color.argb(100, 255, 150, 50))
                         .strokeColor(Color.WHITE)));
             }
         }
@@ -635,12 +632,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
     @Override
     public void onMapReady(@NonNull final GoogleMap googleMap) {
         MapFragment.googleMap = googleMap;
-        if (ActivityCompat.checkSelfPermission(getContext(),
-                Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED
-                && ActivityCompat.checkSelfPermission(getContext(),
-                Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-            googleMap.setMyLocationEnabled(true);
-        }
+
         googleMap.getUiSettings().setCompassEnabled(true);
         googleMap.getUiSettings().setAllGesturesEnabled(true);
 
