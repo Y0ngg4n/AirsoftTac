@@ -68,6 +68,8 @@ import pro.oblivioncoding.yonggan.airsofttac.Firebase.GameCollection.Marker.Mark
 import pro.oblivioncoding.yonggan.airsofttac.Firebase.GameCollection.Teams.TeamData;
 import pro.oblivioncoding.yonggan.airsofttac.Firebase.GameCollection.User.UserData;
 import pro.oblivioncoding.yonggan.airsofttac.Firebase.KMLCollection.KMLData;
+import pro.oblivioncoding.yonggan.airsofttac.Fragments.Dialog.GotoSearchMarkerSelection;
+import pro.oblivioncoding.yonggan.airsofttac.Fragments.Dialog.GotoSearchPlayerSelection;
 import pro.oblivioncoding.yonggan.airsofttac.Fragments.Dialog.OrgaAddMarkerDialogFragment;
 import pro.oblivioncoding.yonggan.airsofttac.InfoWindowAdapter.CustomMarkerInfoWindowAdapter;
 import pro.oblivioncoding.yonggan.airsofttac.InfoWindowAdapter.CustomMarkerOwnInfoWindowAdapter;
@@ -83,7 +85,8 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
     private static FloatingActionButton hitfb, underfirefb, supportfb, missionfb;
     private static FloatingActionButton reloadfb, setMarkerfb, removeMarkerfb, swapFlagfb;
     private static TextView rotationDegrees;
-    private FloatingActionButton currentlocationfb, toggleMap, toggleMapRotation;
+    private static FloatingActionButton currentlocationfb, toggleMap, toggleMapRotation;
+    private static FloatingActionButton gotoFirstHQSelection, gotoPlayerSelection, gotoMarkerSelection;
 
     private static int MapType = GoogleMap.MAP_TYPE_HYBRID;
     private static MapStyleOptions mapStyleOptions;
@@ -174,13 +177,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         getChildFragmentManager().beginTransaction().replace(R.id.map, mapFragment).commit();
 
         currentlocationfb = rootView.findViewById(R.id.currentlocationfb);
-        final UserData ownUserData = FirebaseDB.getGameData().getOwnUserData(FirebaseAuthentication
-                .getFirebaseUser().getEmail());
-        currentlocationfb.setOnClickListener(v -> {
-            googleMap.animateCamera(CameraUpdateFactory.newLatLng(new LatLng(
-                    ownUserData.getPositionLat(),
-                    ownUserData.getPositionLong())));
-        });
+
 
         scaleView = rootView.findViewById(R.id.scaleView);
         toggleMap = rootView.findViewById(R.id.togglemapfb);
@@ -195,6 +192,10 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         setMarkerfb = rootView.findViewById(R.id.setMarker);
         removeMarkerfb = rootView.findViewById(R.id.removeMarker);
         swapFlagfb = rootView.findViewById(R.id.swapFlagMarker);
+
+        gotoFirstHQSelection = rootView.findViewById(R.id.gotoFirstHQ);
+        gotoMarkerSelection = rootView.findViewById(R.id.gotoMarkerSelection);
+        gotoPlayerSelection = rootView.findViewById(R.id.gotoPlayerSelection);
 
 
         setMarkerfb.hide();
@@ -646,6 +647,13 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
 
         googleMap.setMapType(MapType);
 
+        currentlocationfb.setOnClickListener(v -> {
+            googleMap.animateCamera(CameraUpdateFactory.newLatLng(new LatLng(
+                    ownUserData.getPositionLat(),
+                    ownUserData.getPositionLong())));
+        });
+
+
         toggleMap.setOnClickListener(v -> {
             switch (MapType) {
                 case GoogleMap.MAP_TYPE_HYBRID:
@@ -679,6 +687,28 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                 rotationDegrees.setVisibility(View.INVISIBLE);
             }
         });
+
+        gotoFirstHQSelection.setOnClickListener(v -> {
+            if (FirebaseDB.getGameData().getHqMarkerData().size() > 0) {
+                HQMarkerData hqMarkerData = FirebaseDB.getGameData().getHqMarkerData().get(0);
+                if (hqMarkerData != null) {
+                    googleMap.animateCamera(CameraUpdateFactory.newLatLng(new LatLng(
+                            hqMarkerData.getLatitude(),
+                            hqMarkerData.getLongitude())));
+                }
+            }
+        });
+
+        gotoPlayerSelection.setOnClickListener(v -> {
+            final GotoSearchPlayerSelection gotoSearchPlayerSelection = GotoSearchPlayerSelection.newInstance("Search Goto Player");
+            gotoSearchPlayerSelection.show(getFragmentManager(), "goto_search_player_selection");
+        });
+
+        gotoMarkerSelection.setOnClickListener(v -> {
+            final GotoSearchMarkerSelection gotoSearchMarkerSelection = GotoSearchMarkerSelection.newInstance("Search Goto Marker");
+            gotoSearchMarkerSelection.show(getFragmentManager(), "goto_search_marker_selection");
+        });
+
 
         if (mapStyleOptions != null) {
             googleMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);

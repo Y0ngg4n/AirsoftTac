@@ -30,6 +30,7 @@ import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.DocumentSnapshot;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Timer;
@@ -38,6 +39,7 @@ import java.util.TimerTask;
 import pro.oblivioncoding.yonggan.airsofttac.AdMob.AdMobIds;
 import pro.oblivioncoding.yonggan.airsofttac.Firebase.FirebaseAuthentication;
 import pro.oblivioncoding.yonggan.airsofttac.Firebase.FirebaseDB;
+import pro.oblivioncoding.yonggan.airsofttac.Firebase.GameCollection.Chat.ChatMessage;
 import pro.oblivioncoding.yonggan.airsofttac.Firebase.GameCollection.GameData;
 import pro.oblivioncoding.yonggan.airsofttac.Fragments.BeerFragment;
 import pro.oblivioncoding.yonggan.airsofttac.Fragments.ChatFragment;
@@ -246,8 +248,24 @@ public class MainActivity extends AppCompatActivity
         FirebaseDB.setGameData(documentSnapshot.toObject(GameData.class));
         if (mapFragment != null)
             mapFragment.setMarker();
-        if (chatFragment != null && FirebaseDB.getGameData() != null && FirebaseDB.getGameData().getChatMessages() != null)
-            chatFragment.setRecyclerView(FirebaseDB.getGameData().getChatMessages());
+        ArrayList<ChatMessage> chatMessages = FirebaseDB.getGameData().getChatMessages();
+        if (chatFragment != null && FirebaseDB.getGameData() != null && chatMessages != null) {
+            chatFragment.setRecyclerView(chatMessages);
+            if (chatMessages.size() > 0) {
+                ChatMessage chatMessage = chatMessages.get(chatMessages.size() - 1);
+                Toolbar toolbar = findViewById(R.id.toolbar);
+                toolbar.setTitle(chatMessage.getNickName() + ": " + chatMessage.getText());
+                toolbar.setOnClickListener(v -> {
+                    if (menu != null)
+                        getMenuInflater().inflate(R.menu.main, menu);
+                    final FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+                    if (currentFragment != null) fragmentTransaction.detach(currentFragment);
+                    fragmentTransaction.attach(chatFragment);
+                    currentFragment = chatFragment;
+                    fragmentTransaction.commit();
+                });
+            }
+        }
     }
 
     public void requestLocationPermissions() {
@@ -367,6 +385,11 @@ public class MainActivity extends AppCompatActivity
 
         if (mapFragment == null) mapFragment = new MapFragment();
         if (playerFragment == null) playerFragment = new PlayerFragment();
+        if (chatFragment == null) chatFragment = new ChatFragment();
+        if (settingsFragment == null) settingsFragment = new SettingsFragment();
+        if (teamFragment == null) teamFragment = new TeamFragment();
+        if (gameIDFragment == null) gameIDFragment = new GameIDFragment();
+
         menu.clear();
         if (id == R.id.nav_map) {
             if (menu != null)
