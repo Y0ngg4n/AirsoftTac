@@ -122,7 +122,7 @@ public class RecyclerViewTeamListAdapter extends RecyclerView.Adapter<RecyclerVi
         public ViewHolder(@NonNull final View itemView) {
             super(itemView);
             teamName = itemView.findViewById(R.id.markerTitle);
-            joinLeaveTeam = itemView.findViewById(R.id.teamMarkerAssign);
+            joinLeaveTeam = itemView.findViewById(R.id.joinLeaveTeam);
             assignMarker = itemView.findViewById(R.id.teamListAssign);
             assignRadioChannel = itemView.findViewById(R.id.radioChannel);
             constraintLayout = itemView.findViewById(R.id.playerListLayout);

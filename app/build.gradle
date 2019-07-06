@@ -5,9 +5,9 @@ android {
     compileSdkVersion 28
     defaultConfig {
         applicationId "pro.oblivioncoding.yonggan.airsofttac"
-        minSdkVersion 23
+        minSdkVersion 21
         targetSdkVersion 28
-        multiDexEnabled true
+        multiDexEnabled false
         versionCode 10
         versionName "1.7"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
@@ -36,12 +36,12 @@ dependencies {
     implementation 'com.google.firebase:firebase-core:17.0.0'
     implementation 'com.google.firebase:firebase-auth:18.0.0'
     implementation 'com.google.firebase:firebase-database:18.0.0'
-    implementation 'com.google.firebase:firebase-firestore:20.0.0'
+    implementation 'com.google.firebase:firebase-firestore:20.1.0'
     implementation 'com.google.android.gms:play-services-auth:17.0.0'
     implementation 'com.google.android.gms:play-services-maps:17.0.0'
     implementation 'androidx.recyclerview:recyclerview:1.0.0'
     implementation 'com.crashlytics.sdk.android:crashlytics:2.10.1'
-    implementation 'com.google.firebase:firebase-perf:18.0.0'
+    implementation 'com.google.firebase:firebase-perf:18.0.1'
     implementation 'com.google.firebase:firebase-inappmessaging-display:18.0.1'
     implementation 'com.google.android.gms:play-services-vision:18.0.0'
     implementation 'me.dm7.barcodescanner:zbar:1.9.13'
@@ -50,6 +50,10 @@ dependencies {
     implementation 'at.favre.lib:bcrypt:0.8.0'
     implementation 'com.github.pengrad:mapscaleview:1.4.2'
     implementation 'com.google.maps.android:android-maps-utils:0.5+'
+    implementation 'com.caverock:androidsvg-aar:1.4'
+    implementation 'com.github.bumptech.glide:glide:4.9.0'
+    annotationProcessor 'com.github.bumptech.glide:compiler:4.9.0'
+    annotationProcessor 'androidx.annotation:annotation:1.1.0'
 
     implementation "com.google.firebase:firebase-ads:18.0.0"
     implementation 'com.google.android.gms:play-services-ads:18.0.0'

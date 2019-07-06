@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/colorBackground"
     tools:context=".Fragments.MapFragment">
 
     <FrameLayout
@@ -22,7 +23,8 @@
         android:layout_marginBottom="75dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:scale_color="@color/colorAccent"
+        app:scale_color="@color/colorBackground"
+        app:scale_outline="true"
         app:scale_expandRtl="true" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton

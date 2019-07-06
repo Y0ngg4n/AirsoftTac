@@ -120,7 +120,7 @@ public class RecyclerViewMarkerAssignListAdapter extends RecyclerView.Adapter<Re
             markerTitle = itemView.findViewById(R.id.markerTitle);
             markerDescription = itemView.findViewById(R.id.markerDescription);
             markerType = itemView.findViewById(R.id.markerType);
-            assignMarker = itemView.findViewById(R.id.teamMarkerAssign);
+            assignMarker = itemView.findViewById(R.id.joinLeaveTeam);
         }
     }
 }

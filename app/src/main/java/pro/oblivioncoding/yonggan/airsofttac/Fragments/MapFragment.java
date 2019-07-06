@@ -57,6 +57,8 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import pro.oblivioncoding.yonggan.airsofttac.Activitys.MainActivity;
+import pro.oblivioncoding.yonggan.airsofttac.CDN.BMP.BitmapDecoder;
+import pro.oblivioncoding.yonggan.airsofttac.CDN.Data.ImageViews;
 import pro.oblivioncoding.yonggan.airsofttac.Firebase.FirebaseAuthentication;
 import pro.oblivioncoding.yonggan.airsofttac.Firebase.FirebaseDB;
 import pro.oblivioncoding.yonggan.airsofttac.Firebase.GameCollection.GameData;
@@ -593,19 +595,20 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
     }
 
     private void setMarkerIcon(@NonNull final MarkerOptions markerOptions, final UserData userData) {
-        if (userData.isMission()) {
-            markerOptions.icon(getBitmapDescriptor(R.drawable.ic_marker_alivemission));
-        } else if (userData.isAlive() && userData.isUnderfire() && userData.isSupport()) {
-            markerOptions.icon(getBitmapDescriptor(R.drawable.ic_marker_aliveunderfiresupport));
-        } else if (userData.isAlive() && userData.isUnderfire() && !userData.isSupport()) {
-            markerOptions.icon(getBitmapDescriptor(R.drawable.ic_marker_aliveunderfire));
-        } else if (userData.isAlive() && !userData.isUnderfire() && userData.isSupport()) {
-            markerOptions.icon(getBitmapDescriptor(R.drawable.ic_marker_alivenotunderfiresupport));
-        } else if (userData.isAlive() && !userData.isUnderfire() && !userData.isSupport()) {
-            markerOptions.icon(getBitmapDescriptor(R.drawable.ic_marker_alivenotunderfire));
-        } else if (!userData.isAlive()) {
-            markerOptions.icon(getBitmapDescriptor(R.drawable.ic_marker_notalivenotunderfire));
-        }
+        markerOptions.icon(getBitmapDescriptor(BitmapDecoder.BitmapFromImageView(ImageViews.getInstance().playerIcon)));
+        //        if (userData.isMission()) {
+//            markerOptions.icon(getBitmapDescriptor(R.drawable.ic_marker_alivemission));
+//        } else if (userData.isAlive() && userData.isUnderfire() && userData.isSupport()) {
+//            markerOptions.icon(getBitmapDescriptor(R.drawable.ic_marker_aliveunderfiresupport));
+//        } else if (userData.isAlive() && userData.isUnderfire() && !userData.isSupport()) {
+//            markerOptions.icon(getBitmapDescriptor(R.drawable.ic_marker_aliveunderfire));
+//        } else if (userData.isAlive() && !userData.isUnderfire() && userData.isSupport()) {
+//            markerOptions.icon(getBitmapDescriptor(R.drawable.ic_marker_alivenotunderfiresupport));
+//        } else if (userData.isAlive() && !userData.isUnderfire() && !userData.isSupport()) {
+//            markerOptions.icon(getBitmapDescriptor(R.drawable.ic_marker_alivenotunderfire));
+//        } else if (!userData.isAlive()) {
+//            markerOptions.icon(getBitmapDescriptor(R.drawable.ic_marker_notalivenotunderfire));
+//        }
     }
 
     private BitmapDescriptor getBitmapDescriptor(final int id) {
@@ -616,6 +619,12 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         final Bitmap bm = Bitmap.createBitmap(w, h, Bitmap.Config.ARGB_8888);
         final Canvas canvas = new Canvas(bm);
         vectorDrawable.draw(canvas);
+        return BitmapDescriptorFactory.fromBitmap(bm);
+    }
+
+    private BitmapDescriptor getBitmapDescriptor(Bitmap bm) {
+        bm = Bitmap.createScaledBitmap(bm, (int) dpTopixel(getContext(), 50),
+                (int) dpTopixel(getContext(), 50), true);
         return BitmapDescriptorFactory.fromBitmap(bm);
     }
 

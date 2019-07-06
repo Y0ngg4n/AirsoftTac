@@ -3,4 +3,13 @@
     <color name="colorPrimary">#008577</color>
     <color name="colorPrimaryDark">#00574B</color>
     <color name="colorAccent">#D81B60</color>
+    <color name="colorToolbar">#151515</color>
+    <color name="colorBackground">#242424</color>
+    <color name="colorLightDark">#393939</color>
+    <color name="colorLighterDark">#4f4f4f</color>
+    <color name="colorDarkGrey">#656565</color>
+    <color name="colorMidGrey">#7b7b7b</color>
+    <color name="colorLightGrey">#919191</color>
+    <color name="colorLighterGrey">#a7a7a7</color>
+    <color name="colorSelectedBackground">#f9b233</color>
 </resources>

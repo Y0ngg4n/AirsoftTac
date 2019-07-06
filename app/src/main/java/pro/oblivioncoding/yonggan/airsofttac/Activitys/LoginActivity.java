@@ -21,6 +21,7 @@ import com.google.firebase.auth.FirebaseAuthWeakPasswordException;
 import com.google.firebase.firestore.DocumentSnapshot;
 
 import pro.oblivioncoding.yonggan.airsofttac.AdMob.AdMobIds;
+import pro.oblivioncoding.yonggan.airsofttac.CDN.CDNManager;
 import pro.oblivioncoding.yonggan.airsofttac.Firebase.FirebaseAuthentication;
 import pro.oblivioncoding.yonggan.airsofttac.Firebase.FirebaseDB;
 import pro.oblivioncoding.yonggan.airsofttac.R;
@@ -39,6 +40,8 @@ public class LoginActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         FirebaseApp.initializeApp(getApplicationContext());
         MobileAds.initialize(getApplicationContext(), AdMobIds.AdmobAppID);
+
+        new CDNManager(getApplicationContext()).loadImages();
 
         final EditText emailField = findViewById(R.id.email);
         final EditText passwordField = findViewById(R.id.password);

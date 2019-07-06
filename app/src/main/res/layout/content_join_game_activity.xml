@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context=".Activitys.JoinGameActivity"
-    android:background="#242424"
+    android:background="@color/colorBackground"
     tools:showIn="@layout/activity_join_game_activity">
 
     <ScrollView
@@ -22,12 +22,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="0dp"
                 android:layout_marginTop="25dp"
-                android:ems="10"
                 android:hint="Nickname"
-                android:backgroundTint="#f9b233"
-                android:textColor="@android:color/white"
-                android:inputType="textPersonName"
-                android:textColorHint="@android:color/white"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/scanGameID" />
@@ -37,12 +32,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="25dp"
-                android:ems="10"
                 android:hint="Game ID"
-                android:backgroundTint="#f9b233"
-                android:textColor="@android:color/white"
-                android:inputType="textPersonName"
-                android:textColorHint="@android:color/white"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
@@ -53,10 +43,6 @@
                 android:layout_height="0dp"
                 android:layout_marginTop="25dp"
                 android:text="Join Game"
-                android:background="@drawable/buttons"
-                android:padding="5dp"
-                android:textColor="@android:color/white"
-                android:textColorHint="@android:color/white"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/passwordLayout" />
@@ -67,10 +53,6 @@
                 android:layout_height="0dp"
                 android:layout_marginTop="50dp"
                 android:text="Create Game"
-                android:background="@drawable/buttons"
-                android:padding="5dp"
-                android:textColor="@android:color/white"
-                android:textColorHint="@android:color/white"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/joinGame" />
@@ -82,10 +64,6 @@
                 android:layout_marginTop="10dp"
                 android:layout_marginBottom="10dp"
                 android:text="Scan Game ID"
-                android:background="@drawable/buttons"
-                android:padding="5dp"
-                android:textColor="@android:color/white"
-                android:textColorHint="@android:color/white"
                 app:layout_constraintBottom_toTopOf="@+id/nickName"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -104,15 +82,16 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/nickName"
+                app:passwordToggleTint="@android:color/white"
                 app:passwordToggleEnabled="true">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/password"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:backgroundTint="#f9b233"
-                    android:textColor="@android:color/white"
+                    android:backgroundTint="@color/colorSelectedBackground"
                     android:hint="Password"
+                    android:textColor="@android:color/white"
                     android:textColorHint="@android:color/white"
                     android:inputType="textPassword" />
             </com.google.android.material.textfield.TextInputLayout>
