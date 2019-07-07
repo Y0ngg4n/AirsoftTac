@@ -96,17 +96,17 @@ public class ChatFragment extends Fragment {
                             FirebaseDB.updateObject(documentReference, "chatMessages",
                                     FirebaseDB.getGameData().getChatMessages());
                             setRecyclerView(FirebaseDB.getGameData().getChatMessages());
+                            sendMessage.setVisibility(View.INVISIBLE);
+                            writeMessage.setText("");
+                            new Timer().schedule(new TimerTask() {
+                                @Override
+                                public void run() {
+                                    getActivity().runOnUiThread(() -> {
+                                        sendMessage.setVisibility(View.VISIBLE);
+                                    });
+                                }
+                            }, 5000L);
                         }
-                        sendMessage.setVisibility(View.INVISIBLE);
-                        writeMessage.setText("");
-                        new Timer().schedule(new TimerTask() {
-                            @Override
-                            public void run() {
-                                getActivity().runOnUiThread(() -> {
-                                    sendMessage.setVisibility(View.VISIBLE);
-                                });
-                            }
-                        }, 5000L);
                     });
                 }
             }

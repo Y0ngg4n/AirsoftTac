@@ -45,6 +45,7 @@ import pro.oblivioncoding.yonggan.airsofttac.Fragments.BeerFragment;
 import pro.oblivioncoding.yonggan.airsofttac.Fragments.ChatFragment;
 import pro.oblivioncoding.yonggan.airsofttac.Fragments.GameIDFragment;
 import pro.oblivioncoding.yonggan.airsofttac.Fragments.MapFragment;
+import pro.oblivioncoding.yonggan.airsofttac.Fragments.OverlayImagesFragment;
 import pro.oblivioncoding.yonggan.airsofttac.Fragments.PlayerFragment;
 import pro.oblivioncoding.yonggan.airsofttac.Fragments.SettingsFragment;
 import pro.oblivioncoding.yonggan.airsofttac.Fragments.TeamFragment;
@@ -52,7 +53,7 @@ import pro.oblivioncoding.yonggan.airsofttac.R;
 import pro.oblivioncoding.yonggan.airsofttac.Services.GoogleLocationService;
 
 public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener, MapFragment.OnFragmentInteractionListener, PlayerFragment.OnFragmentInteractionListener, TeamFragment.OnFragmentInteractionListener, ChatFragment.OnFragmentInteractionListener, SettingsFragment.OnFragmentInteractionListener, BeerFragment.OnFragmentInteractionListener, GameIDFragment.OnFragmentInteractionListener {
+        implements NavigationView.OnNavigationItemSelectedListener, MapFragment.OnFragmentInteractionListener, PlayerFragment.OnFragmentInteractionListener, TeamFragment.OnFragmentInteractionListener, ChatFragment.OnFragmentInteractionListener, SettingsFragment.OnFragmentInteractionListener, BeerFragment.OnFragmentInteractionListener, GameIDFragment.OnFragmentInteractionListener, OverlayImagesFragment.OnFragmentInteractionListener {
 
     private static MainActivity instance;
 
@@ -63,6 +64,7 @@ public class MainActivity extends AppCompatActivity
     private ChatFragment chatFragment;
     private SettingsFragment settingsFragment;
     private BeerFragment beerFragment;
+    private OverlayImagesFragment overlayImagesFragment;
     private GameIDFragment gameIDFragment;
 
     public MapFragment getMapFragment() {
@@ -149,6 +151,7 @@ public class MainActivity extends AppCompatActivity
         settingsFragment = new SettingsFragment();
 //        beerFragment = new BeerFragment();
         gameIDFragment = new GameIDFragment();
+        overlayImagesFragment = new OverlayImagesFragment();
 
         final FragmentManager fragmentManager = getSupportFragmentManager();
 
@@ -161,6 +164,8 @@ public class MainActivity extends AppCompatActivity
         fragmentTransaction.add(R.id.content_main, settingsFragment);
 //        fragmentTransaction.add(R.id.content_main, beerFragment);
         fragmentTransaction.add(R.id.content_main, gameIDFragment);
+        fragmentTransaction.add(R.id.content_main, overlayImagesFragment);
+
 
         fragmentTransaction.detach(playerFragment);
         fragmentTransaction.detach(teamFragment);
@@ -168,6 +173,8 @@ public class MainActivity extends AppCompatActivity
         fragmentTransaction.detach(settingsFragment);
 //        fragmentTransaction.detach(beerFragment);
         fragmentTransaction.detach(gameIDFragment);
+        fragmentTransaction.detach(overlayImagesFragment);
+
         fragmentTransaction.commit();
 
         currentFragment = mapFragment;
@@ -416,6 +423,11 @@ public class MainActivity extends AppCompatActivity
                 getMenuInflater().inflate(R.menu.main, menu);
             fragmentTransaction.attach(settingsFragment);
             currentFragment = settingsFragment;
+        } else if (id == R.id.nav_overlay_images) {
+            if (menu != null)
+                getMenuInflater().inflate(R.menu.main, menu);
+            fragmentTransaction.attach(overlayImagesFragment);
+            currentFragment = overlayImagesFragment;
         }
 //        else if(id == R.id.nav_beer){
 //            if(menu != null)
@@ -440,5 +452,4 @@ public class MainActivity extends AppCompatActivity
     @Override
     public void onFragmentInteraction(final Uri uri) {
     }
-
 }

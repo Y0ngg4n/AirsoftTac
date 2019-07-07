@@ -10,6 +10,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import pro.oblivioncoding.yonggan.airsofttac.Firebase.GameCollection.GameData;
 import pro.oblivioncoding.yonggan.airsofttac.Firebase.KMLCollection.KMLData;
 import pro.oblivioncoding.yonggan.airsofttac.Firebase.MapStyleCollection.MapStyleData;
+import pro.oblivioncoding.yonggan.airsofttac.Firebase.OverlayImageCollection.OverlayImage;
 
 public class FirebaseDB {
 
@@ -18,10 +19,13 @@ public class FirebaseDB {
     private static GameData gameData;
     private static MapStyleData mapStyleData;
     private static KMLData kmlData;
+    private static OverlayImage overlayImage;
+
     @NonNull
     private static CollectionReference games = db.collection("Games");
     private static CollectionReference mapStyles = db.collection("MapStyles");
     private static CollectionReference kml = db.collection("KML");
+    private static CollectionReference overlayImages = db.collection("OverlayImages");
 
     @NonNull
     public static FirebaseFirestore getDb() {
@@ -91,5 +95,21 @@ public class FirebaseDB {
 
     public static void setKml(final CollectionReference kml) {
         FirebaseDB.kml = kml;
+    }
+
+    public static OverlayImage getOverlayImage() {
+        return overlayImage;
+    }
+
+    public static void setOverlayImage(OverlayImage overlayImage) {
+        FirebaseDB.overlayImage = overlayImage;
+    }
+
+    public static CollectionReference getOverlayImages() {
+        return overlayImages;
+    }
+
+    public static void setOverlayImages(CollectionReference overlayImages) {
+        FirebaseDB.overlayImages = overlayImages;
     }
 }
