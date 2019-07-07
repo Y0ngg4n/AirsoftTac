@@ -10,11 +10,12 @@
         <item name="android:itemBackground">@color/colorBackground</item>
         <item name="checkboxStyle">@style/CheckboxStyle</item>
         <item name="radioButtonStyle">@style/RadioButtonStyle</item>
-        <item name="switchStyle">@style/SwitchStyle</item>
+        <!--<item name="android:switchStyle">@style/SwitchStyle</item>-->
         <item name="buttonStyle">@style/ButtonStyle</item>
         <item name="android:buttonStyle">@style/ButtonStyle</item>
         <item name="editTextStyle">@style/EditTextStyle</item>
         <item name="android:textViewStyle">@style/TextViewStyle</item>
+        <item name="spinnerStyle">@style/SpinnerStyle</item>
     </style>
 
     <style name="AppTheme.NoActionBar">
@@ -41,14 +42,14 @@
 
     <style name="SwitchStyle" parent="Widget.AppCompat.CompoundButton.Switch">
         <item name="android:textColor">@android:color/white</item>
-        <item name="android:colorControlNormal">@color/colorSelectedBackground</item>
-        <item name="android:colorControlActivated">@color/colorSelectedBackground</item>
+        <!--<item name="android:colorControlNormal">@color/colorSelectedBackground</item>-->
+        <!--<item name="android:colorControlActivated">@color/colorSelectedBackground</item>-->
     </style>
 
     <style name="ButtonStyle" parent="Widget.AppCompat.Button">
         <item name="android:textColor">@android:color/white</item>
-        <item name="android:padding">5dp</item>
-        <item name="android:background">@drawable/buttons</item>
+        <item name="android:padding">10dp</item>
+        <item name="android:background">@drawable/button_layout</item>
     </style>
 
     <style name="EditTextStyle" parent="Widget.AppCompat.EditText">
@@ -61,5 +62,11 @@
 
     <style name="TextViewStyle" parent="Widget.AppCompat.TextView">
         <item name="android:textColor">@android:color/white</item>
+    </style>
+
+    <style name="SpinnerStyle" parent="Widget.AppCompat.Spinner">
+        <item name="android:textColor">@android:color/white</item>
+        <item name="android:background">@color/colorDarkGrey</item>
+        <item name="android:popupBackground">@color/colorBackground</item>
     </style>
 </resources>

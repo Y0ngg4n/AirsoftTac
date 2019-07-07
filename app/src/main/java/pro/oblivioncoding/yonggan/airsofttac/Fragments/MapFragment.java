@@ -12,6 +12,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -37,7 +38,6 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.android.gms.maps.model.TileOverlayOptions;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.maps.android.clustering.ClusterManager;
@@ -57,8 +57,6 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import pro.oblivioncoding.yonggan.airsofttac.Activitys.MainActivity;
-import pro.oblivioncoding.yonggan.airsofttac.CDN.BMP.BitmapDecoder;
-import pro.oblivioncoding.yonggan.airsofttac.CDN.Data.ImageViews;
 import pro.oblivioncoding.yonggan.airsofttac.Firebase.FirebaseAuthentication;
 import pro.oblivioncoding.yonggan.airsofttac.Firebase.FirebaseDB;
 import pro.oblivioncoding.yonggan.airsofttac.Firebase.GameCollection.GameData;
@@ -84,11 +82,11 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
 
     private static GoogleMap googleMap;
     private static MapScaleView scaleView;
-    private static FloatingActionButton hitfb, underfirefb, supportfb, missionfb;
-    private static FloatingActionButton reloadfb, setMarkerfb, removeMarkerfb, swapFlagfb;
+    private static ImageButton hitfb, underfirefb, supportfb, missionfb;
+    private static ImageButton setMarkerfb, removeMarkerfb, swapFlagfb;
     private static TextView rotationDegrees;
-    private static FloatingActionButton currentlocationfb, toggleMap, toggleMapRotation;
-    private static FloatingActionButton gotoFirstHQSelection, gotoPlayerSelection, gotoMarkerSelection;
+    private static ImageButton reloadfb, currentlocationfb, toggleMap, toggleMapRotation;
+    private static ImageButton gotoFirstHQSelection, gotoPlayerSelection, gotoMarkerSelection;
 
     private static int MapType = GoogleMap.MAP_TYPE_HYBRID;
     private static MapStyleOptions mapStyleOptions;
@@ -183,7 +181,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
 
         scaleView = rootView.findViewById(R.id.scaleView);
         toggleMap = rootView.findViewById(R.id.togglemapfb);
-        toggleMapRotation = rootView.findViewById(R.id.togglemaprotation);
+        toggleMapRotation = rootView.findViewById(R.id.togglemaprotationfb);
         rotationDegrees = rootView.findViewById(R.id.rotationDegrees);
         hitfb = rootView.findViewById(R.id.hitfb);
         underfirefb = rootView.findViewById(R.id.underfirefb);
@@ -200,9 +198,9 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         gotoPlayerSelection = rootView.findViewById(R.id.gotoPlayerSelection);
 
 
-        setMarkerfb.hide();
-        removeMarkerfb.hide();
-        swapFlagfb.hide();
+        setMarkerfb.setVisibility(View.INVISIBLE);
+        removeMarkerfb.setVisibility(View.INVISIBLE);
+        swapFlagfb.setVisibility(View.INVISIBLE);
 
         hitfb.setOnClickListener(v -> {
             FirebaseDB.getGames().whereEqualTo("gameID", FirebaseDB.getGameData().getGameID())
@@ -214,18 +212,18 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                         FirebaseDB.updateObject(documentReference, "users",
                                 FirebaseDB.getGameData().getUsers());
                         if (FirebaseDB.getGameData().getOwnUserData(FirebaseAuthentication.getFirebaseUser().getEmail()).isAlive()) {
-                            missionfb.show();
-                            supportfb.show();
-                            underfirefb.show();
+                            missionfb.setVisibility(View.VISIBLE);
+                            supportfb.setVisibility(View.VISIBLE);
+                            underfirefb.setVisibility(View.VISIBLE);
                             hitfb.setImageResource(R.drawable.ic_fb_hit);
-                            hitfb.hide();
+                            hitfb.setVisibility(View.INVISIBLE);
                             showAfterTime(hitfb, 3000L);
                         } else {
-                            missionfb.hide();
-                            supportfb.hide();
-                            underfirefb.hide();
+                            missionfb.setVisibility(View.INVISIBLE);
+                            supportfb.setVisibility(View.INVISIBLE);
+                            underfirefb.setVisibility(View.INVISIBLE);
                             hitfb.setImageResource(R.drawable.ic_fb_healed);
-                            hitfb.hide();
+                            hitfb.setVisibility(View.INVISIBLE);
                             showAfterTime(hitfb, 3000L);
                         }
                     } else {
@@ -249,14 +247,14 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                         FirebaseDB.updateObject(documentReference, "users",
                                 FirebaseDB.getGameData().getUsers());
                         if (FirebaseDB.getGameData().getOwnUserData(FirebaseAuthentication.getFirebaseUser().getEmail()).isUnderfire()) {
-                            missionfb.hide();
+                            missionfb.setVisibility(View.INVISIBLE);
                             underfirefb.setImageResource(R.drawable.ic_fb_not_underfire);
-                            underfirefb.hide();
+                            underfirefb.setVisibility(View.INVISIBLE);
                             showAfterTime(underfirefb, 3000L);
                         } else {
-                            missionfb.show();
+                            missionfb.setVisibility(View.VISIBLE);
                             underfirefb.setImageResource(R.drawable.ic_fb_under_fire);
-                            underfirefb.hide();
+                            underfirefb.setVisibility(View.INVISIBLE);
                             showAfterTime(underfirefb, 3000L);
                         }
                     } else {
@@ -280,14 +278,14 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                         FirebaseDB.updateObject(documentReference, "users",
                                 FirebaseDB.getGameData().getUsers());
                         if (FirebaseDB.getGameData().getOwnUserData(FirebaseAuthentication.getFirebaseUser().getEmail()).isSupport()) {
-                            missionfb.hide();
+                            missionfb.setVisibility(View.INVISIBLE);
                             supportfb.setImageResource(R.drawable.ic_fb_no_support);
-                            supportfb.hide();
+                            supportfb.setVisibility(View.INVISIBLE);
                             showAfterTime(supportfb, 3000L);
                         } else {
-                            missionfb.show();
+                            missionfb.setVisibility(View.VISIBLE);
                             supportfb.setImageResource(R.drawable.ic_fb_support);
-                            supportfb.hide();
+                            supportfb.setVisibility(View.INVISIBLE);
                             showAfterTime(supportfb, 3000L);
                         }
                     } else {
@@ -311,18 +309,18 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                         FirebaseDB.updateObject(documentReference, "users",
                                 FirebaseDB.getGameData().getUsers());
                         if (FirebaseDB.getGameData().getOwnUserData(FirebaseAuthentication.getFirebaseUser().getEmail()).isMission()) {
-                            underfirefb.hide();
-                            supportfb.hide();
-                            hitfb.hide();
+                            underfirefb.setVisibility(View.INVISIBLE);
+                            supportfb.setVisibility(View.INVISIBLE);
+                            hitfb.setVisibility(View.INVISIBLE);
                             missionfb.setImageResource(R.drawable.ic_fb_mission_success);
-                            missionfb.hide();
+                            missionfb.setVisibility(View.INVISIBLE);
                             showAfterTime(missionfb, 3000L);
                         } else {
-                            underfirefb.show();
-                            supportfb.show();
-                            hitfb.show();
+                            underfirefb.setVisibility(View.VISIBLE);
+                            supportfb.setVisibility(View.VISIBLE);
+                            hitfb.setVisibility(View.VISIBLE);
                             missionfb.setImageResource(R.drawable.ic_fb_mission);
-                            missionfb.hide();
+                            missionfb.setVisibility(View.INVISIBLE);
                             showAfterTime(missionfb, 3000L);
                         }
                     } else {
@@ -338,7 +336,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
 
         reloadfb.setOnClickListener(v -> {
             MainActivity.getInstance().getGoogleLocationService().requestLocation();
-            reloadfb.hide();
+            reloadfb.setVisibility(View.INVISIBLE);
             FirebaseDB.getGames().whereEqualTo("gameID", FirebaseDB.getGameData().getGameID())
                     .get().addOnCompleteListener(task -> {
                 if (task.isSuccessful()) {
@@ -595,20 +593,19 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
     }
 
     private void setMarkerIcon(@NonNull final MarkerOptions markerOptions, final UserData userData) {
-        markerOptions.icon(getBitmapDescriptor(BitmapDecoder.BitmapFromImageView(ImageViews.getInstance().playerIcon)));
-        //        if (userData.isMission()) {
-//            markerOptions.icon(getBitmapDescriptor(R.drawable.ic_marker_alivemission));
-//        } else if (userData.isAlive() && userData.isUnderfire() && userData.isSupport()) {
-//            markerOptions.icon(getBitmapDescriptor(R.drawable.ic_marker_aliveunderfiresupport));
-//        } else if (userData.isAlive() && userData.isUnderfire() && !userData.isSupport()) {
-//            markerOptions.icon(getBitmapDescriptor(R.drawable.ic_marker_aliveunderfire));
-//        } else if (userData.isAlive() && !userData.isUnderfire() && userData.isSupport()) {
-//            markerOptions.icon(getBitmapDescriptor(R.drawable.ic_marker_alivenotunderfiresupport));
-//        } else if (userData.isAlive() && !userData.isUnderfire() && !userData.isSupport()) {
-//            markerOptions.icon(getBitmapDescriptor(R.drawable.ic_marker_alivenotunderfire));
-//        } else if (!userData.isAlive()) {
-//            markerOptions.icon(getBitmapDescriptor(R.drawable.ic_marker_notalivenotunderfire));
-//        }
+        if (userData.isMission()) {
+            markerOptions.icon(getBitmapDescriptor(R.drawable.ic_marker_alivemission));
+        } else if (userData.isAlive() && userData.isUnderfire() && userData.isSupport()) {
+            markerOptions.icon(getBitmapDescriptor(R.drawable.ic_marker_aliveunderfiresupport));
+        } else if (userData.isAlive() && userData.isUnderfire() && !userData.isSupport()) {
+            markerOptions.icon(getBitmapDescriptor(R.drawable.ic_marker_aliveunderfire));
+        } else if (userData.isAlive() && !userData.isUnderfire() && userData.isSupport()) {
+            markerOptions.icon(getBitmapDescriptor(R.drawable.ic_marker_alivenotunderfiresupport));
+        } else if (userData.isAlive() && !userData.isUnderfire() && !userData.isSupport()) {
+            markerOptions.icon(getBitmapDescriptor(R.drawable.ic_marker_alivenotunderfire));
+        } else if (!userData.isAlive()) {
+            markerOptions.icon(getBitmapDescriptor(R.drawable.ic_marker_notalivenotunderfire));
+        }
     }
 
     private BitmapDescriptor getBitmapDescriptor(final int id) {
@@ -622,18 +619,12 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         return BitmapDescriptorFactory.fromBitmap(bm);
     }
 
-    private BitmapDescriptor getBitmapDescriptor(Bitmap bm) {
-        bm = Bitmap.createScaledBitmap(bm, (int) dpTopixel(getContext(), 50),
-                (int) dpTopixel(getContext(), 50), true);
-        return BitmapDescriptorFactory.fromBitmap(bm);
-    }
-
-    private void showAfterTime(@NonNull final FloatingActionButton button, final long delay) {
+    private void showAfterTime(@NonNull final ImageButton button, final long delay) {
         new Timer().schedule(new TimerTask() {
             @Override
             public void run() {
                 getActivity().runOnUiThread(() -> {
-                    button.show();
+                    button.setVisibility(View.VISIBLE);
                 });
             }
         }, delay);
@@ -758,7 +749,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                         respawnMarkerData.getTitle(), respawnMarkerData.getDescription(), respawnMarkerData.isOwn(), distance));
                 currentMarker = marker;
                 if (FirebaseDB.getGameData().getOwnUserData(FirebaseAuthentication.getFirebaseUser().getEmail()).isOrga()) {
-                    swapFlagfb.show();
+                    swapFlagfb.setVisibility(View.VISIBLE);
                 }
             } else if (hqMarkerDataHashMap.containsKey(marker)) {
                 final HQMarkerData hqMarkerData = hqMarkerDataHashMap.get(marker);
@@ -772,15 +763,15 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                         flagMarkerData.getLatitude(), flagMarkerData.getLongitude(),
                         flagMarkerData.getTitle(), flagMarkerData.getDescription(), flagMarkerData.isOwn(), distance));
                 if (FirebaseDB.getGameData().getOwnUserData(FirebaseAuthentication.getFirebaseUser().getEmail()).isOrga()) {
-                    swapFlagfb.show();
+                    swapFlagfb.setVisibility(View.VISIBLE);
                 }
                 currentMarker = marker;
             }
             if (FirebaseDB.getGameData().getOwnUserData(FirebaseAuthentication.getFirebaseUser().getEmail()).isOrga()) {
                 Log.d("DDDD", "adas");
                 if (currentMarker != null)
-                    removeMarkerfb.show();
-                else removeMarkerfb.hide();
+                    removeMarkerfb.setVisibility(View.VISIBLE);
+                else removeMarkerfb.setVisibility(View.INVISIBLE);
             }
             marker.showInfoWindow();
 
@@ -788,8 +779,8 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         });
 
         googleMap.setOnMapClickListener(e -> {
-            swapFlagfb.hide();
-            removeMarkerfb.hide();
+            swapFlagfb.setVisibility(View.INVISIBLE);
+            removeMarkerfb.setVisibility(View.INVISIBLE);
         });
 
         googleMap.setOnCameraMoveListener(() -> {
@@ -824,7 +815,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         });
 
         if (FirebaseDB.getGameData().getOwnUserData(FirebaseAuthentication.getFirebaseUser().getEmail()).isOrga()) {
-            setMarkerfb.show();
+            setMarkerfb.setVisibility(View.VISIBLE);
             setMarkerfb.setOnClickListener(v -> {
                 final OrgaAddMarkerDialogFragment orgaAddMarkerDialogFragment = OrgaAddMarkerDialogFragment.newInstance("New Marker");
                 orgaAddMarkerDialogFragment.show(getFragmentManager(), "orga_add_marker_dialog");
@@ -881,7 +872,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                             }
                             FirebaseDB.updateObject(documentReference, FirebaseDB.getGameData());
                             currentMarker = null;
-                            removeMarkerfb.hide();
+                            removeMarkerfb.setVisibility(View.INVISIBLE);
                         });
 
                         swapFlagfb.setOnClickListener(e -> {
@@ -894,7 +885,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                                 FirebaseDB.updateObject(documentReference, "flagMarkerData",
                                         FirebaseDB.getGameData().getFlagMarkerData());
                                 currentMarker = null;
-                                swapFlagfb.hide();
+                                swapFlagfb.setVisibility(View.INVISIBLE);
                             } else if (currentMarker != null && respawnMarkerDataHashMap.containsKey(currentMarker)) {
                                 final RespawnMarkerData respawnMarkerData = FirebaseDB.getGameData().getRespawnMarkerData()
                                         .get(FirebaseDB.getGameData().getRespawnMarkerData()
@@ -903,7 +894,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                                 FirebaseDB.updateObject(documentReference, "respawnMarkerData",
                                         FirebaseDB.getGameData().getRespawnMarkerData());
                                 currentMarker = null;
-                                swapFlagfb.hide();
+                                swapFlagfb.setVisibility(View.INVISIBLE);
                             }
                         });
 
@@ -986,9 +977,9 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                 }
             });
         } else {
-            setMarkerfb.hide();
-            removeMarkerfb.hide();
-            swapFlagfb.hide();
+            setMarkerfb.setVisibility(View.INVISIBLE);
+            removeMarkerfb.setVisibility(View.INVISIBLE);
+            swapFlagfb.setVisibility(View.INVISIBLE);
         }
     }
 

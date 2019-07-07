@@ -258,8 +258,8 @@ public class GoogleLocationService extends Service implements LocationListener, 
                     mRotationMatrix, event.values);
             final float[] orientation = new float[3];
             SensorManager.getOrientation(mRotationMatrix, orientation);
-            final float bearing = (float) Math.toDegrees(orientation[0]) + mDeclination;
-            updateCamera(bearing);
+            final float bearing = (float) Math.toDegrees(orientation[0]);
+            updateCamera(bearing + mDeclination);
         }
     }
 
@@ -269,12 +269,11 @@ public class GoogleLocationService extends Service implements LocationListener, 
     }
 
     private void updateCamera(final float bearing) {
-        final MapFragment mapFragment = MainActivity.getInstance().getMapFragment();
         if (MapFragment.getGoogleMap() != null && mapsRotate) {
             final CameraPosition oldPos = MapFragment.getGoogleMap().getCameraPosition();
             final CameraPosition pos = CameraPosition.builder(oldPos).bearing(bearing).build();
             MapFragment.getGoogleMap().moveCamera(CameraUpdateFactory.newCameraPosition(pos));
-            MapFragment.getRotationDegrees().setText(bearing + "°");
+            MapFragment.getRotationDegrees().setText(Math.round(bearing < 0 ? 360 + bearing : bearing) + "°");
         }
 
     }
