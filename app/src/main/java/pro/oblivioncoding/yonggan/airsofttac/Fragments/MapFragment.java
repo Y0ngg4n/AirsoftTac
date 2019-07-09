@@ -2,12 +2,14 @@ package pro.oblivioncoding.yonggan.airsofttac.Fragments;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Base64;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -68,6 +70,7 @@ import pro.oblivioncoding.yonggan.airsofttac.Firebase.GameCollection.Marker.Mark
 import pro.oblivioncoding.yonggan.airsofttac.Firebase.GameCollection.Teams.TeamData;
 import pro.oblivioncoding.yonggan.airsofttac.Firebase.GameCollection.User.UserData;
 import pro.oblivioncoding.yonggan.airsofttac.Firebase.KMLCollection.KMLData;
+import pro.oblivioncoding.yonggan.airsofttac.Firebase.OverlayImageCollection.OverlayImage;
 import pro.oblivioncoding.yonggan.airsofttac.Fragments.Dialog.GotoSearchMarkerSelection;
 import pro.oblivioncoding.yonggan.airsofttac.Fragments.Dialog.GotoSearchPlayerSelection;
 import pro.oblivioncoding.yonggan.airsofttac.Fragments.Dialog.OrgaAddMarkerDialogFragment;
@@ -123,6 +126,21 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
     private HashMap<UserData, Circle> userDataCircleFirstHashMap = new HashMap<>();
 
     private HashMap<UserData, Circle> userDataCircleSecondHashMap = new HashMap<>();
+
+    private static OverlayImage overlayImage;
+    private static String overlayImageTitle;
+
+    public static void setOverlayImage(OverlayImage overlayImage) {
+        MapFragment.overlayImage = overlayImage;
+    }
+
+    public static String getOverlayImageTitle() {
+        return overlayImageTitle;
+    }
+
+    public static void setOverlayImageTitle(String overlayImageTitle) {
+        MapFragment.overlayImageTitle = overlayImageTitle;
+    }
 
     private KmlLayer kmlLayer;
     @NonNull
@@ -504,6 +522,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
             addKmlLayer();
             showHeatMap();
 //            setClusterItems();
+            showImageGroundOverlay();
             setAllPositionMarker();
 
             setAlTacticalMarker();
@@ -1068,6 +1087,18 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                 clusterManager.addItem(clusterMarkerItem);
             }
         }
+    }
+
+    public void showImageGroundOverlay() {
+        if (googleMap == null || overlayImage == null) return;
+        byte[] decode = Base64.decode(overlayImage.getImage(), Base64.DEFAULT);
+        GroundOverlayOptions groundOverlayOptions = new GroundOverlayOptions()
+                .image(BitmapDescriptorFactory.fromBitmap(
+                        BitmapFactory.decodeByteArray(decode, 0, decode.length)))
+                .anchor(0, 1)
+                .position(new LatLng(overlayImage.getLatitude(), overlayImage.getLongitude()),
+                        overlayImage.getWidth());
+        googleMap.addGroundOverlay(groundOverlayOptions);
     }
 
     public enum ShowSettings {

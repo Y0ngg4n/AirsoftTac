@@ -1,7 +1,5 @@
 package pro.oblivioncoding.yonggan.airsofttac.Adapter;
 
-import android.graphics.BitmapFactory;
-import android.util.Base64;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,13 +9,11 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.google.android.gms.maps.model.BitmapDescriptorFactory;
-import com.google.android.gms.maps.model.GroundOverlayOptions;
-import com.google.android.gms.maps.model.LatLng;
 import com.google.firebase.firestore.DocumentSnapshot;
 
 import java.util.ArrayList;
 
+import pro.oblivioncoding.yonggan.airsofttac.Activitys.MainActivity;
 import pro.oblivioncoding.yonggan.airsofttac.Firebase.OverlayImageCollection.OverlayImage;
 import pro.oblivioncoding.yonggan.airsofttac.Fragments.MapFragment;
 import pro.oblivioncoding.yonggan.airsofttac.R;
@@ -43,14 +39,9 @@ public class RecyclerViewOverlayImages extends RecyclerView.Adapter<RecyclerView
         final OverlayImage overlayImage = this.overlayImageArrayList.get(i).toObject(OverlayImage.class);
         viewHolder.name.setText(overlayImage.getName());
         viewHolder.loadButton.setOnClickListener(v -> {
-            byte[] decode = Base64.decode(overlayImage.getImage(), Base64.DEFAULT);
-            GroundOverlayOptions groundOverlayOptions = new GroundOverlayOptions()
-                    .image(BitmapDescriptorFactory.fromBitmap(
-                            BitmapFactory.decodeByteArray(decode, 0, decode.length)))
-                    .anchor(0, 1)
-                    .position(new LatLng(overlayImage.getLatitude(), overlayImage.getLongitude()),
-                            overlayImage.getWidth());
-            MapFragment.getGoogleMap().addGroundOverlay(groundOverlayOptions);
+            MapFragment.setOverlayImage(overlayImage);
+            MapFragment.setOverlayImageTitle(overlayImage.getName());
+            MainActivity.getInstance().getMapFragment().showImageGroundOverlay();
         });
     }
 

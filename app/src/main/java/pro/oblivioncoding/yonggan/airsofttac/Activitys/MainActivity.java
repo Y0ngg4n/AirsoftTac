@@ -41,6 +41,7 @@ import pro.oblivioncoding.yonggan.airsofttac.Firebase.FirebaseAuthentication;
 import pro.oblivioncoding.yonggan.airsofttac.Firebase.FirebaseDB;
 import pro.oblivioncoding.yonggan.airsofttac.Firebase.GameCollection.Chat.ChatMessage;
 import pro.oblivioncoding.yonggan.airsofttac.Firebase.GameCollection.GameData;
+import pro.oblivioncoding.yonggan.airsofttac.Firebase.OverlayImageCollection.OverlayImage;
 import pro.oblivioncoding.yonggan.airsofttac.Fragments.BeerFragment;
 import pro.oblivioncoding.yonggan.airsofttac.Fragments.ChatFragment;
 import pro.oblivioncoding.yonggan.airsofttac.Fragments.GameIDFragment;
@@ -273,6 +274,18 @@ public class MainActivity extends AppCompatActivity
                 });
             }
         }
+        if (MapFragment.getOverlayImageTitle() != null)
+            FirebaseDB.getOverlayImages().whereEqualTo("name", MapFragment.getOverlayImageTitle()).get().addOnCompleteListener(task -> {
+                if (task.isSuccessful()) {
+                    if (task.getResult().size() > 0) {
+                        final DocumentSnapshot documentSnapshot1 = task.getResult().getDocuments().get(0);
+                        MapFragment.setOverlayImage(documentSnapshot1.toObject(OverlayImage.class));
+                    }
+                } else {
+                    Toast.makeText(this, "Please select Image first!", Toast.LENGTH_LONG).show();
+                }
+            });
+
     }
 
     public void requestLocationPermissions() {
