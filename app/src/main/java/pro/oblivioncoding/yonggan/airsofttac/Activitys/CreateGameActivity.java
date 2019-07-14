@@ -4,6 +4,7 @@ import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -76,33 +77,39 @@ public class CreateGameActivity extends AppCompatActivity {
                     dHour, dMinute, true).show();
         });
 
-        FirebaseDB.getGames().whereEqualTo("gameID", ((TextView) findViewById(R.id.gameID)).getText().toString())
-                .get().addOnCompleteListener(task -> {
-            if (task.isSuccessful()) {
-                if (task == null || task.getResult().size() <= 0) {
-                    (findViewById(R.id.createGame)).setOnClickListener(v -> {
-                        Toast.makeText(this, "Trying to create Game...", Toast.LENGTH_LONG).show();
+        findViewById(R.id.createGame).setOnClickListener(v -> {
+            Log.i("CreateGame", "adasdsa");
+            findViewById(R.id.createGame).setClickable(false);
+            Toast.makeText(getApplicationContext(), "Trying to create Game...", Toast.LENGTH_LONG).show();
+            FirebaseDB.getGames().whereEqualTo("gameID", ((TextView) findViewById(R.id.gameID)).getText().toString())
+                    .get().addOnCompleteListener(task -> {
+                if (task.isSuccessful()) {
+                    if (task.getResult() == null || task.getResult().size() <= 0) {
                         final GameData gameData = createGame();
                         if (gameData != null) {
                             FirebaseDB.getGames().document().set(gameData).addOnCompleteListener(task1 -> {
                                 if (task1.isSuccessful()) {
                                     FirebaseDB.setGameData(gameData);
+//                                    writeGameData(gameData);
                                     CreateGameActivity.this.startActivity(new Intent(
                                             CreateGameActivity.this, MainActivity.class));
                                 } else {
+                                    findViewById(R.id.createGame).setClickable(true);
                                     Toast.makeText(getApplicationContext(), "Couldn´t create Game", Toast.LENGTH_LONG).show();
                                 }
                             });
-                        }
-                    });
+                        } else findViewById(R.id.createGame).setClickable(true);
+                    } else {
+                        findViewById(R.id.createGame).setClickable(true);
+                        Toast.makeText(getApplicationContext(), "GameID allready existing!",
+                                Toast.LENGTH_LONG).show();
+                    }
                 } else {
-                    Toast.makeText(getApplicationContext(), "GameID allready existing!",
+                    findViewById(R.id.createGame).setClickable(true);
+                    Toast.makeText(getApplicationContext(), "Couldn´t query Database!",
                             Toast.LENGTH_LONG).show();
                 }
-            } else {
-                Toast.makeText(getApplicationContext(), "Couldn´t query Database!",
-                        Toast.LENGTH_LONG).show();
-            }
+            });
         });
 
         findViewById(R.id.createKML).setOnClickListener(v -> {
@@ -169,6 +176,7 @@ public class CreateGameActivity extends AppCompatActivity {
     }
 
     private void writeGameData(@NonNull final GameData gameData) {
-
+        FirebaseDB.getGames().document().set(gameData);
     }
+
 }

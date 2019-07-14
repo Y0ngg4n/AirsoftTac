@@ -68,6 +68,7 @@ public class JoinGameActivity extends AppCompatActivity implements ZXingScannerV
         joinGameID.setText(sharedPreferences.getString(gameIDPref, ""));
 
         findViewById(R.id.joinGame).setOnClickListener(v -> {
+            findViewById(R.id.joinGame).setClickable(false);
             Toast.makeText(this, "Trying to connect to Game...", Toast.LENGTH_LONG).show();
             FirebaseDB.getGames().whereEqualTo("gameID", joinGameID.getText().toString())
                     .get().addOnCompleteListener(task -> {
@@ -75,19 +76,17 @@ public class JoinGameActivity extends AppCompatActivity implements ZXingScannerV
                     if (task.getResult().size() > 0) {
                         if (!nickNameField.getText().toString().isEmpty()) {
                             final DocumentSnapshot documentSnapshot = task.getResult().getDocuments().get(0);
-
                             if (documentSnapshot != null && documentSnapshot.exists()) {
                                 FirebaseDB.setGameData(documentSnapshot.toObject(GameData.class));
                                 if (BCrypt.verifyer().verify(passwordField.getText().toString().getBytes(StandardCharsets.UTF_8),
                                         FirebaseDB.getGameData().getPassword().getBytes(StandardCharsets.UTF_8)).verified) {
-                                    boolean allreadyExists = false;
+                                    boolean alreadyExists = false;
                                     if (FirebaseDB.getGameData().getOwnUserData(FirebaseAuthentication.getFirebaseUser().getEmail()) != null)
-                                        allreadyExists = true;
-                                    if (!allreadyExists) {
+                                        alreadyExists = true;
+                                    if (!alreadyExists) {
                                         FirebaseDB.getGameData().getUsers().add(new UserData(
                                                 FirebaseAuthentication.getFirebaseUser().getEmail(), false,
                                                 nickNameField.getText().toString()));
-
                                     } else {
                                         FirebaseDB.getGameData().getOwnUserData(FirebaseAuthentication.getFirebaseUser().getEmail())
                                                 .setNickname(nickNameField.getText().toString());
@@ -103,18 +102,22 @@ public class JoinGameActivity extends AppCompatActivity implements ZXingScannerV
                                     JoinGameActivity.this.startActivity(new Intent(JoinGameActivity.this,
                                             MainActivity.class));
                                 } else {
+                                    findViewById(R.id.joinGame).setClickable(true);
                                     Toast.makeText(getApplicationContext(), "Password wrong!", Toast.LENGTH_LONG).show();
                                 }
                             }
                         } else {
+                            findViewById(R.id.joinGame).setClickable(true);
                             Toast.makeText(getApplicationContext(), "Please enter Nickname!",
                                     Toast.LENGTH_LONG).show();
                         }
                     } else {
+                        findViewById(R.id.joinGame).setClickable(true);
                         Toast.makeText(getApplicationContext(), "Couldn´t find Document with GameID!",
                                 Toast.LENGTH_LONG).show();
                     }
                 } else {
+                    findViewById(R.id.joinGame).setClickable(true);
                     Toast.makeText(getApplicationContext(), "Couldn´t query Database!",
                             Toast.LENGTH_LONG).show();
                 }

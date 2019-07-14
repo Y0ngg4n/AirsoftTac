@@ -43,9 +43,9 @@ import com.google.android.gms.maps.model.TileOverlayOptions;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.maps.android.clustering.ClusterManager;
-import com.google.maps.android.data.kml.KmlGroundOverlay;
 import com.google.maps.android.data.kml.KmlLayer;
 import com.google.maps.android.data.kml.KmlPlacemark;
+import com.google.maps.android.data.kml.KmlPoint;
 import com.google.maps.android.heatmaps.HeatmapTileProvider;
 
 import org.xmlpull.v1.XmlPullParserException;
@@ -142,7 +142,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         MapFragment.overlayImageTitle = overlayImageTitle;
     }
 
-    private KmlLayer kmlLayer;
+    private KmlLayer kmlLayer = null;
     @NonNull
     private ArrayList<Marker> kmlMarker = new ArrayList<>();
     @NonNull
@@ -519,7 +519,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
     public void setMarker() {
         if (googleMap != null) {
             googleMap.clear();
-            addKmlLayer();
+//            addKmlLayer();
             showHeatMap();
 //            setClusterItems();
             showImageGroundOverlay();
@@ -734,7 +734,8 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
             googleMap.setMapStyle(mapStyleOptions);
         }
 
-        addKmlLayer();
+        addKMLData();
+//        addKmlLayer();
 //        setClusterManager();
 
         googleMap.setOnMarkerClickListener(marker ->
@@ -1002,64 +1003,183 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         }
     }
 
-    public void addKmlLayer() {
-        //TODO: Fix removing of KML Layer after Seconds
+    public void addKMLData() {
         if (googleMap != null) {
-            if (kmlLayer == null) {
-                FirebaseDB.getKml().whereEqualTo("title", FirebaseDB.getGameData().getKmlTitle()).get().addOnCompleteListener(task -> {
-                    if (task.isSuccessful()) {
-                        if (task.getResult().size() > 0) {
+            FirebaseDB.getKml().whereEqualTo("title", FirebaseDB.getGameData().getKmlTitle()).get().addOnCompleteListener(task -> {
+                if (task.isSuccessful()) {
+                    if (task.getResult().size() > 0) {
+                        if (kmlLayer == null) {
                             try {
                                 kmlLayer = new KmlLayer(googleMap, new ByteArrayInputStream(task.getResult().toObjects(KMLData.class).get(0).getKml().getBytes(StandardCharsets.UTF_8)),
                                         getActivity().getApplicationContext());
-                                setKmlLayer();
-                            } catch (final XmlPullParserException e) {
-                                Toast.makeText(getContext(), "Couldn´t parse KML Data!",
-                                        Toast.LENGTH_LONG).show();
-                            } catch (final IOException e) {
-                                Toast.makeText(getContext(), "Couldn´t get inputstream from KML Data!",
-                                        Toast.LENGTH_LONG).show();
+                                kmlLayer.addLayerToMap();
+                                FirebaseDB.getGames().whereEqualTo("gameID", FirebaseDB.getGameData().getGameID())
+                                        .get().addOnCompleteListener(task1 -> {
+                                    if (task1.isSuccessful()) {
+                                        if (task1.getResult().size() > 0) {
+                                            final DocumentSnapshot documentSnapshot = task1.getResult().getDocuments().get(0);
+                                            if (documentSnapshot != null && documentSnapshot.exists()) {
+                                                for (KmlPlacemark placemark : kmlLayer.getPlacemarks()) {
+                                                    String name = "", description = "";
+                                                    if (placemark.hasProperty("name"))
+                                                        name = placemark.getProperty("name");
+                                                    if (placemark.hasProperty("description"))
+                                                        description = placemark.getProperty("description");
+
+                                                    if (placemark.getGeometry().getGeometryType().equals("Point")) {
+                                                        KmlPoint point = (KmlPoint) placemark.getGeometry();
+
+                                                        String[] options = name.split("\\|");
+                                                        if (options.length == 2) {
+                                                            name = options[0];
+                                                            boolean exists = false;
+                                                            if (options[1].toLowerCase().contains("tactical")) {
+                                                                for (TacticalMarkerData tacticalMarkerData : FirebaseDB.getGameData().getTacticalMarkerData()) {
+                                                                    if (tacticalMarkerData.getTitle().equals(name)) {
+                                                                        exists = true;
+                                                                    }
+                                                                }
+                                                                if (!exists)
+                                                                    FirebaseDB.getGameData().getTacticalMarkerData()
+                                                                            .add(new TacticalMarkerData(
+                                                                                    point.getGeometryObject().latitude,
+                                                                                    point.getGeometryObject().longitude,
+                                                                                    name, description));
+                                                            } else if (options[1].toLowerCase().contains("mission")) {
+                                                                for (MissionMarkerData missionMarkerData : FirebaseDB.getGameData().getMissionMarkerData()) {
+                                                                    if (missionMarkerData.getTitle().equals(name))
+                                                                        exists = true;
+                                                                }
+                                                                if (!exists)
+                                                                    FirebaseDB.getGameData().getMissionMarkerData()
+                                                                            .add(new MissionMarkerData(
+                                                                                    point.getGeometryObject().latitude,
+                                                                                    point.getGeometryObject().longitude,
+                                                                                    name, description
+                                                                            ));
+                                                            }
+                                                        } else if (options.length >= 3) {
+                                                            name = options[0];
+                                                            boolean exists = false;
+                                                            boolean own = false;
+                                                            if (options[2].toLowerCase().contains("own"))
+                                                                own = true;
+                                                            if (options[1].toLowerCase().contains("respawn")) {
+                                                                for (RespawnMarkerData respawnMarkerData : FirebaseDB.getGameData().getRespawnMarkerData()) {
+                                                                    if (respawnMarkerData.getTitle().equals(name))
+                                                                        exists = true;
+                                                                }
+                                                                if (!exists)
+                                                                    FirebaseDB.getGameData().getRespawnMarkerData()
+                                                                            .add(new RespawnMarkerData(
+                                                                                    point.getGeometryObject().latitude,
+                                                                                    point.getGeometryObject().longitude,
+                                                                                    name, description, own
+                                                                            ));
+                                                            } else if (options[1].toLowerCase().contains("hq")) {
+                                                                for (HQMarkerData hqMarkerData : FirebaseDB.getGameData().getHqMarkerData()) {
+                                                                    if (hqMarkerData.getTitle().equals(name))
+                                                                        exists = true;
+                                                                }
+                                                                if (!exists)
+                                                                    FirebaseDB.getGameData().getHqMarkerData()
+                                                                            .add(new HQMarkerData(
+                                                                                    point.getGeometryObject().latitude,
+                                                                                    point.getGeometryObject().longitude,
+                                                                                    name, description, own
+                                                                            ));
+                                                            } else if (options[1].toLowerCase().contains("flag")) {
+                                                                for (FlagMarkerData flagMarkerData : FirebaseDB.getGameData().getFlagMarkerData()) {
+                                                                    if (flagMarkerData.getTitle().equals(name))
+                                                                        exists = true;
+                                                                }
+                                                                if (!exists) {
+                                                                    FirebaseDB.getGameData().getFlagMarkerData()
+                                                                            .add(new FlagMarkerData(
+                                                                                    point.getGeometryObject().latitude,
+                                                                                    point.getGeometryObject().longitude,
+                                                                                    name, description, own
+                                                                            ));
+
+                                                                }
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                                FirebaseDB.updateObject(documentSnapshot.getReference(), FirebaseDB.getGameData());
+                                            }
+                                        }
+                                    }
+                                });
+                            } catch (XmlPullParserException | IOException e) {
+                                Toast.makeText(getContext(), "Could not load KML Data", Toast.LENGTH_LONG).show();
                             }
                         }
-                    } else {
-                        Toast.makeText(getContext(), "Couldn´t query Database!",
-                                Toast.LENGTH_LONG).show();
                     }
-                });
-            } else
-                setKmlLayer();
+                }
+            });
         }
     }
 
-    private void setKmlLayer() {
-        if (showKmlLayer) {
-            try {
-                if (!kmlLayer.isLayerOnMap()) {
-                    kmlLayer.addLayerToMap();
-                }
 
-                groundOverlays.clear();
-                kmlMarker.clear();
-
-                for (final KmlGroundOverlay kmlGroundOverlay : kmlLayer.getGroundOverlays()) {
-                    groundOverlays.add(googleMap.addGroundOverlay(new GroundOverlayOptions()
-                            .positionFromBounds(kmlGroundOverlay.getLatLngBox())));
-                }
-
-                for (final KmlPlacemark kmlPlacemark : kmlLayer.getPlacemarks()) {
-                    kmlMarker.add(googleMap.addMarker(kmlPlacemark.getMarkerOptions()));
-                }
-
-//                Toast.makeText(getContext(), "Added KMLLayer", Toast.LENGTH_LONG).show();
-            } catch (final IOException e) {
-                Toast.makeText(getContext(), "Couldn´t parse KML Data!",
-                        Toast.LENGTH_LONG).show();
-            } catch (final XmlPullParserException e) {
-                Toast.makeText(getContext(), "Couldn´t get inputstream from KML Data!",
-                        Toast.LENGTH_LONG).show();
-            }
-        }
-    }
+//    public void addKmlLayer() {
+//        //TODO: Fix removing of KML Layer after Seconds
+//        if (googleMap != null) {
+//            if (kmlLayer == null) {
+//                FirebaseDB.getKml().whereEqualTo("title", FirebaseDB.getGameData().getKmlTitle()).get().addOnCompleteListener(task -> {
+//                    if (task.isSuccessful()) {
+//                        if (task.getResult().size() > 0) {
+//                            try {
+//                                kmlLayer = new KmlLayer(googleMap, new ByteArrayInputStream(task.getResult().toObjects(KMLData.class).get(0).getKml().getBytes(StandardCharsets.UTF_8)),
+//                                        getActivity().getApplicationContext());
+//                                setKmlLayer();
+//                            } catch (final XmlPullParserException e) {
+//                                Toast.makeText(getContext(), "Couldn´t parse KML Data!",
+//                                        Toast.LENGTH_LONG).show();
+//                            } catch (final IOException e) {
+//                                Toast.makeText(getContext(), "Couldn´t get inputstream from KML Data!",
+//                                        Toast.LENGTH_LONG).show();
+//                            }
+//                        }
+//                    } else {
+//                        Toast.makeText(getContext(), "Couldn´t query Database!",
+//                                Toast.LENGTH_LONG).show();
+//                    }
+//                });
+//            } else
+//                setKmlLayer();
+//        }
+//    }
+//
+//    private void setKmlLayer() {
+//        if (showKmlLayer) {
+//            try {
+//                if (!kmlLayer.isLayerOnMap()) {
+//                    kmlLayer.addLayerToMap();
+//                }
+//
+//                groundOverlays.clear();
+//                kmlMarker.clear();
+//
+//                for (final KmlGroundOverlay kmlGroundOverlay : kmlLayer.getGroundOverlays()) {
+//                    groundOverlays.add(googleMap.addGroundOverlay(new GroundOverlayOptions()
+//                            .positionFromBounds(kmlGroundOverlay.getLatLngBox())));
+//                }
+//
+//                for (final KmlPlacemark kmlPlacemark : kmlLayer.getPlacemarks()) {
+//                    kmlMarker.add(googleMap.addMarker(kmlPlacemark.getMarkerOptions()));
+//                }
+//
+////                Toast.makeText(getContext(), "Added KMLLayer", Toast.LENGTH_LONG).show();
+//            } catch (final IOException e) {
+//                Toast.makeText(getContext(), "Couldn´t parse KML Data!",
+//                        Toast.LENGTH_LONG).show();
+//            } catch (final XmlPullParserException e) {
+//                Toast.makeText(getContext(), "Couldn´t get inputstream from KML Data!",
+//                        Toast.LENGTH_LONG).show();
+//            }
+//        }
+//    }
 
     private void showHeatMap() {
         if (showHeatMap) {

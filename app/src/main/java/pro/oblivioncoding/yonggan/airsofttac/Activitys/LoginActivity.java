@@ -49,6 +49,7 @@ public class LoginActivity extends AppCompatActivity {
         passwordField.setText(sharedPreferences.getString(passwordPref, ""));
 
         findViewById(R.id.login).setOnClickListener(v -> {
+            findViewById(R.id.login).setClickable(false);
             final String email = emailField.getText().toString();
             final String password = passwordField.getText().toString();
 
@@ -59,6 +60,7 @@ public class LoginActivity extends AppCompatActivity {
                         if (task.isSuccessful()) {
                             loadScanGameActivity();
                         } else {
+                            findViewById(R.id.login).setClickable(true);
                             try {
                                 throw task.getException();
                             } catch (final FirebaseAuthUserCollisionException existEmail) {
@@ -99,7 +101,6 @@ public class LoginActivity extends AppCompatActivity {
         findViewById(R.id.termsandConditions).setOnClickListener(v -> {
             startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://airsofttac.oblivioncoding.pro/terms_and_conditions.html")));
         });
-
 
         FirebaseDB.getGames().whereLessThanOrEqualTo("endTime", Timestamp.now()).get().addOnCompleteListener(task -> {
             if (task.isSuccessful()) {

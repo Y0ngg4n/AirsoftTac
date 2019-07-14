@@ -3,9 +3,12 @@ package pro.oblivioncoding.yonggan.airsofttac.Fragments;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -90,6 +93,47 @@ public class OverlayImagesFragment extends Fragment {
             addOverlayImageDialogFragment.show(getFragmentManager(), "add_overlay_image");
         });
 
+        ((EditText) rootView.findViewById(R.id.searchOverlayImage)).addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(final CharSequence s, final int start, final int count, final int after) {
+            }
+
+            @Override
+            public void onTextChanged(@NonNull final CharSequence s, final int start, final int before, final int count) {
+                if (!s.toString().isEmpty()) {
+                    FirebaseDB.getOverlayImages().whereGreaterThanOrEqualTo("name", s.toString().toLowerCase()).get().addOnCompleteListener(task -> {
+                        if (task.isSuccessful()) {
+                            if (task.getResult().size() > 0) {
+                                final List<DocumentSnapshot> documents = task.getResult().getDocuments();
+                                setAdapter(documents);
+                            } else {
+                                setAdapter(new ArrayList<>());
+                            }
+                        } else {
+                            Toast.makeText(getContext(), "Couldn´t query Database!",
+                                    Toast.LENGTH_LONG).show();
+                        }
+                    });
+                } else {
+                    FirebaseDB.getOverlayImages().get().addOnCompleteListener(task -> {
+                        if (task.isSuccessful()) {
+                            if (task.getResult().size() > 0) {
+                                final List<DocumentSnapshot> documents = task.getResult().getDocuments();
+                                setAdapter(documents);
+                            }
+                        } else {
+                            Toast.makeText(getContext(), "Couldn´t query Database!",
+                                    Toast.LENGTH_LONG).show();
+                        }
+
+                    });
+                }
+            }
+
+            @Override
+            public void afterTextChanged(final Editable s) {
+            }
+        });
 
         final InterstitialAd interstitialAd = new InterstitialAd(getContext());
         interstitialAd.setAdUnitId(AdMobIds.InterstialAll);

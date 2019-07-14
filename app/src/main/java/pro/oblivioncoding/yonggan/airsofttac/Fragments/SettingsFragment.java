@@ -99,19 +99,31 @@ public class SettingsFragment extends Fragment {
             @Override
             public void onTextChanged(@NonNull final CharSequence s, final int start, final int before, final int count) {
                 if (!s.toString().isEmpty()) {
-                    FirebaseDB.getMapStyles().whereEqualTo("title", s.toString().toLowerCase()).get().addOnCompleteListener(task -> {
+                    FirebaseDB.getMapStyles().whereGreaterThanOrEqualTo("title", s.toString().toLowerCase()).get().addOnCompleteListener(task -> {
                         if (task.isSuccessful()) {
                             if (task.getResult().size() > 0) {
                                 final List<DocumentSnapshot> documents = task.getResult().getDocuments();
                                 setAdapter(documents);
                             } else {
-                                Toast.makeText(getContext(), "Couldn´t find Document this Title!",
-                                        Toast.LENGTH_LONG).show();
+                                setAdapter(new ArrayList<>());
                             }
                         } else {
                             Toast.makeText(getContext(), "Couldn´t query Database!",
                                     Toast.LENGTH_LONG).show();
                         }
+                    });
+                } else {
+                    FirebaseDB.getMapStyles().get().addOnCompleteListener(task -> {
+                        if (task.isSuccessful()) {
+                            if (task.getResult().size() > 0) {
+                                final List<DocumentSnapshot> documents = task.getResult().getDocuments();
+                                setAdapter(documents);
+                            }
+                        } else {
+                            Toast.makeText(getContext(), "Couldn´t query Database!",
+                                    Toast.LENGTH_LONG).show();
+                        }
+
                     });
                 }
             }
@@ -120,6 +132,8 @@ public class SettingsFragment extends Fragment {
             public void afterTextChanged(final Editable s) {
             }
         });
+
+
         rootView.findViewById(R.id.addMapStyle).setOnClickListener(v -> {
             final AddMapStyleDialogFragment addMapStyleDialogFragment = AddMapStyleDialogFragment.newInstance("Add Map Style");
             addMapStyleDialogFragment.show(getFragmentManager(), "add_map_style");

@@ -29,15 +29,24 @@
         app:layout_constraintTop_toBottomOf="@id/customMapTitletext" />
 
     <Button
+        android:id="@+id/selectKMLFile"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        android:text="Select KML File"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/customMap" />
+
+    <Button
         android:id="@+id/addCustomMapButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="10dp"
-        android:layout_marginTop="10dp"
         android:text="Add Map Style"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/customMap" />
+        app:layout_constraintTop_toBottomOf="@id/selectKMLFile" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

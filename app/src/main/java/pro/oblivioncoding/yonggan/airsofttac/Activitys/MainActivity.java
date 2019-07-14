@@ -202,7 +202,7 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void onUserInteraction() {
-        if (mapFragment != null) mapFragment.addKmlLayer();
+//        if (mapFragment != null) mapFragment.addKmlLayer();
     }
 
     public void queryUpdateData() {
