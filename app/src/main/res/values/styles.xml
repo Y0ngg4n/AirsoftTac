@@ -69,4 +69,8 @@
         <item name="android:background">@color/colorDarkGrey</item>
         <item name="android:popupBackground">@color/colorBackground</item>
     </style>
+
+    <style name="NumberPickerStyle" parent="ThemeOverlay.AppCompat.Dark.ActionBar">
+        <item name="android:textColor">@android:color/white</item>
+    </style>
 </resources>

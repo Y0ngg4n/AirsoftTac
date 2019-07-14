@@ -57,46 +57,49 @@ public class AssignMarkerTeamDialogFragment extends DialogFragment {
 
             @Override
             public void onTextChanged(@NonNull final CharSequence s, final int start, final int before, final int count) {
+                ArrayList<MarkerType> markerTypeArrayList = getAllMarker();
                 if (!s.toString().isEmpty()) {
-                    final ArrayList<MarkerType> markerTypeArrayList = new ArrayList<>();
+                    markerTypeArrayList = new ArrayList<>();
                     for (final MarkerType markerType : getAllMarker()) {
                         String title = null;
                         String description = null;
-                        if (teamData.getFlagMarkerData() != null) {
-                            final FlagMarkerData flagMarkerData = teamData.getFlagMarkerData();
+                        if (markerType instanceof FlagMarkerData) {
+                            final FlagMarkerData flagMarkerData = (FlagMarkerData) markerType;
                             title = flagMarkerData.getTitle();
                             description = flagMarkerData.getDescription();
-                        } else if (teamData.getHqMarkerData() != null) {
-                            final HQMarkerData hqMarkerData = teamData.getHqMarkerData();
+                        } else if (markerType instanceof HQMarkerData) {
+                            final HQMarkerData hqMarkerData = (HQMarkerData) markerType;
                             title = hqMarkerData.getTitle();
                             description = hqMarkerData.getDescription();
-                        } else if (teamData.getMissionMarkerData() != null) {
-                            final MissionMarkerData missionMarkerData = teamData.getMissionMarkerData();
+                        } else if (markerType instanceof MissionMarkerData) {
+                            final MissionMarkerData missionMarkerData = (MissionMarkerData) markerType;
                             title = missionMarkerData.getTitle();
                             description = missionMarkerData.getDescription();
-                        } else if (teamData.getRespawnMarkerData() != null) {
-                            final RespawnMarkerData respawnMarkerData = teamData.getRespawnMarkerData();
+                        } else if (markerType instanceof RespawnMarkerData) {
+                            final RespawnMarkerData respawnMarkerData = (RespawnMarkerData) markerType;
                             title = respawnMarkerData.getTitle();
                             description = respawnMarkerData.getDescription();
-                        } else if (teamData.getTacticalMarkerData() != null) {
-                            final TacticalMarkerData tacticalMarkerData = teamData.getTacticalMarkerData();
+                        } else if (markerType instanceof TacticalMarkerData) {
+                            final TacticalMarkerData tacticalMarkerData = (TacticalMarkerData) markerType;
                             title = tacticalMarkerData.getTitle();
                             description = tacticalMarkerData.getDescription();
                         }
-                        if (title != null && description != null)
+                        if (title != null && description != null) {
                             if (title.toLowerCase().contains(s.toString().toLowerCase())
                                     || description.toLowerCase().contains(s.toString().toLowerCase())) {
                                 markerTypeArrayList.add(markerType);
                             }
+                        }
                     }
-                    setRecyclerView(markerTypeArrayList, teamData, recyclerView);
                 }
+                setRecyclerView(markerTypeArrayList, teamData, recyclerView);
             }
 
             @Override
             public void afterTextChanged(final Editable s) {
             }
         });
+
         setRecyclerView(getAllMarker(), teamData, recyclerView);
         return rootView;
     }

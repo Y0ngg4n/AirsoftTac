@@ -127,6 +127,8 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
 
     private HashMap<UserData, Circle> userDataCircleSecondHashMap = new HashMap<>();
 
+    private float zoom = 0;
+
     private static OverlayImage overlayImage;
     private static String overlayImageTitle;
 
@@ -660,9 +662,9 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         final UserData ownUserData = FirebaseDB.getGameData().getOwnUserData(FirebaseAuthentication
                 .getFirebaseUser().getEmail());
 
-        googleMap.animateCamera(CameraUpdateFactory.newLatLng(new LatLng(
+        googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(
                 ownUserData.getPositionLat(),
-                ownUserData.getPositionLong())));
+                ownUserData.getPositionLong()), zoom));
 
         googleMap.setMapType(MapType);
 
@@ -804,16 +806,19 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         });
 
         googleMap.setOnCameraMoveListener(() -> {
+            zoom = googleMap.getCameraPosition().zoom;
             scaleView.update(googleMap.getCameraPosition().zoom, googleMap.getCameraPosition().target.latitude);
         });
 
         googleMap.setOnCameraIdleListener(() -> {
+            zoom = googleMap.getCameraPosition().zoom;
             scaleView.update(googleMap.getCameraPosition().zoom, googleMap.getCameraPosition().target.latitude);
             if (clusterManager != null)
                 clusterManager.onCameraIdle();
         });
 
         googleMap.setOnCameraMoveStartedListener(i -> {
+            zoom = googleMap.getCameraPosition().zoom;
             scaleView.update(googleMap.getCameraPosition().zoom, googleMap.getCameraPosition().target.latitude);
         });
 

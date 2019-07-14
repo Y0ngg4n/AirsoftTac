@@ -101,7 +101,7 @@ public class OverlayImagesFragment extends Fragment {
             @Override
             public void onTextChanged(@NonNull final CharSequence s, final int start, final int before, final int count) {
                 if (!s.toString().isEmpty()) {
-                    FirebaseDB.getOverlayImages().whereGreaterThanOrEqualTo("name", s.toString().toLowerCase()).get().addOnCompleteListener(task -> {
+                    FirebaseDB.getOverlayImages().whereEqualTo("name", s.toString().toLowerCase()).get().addOnCompleteListener(task -> {
                         if (task.isSuccessful()) {
                             if (task.getResult().size() > 0) {
                                 final List<DocumentSnapshot> documents = task.getResult().getDocuments();

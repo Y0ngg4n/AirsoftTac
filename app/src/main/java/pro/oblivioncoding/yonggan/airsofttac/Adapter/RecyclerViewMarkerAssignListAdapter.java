@@ -52,7 +52,6 @@ public class RecyclerViewMarkerAssignListAdapter extends RecyclerView.Adapter<Re
     @Override
     public void onBindViewHolder(@NonNull final RecyclerViewMarkerAssignListAdapter.ViewHolder viewHolder, final int i) {
         final MarkerType teamDataMarker = markerTypeArrayList.get(i);
-
         if (teamDataMarker instanceof FlagMarkerData) {
             viewHolder.markerTitle.setText(teamDataMarker.getTitle());
             viewHolder.markerDescription.setText(teamDataMarker.getDescription());

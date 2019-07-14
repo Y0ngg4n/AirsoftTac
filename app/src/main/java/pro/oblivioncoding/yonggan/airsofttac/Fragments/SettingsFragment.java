@@ -99,7 +99,7 @@ public class SettingsFragment extends Fragment {
             @Override
             public void onTextChanged(@NonNull final CharSequence s, final int start, final int before, final int count) {
                 if (!s.toString().isEmpty()) {
-                    FirebaseDB.getMapStyles().whereGreaterThanOrEqualTo("title", s.toString().toLowerCase()).get().addOnCompleteListener(task -> {
+                    FirebaseDB.getMapStyles().whereEqualTo("title", s.toString().toLowerCase()).get().addOnCompleteListener(task -> {
                         if (task.isSuccessful()) {
                             if (task.getResult().size() > 0) {
                                 final List<DocumentSnapshot> documents = task.getResult().getDocuments();
