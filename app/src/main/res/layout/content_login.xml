@@ -22,7 +22,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="50dp"
-                android:text="Login"
+                android:text="@string/button_login"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/passwordLayout" />
@@ -34,7 +34,8 @@
                 android:layout_marginStart="10dp"
                 android:layout_marginTop="10dp"
                 android:layout_marginEnd="10dp"
-                android:text="Account will be created if not exists. \nBy downloading or using this app, the terms and conditions will automatically apply to you."
+                android:text="@string/text_account_will_be_created_if_not_exists_nby_downloading_or_using_this_app_the_terms_and_conditions_will_automatically_apply_to_you"
+                android:textAlignment="center"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/login" />
@@ -63,7 +64,7 @@
                     android:backgroundTint="@color/colorSelectedBackground"
                     android:textColor="@android:color/white"
                     android:textColorHint="@android:color/white"
-                    android:hint="Password"
+                    android:hint="@string/hint_password"
                     android:inputType="textPassword" />
             </com.google.android.material.textfield.TextInputLayout>
 
@@ -74,7 +75,7 @@
                 android:layout_marginStart="75dp"
                 android:layout_marginTop="50dp"
                 android:layout_marginEnd="75dp"
-                android:hint="Email"
+                android:hint="@string/hint_email"
                 android:inputType="textEmailAddress"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -85,7 +86,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
-                android:text="Privacy Policy"
+                android:text="@string/button_privacy_policy"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/automaticcreateccountlabel" />
@@ -95,7 +96,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
-                android:text="Terms and Conditions"
+                android:text="@string/button_terms_and_conditions"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/privacyPolicy" />

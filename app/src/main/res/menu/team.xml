@@ -7,17 +7,17 @@
         <item
             android:id="@+id/settings_show_all_player_team"
             android:orderInCategory="100"
-            android:title="Show all Player"
+            android:title="@string/menu_settings_show_all_player"
             app:showAsAction="never" />
         <item
             android:id="@+id/settings_show_own_team_only_team"
             android:orderInCategory="100"
-            android:title="Show only own Team"
+            android:title="@string/menu_settings_show_only_own_team"
             app:showAsAction="never" />
         <item
             android:id="@+id/settings_show_not_assigned_team"
             android:orderInCategory="100"
-            android:title="Show only unassigned"
+            android:title="@string/menu_settings_show_only_unassigned"
             app:showAsAction="never" />
     </group>
 </menu>

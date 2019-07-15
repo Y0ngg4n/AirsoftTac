@@ -22,7 +22,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="0dp"
                 android:layout_marginTop="10dp"
-                android:text="Create Game"
+                android:text="@string/button_create_game"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/selectKML" />
@@ -32,8 +32,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="25dp"
-                android:clickable="true"
-                android:hint="GameID"
+                android:hint="@string/hint_gameid"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
@@ -44,7 +43,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="25dp"
                 android:layout_marginEnd="8dp"
-                android:hint="Date"
+                android:hint="@string/hint_date"
                 android:clickable="false"
                 android:editable="false"
                 android:inputType="date"
@@ -60,7 +59,7 @@
                 android:layout_marginEnd="10dp"
                 android:clickable="false"
                 android:editable="false"
-                android:hint="Starting Time"
+                android:hint="@string/hint_starting_time"
                 android:inputType="time"
                 app:layout_constraintEnd_toStartOf="@+id/startTimePicker"
                 app:layout_constraintStart_toStartOf="parent"
@@ -74,7 +73,7 @@
                 android:layout_marginEnd="10dp"
                 android:clickable="false"
                 android:editable="false"
-                android:hint="Duration"
+                android:hint="@string/hint_duration"
                 android:inputType="time"
                 app:layout_constraintEnd_toStartOf="@+id/durationPicker"
                 app:layout_constraintStart_toStartOf="parent"
@@ -84,7 +83,7 @@
                 android:id="@+id/datePicker"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Select Date"
+                android:text="@string/button_select_date"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/date"
                 app:layout_constraintTop_toTopOf="@+id/date" />
@@ -94,7 +93,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="0dp"
                 android:layout_marginStart="10dp"
-                android:text="Select Time"
+                android:text="@string/button_select_time"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/startTime"
                 app:layout_constraintTop_toTopOf="@+id/startTime" />
@@ -103,7 +102,7 @@
                 android:id="@+id/durationPicker"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Select Duration"
+                android:text="@string/button_select_duration"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/duration"
                 app:layout_constraintTop_toTopOf="@+id/duration" />
@@ -131,7 +130,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:backgroundTint="@color/colorSelectedBackground"
-                    android:hint="Password"
+                    android:hint="@string/hint_password"
                     android:inputType="textPassword"
                     android:textColor="@android:color/white"
                     android:textColorHint="@android:color/white" />
@@ -143,7 +142,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="25dp"
-                android:hint="Nickname"
+                android:hint="@string/hint_nickname"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/passwordLayout" />
@@ -155,7 +154,7 @@
                 android:layout_marginStart="10dp"
                 android:layout_marginTop="10dp"
                 android:layout_marginEnd="10dp"
-                android:text="Select KML"
+                android:text="@string/button_select_kml"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/nickNameField" />
@@ -167,7 +166,7 @@
                 android:layout_marginStart="10dp"
                 android:layout_marginTop="10dp"
                 android:layout_marginEnd="10dp"
-                android:text="Create KML"
+                android:text="@string/button_create_kml"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@id/selectKML"
                 app:layout_constraintTop_toBottomOf="@+id/nickNameField" />

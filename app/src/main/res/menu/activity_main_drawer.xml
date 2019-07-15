@@ -7,32 +7,32 @@
         <item
             android:id="@+id/nav_map"
             android:icon="@drawable/ic_menu_map"
-            android:title="Map"></item>
+            android:title="@string/nav_menu_map"></item>
         <item
             android:id="@+id/nav_player"
             android:icon="@drawable/ic_menu_player"
-            android:title="Player"
+            android:title="@string/nav_menu_player"
             android:visible="false" />
         <item
             android:id="@+id/nav_team"
             android:icon="@drawable/ic_menu_team"
-            android:title="Team" />
+            android:title="@string/nav_menu_team" />
         <item
             android:id="@+id/nav_chat"
             android:icon="@drawable/ic_menu_chat"
-            android:title="Chat" />
+            android:title="@string/nav_menu_chat" />
         <item
             android:id="@+id/nav_settings"
             android:icon="@drawable/ic_menu_manage"
-            android:title="Settings" />
+            android:title="@string/nav_menu_settings" />
         <item
             android:id="@+id/nav_gameID"
             android:icon="@drawable/ic_menu_qrcode"
-            android:title="GameID" />
+            android:title="@string/nav_menu_gameid" />
         <item
             android:id="@+id/nav_overlay_images"
             android:icon="@drawable/ic_overlay_image"
-            android:title="Overlay Images" />
+            android:title="@string/nav_menu_overlay_images" />
 
         <!--<item-->
         <!--android:id="@+id/nav_beer"-->

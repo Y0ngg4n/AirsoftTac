@@ -1,25 +1,108 @@
 <resources>
     <string name="app_name">AirsoftTac</string>
-    <string name="title_activity_login">LoginActivity</string>
-    <string name="title_activity_scan_game">ScanGameActivity</string>
-    <string name="title_activity_create_game">CreateGame</string>
-    <string name="title_activity_join_game">JoinGame</string>
-    <string name="title_activity_map">MapActivity</string>
-    <string name="title_activity_main">MainActivity</string>
-    <string name="navigation_drawer_open">Open navigation drawer</string>
-    <string name="navigation_drawer_close">Close navigation drawer</string>
-    <string name="nav_header_title">Android Studio</string>
-    <string name="nav_header_subtitle">android.studio@android.com</string>
-    <string name="nav_header_desc">Navigation header</string>
-    <string name="action_settings">Settings</string>
+    <string name="nav_menu_map">Map</string>
+    <string name="nav_menu_player">Player</string>
+    <string name="nav_menu_team">Team</string>
+    <string name="nav_menu_chat">Chat</string>
+    <string name="nav_menu_settings">Settings</string>
+    <string name="nav_menu_gameid">GameID</string>
+    <string name="nav_menu_overlay_images">Overlay Images</string>
 
-    <string name="menu_home">Home</string>
-    <string name="menu_gallery">Gallery</string>
-    <string name="menu_slideshow">Slideshow</string>
-    <string name="menu_tools">Tools</string>
-    <string name="menu_share">Share</string>
-    <string name="menu_send">Send</string>
+    <string name="menu_settings_show_all_player">Show all Player</string>
+    <string name="menu_settings_show_only_own_team">Show only own Team</string>
+    <string name="menu_settings_show_only_unassigned">Show only unassigned</string>
+    <string name="menu_settings_show_ground_overlays">Show Ground Overlays</string>
+    <string name="menu_settings_show_heatmap">Show Heatmap</string>
+    <string name="menu_settings_show_first_radial_circles">Show first radial circles</string>
+    <string name="menu_settings_show_second_radial_circles">Show second radial circles</string>
 
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="hint_title">Title</string>
+    <string name="hint_kml">KML</string>
+    <string name="hint_json_map_style">JSON Map Style</string>
+    <string name="hint_name">Name</string>
+    <string name="hint_latitude">Latitude</string>
+    <string name="hint_longitude">Longitude</string>
+    <string name="hint_width_in_meters">Width in meters</string>
+    <string name="hint_search_custom_map">Search Custom Map</string>
+    <string name="hint_search_marker">Search Marker...</string>
+    <string name="hint_gameid">GameID</string>
+    <string name="hint_date">Date</string>
+    <string name="hint_starting_time">Starting Time</string>
+    <string name="hint_duration">Duration</string>
+    <string name="hint_password">Password</string>
+    <string name="hint_nickname">Nickname</string>
+    <string name="hint_email">Email</string>
+    <string name="hint_teamname">TeamName</string>
+    <string name="hint_write">Write...</string>
+    <string name="hint_search_overlay_images">Search Overlay Images</string>
+    <string name="hint_description">Description</string>
+
+
+    <string name="button_select_kml_file">Select KML File</string>
+    <string name="button_select">Select</string>
+    <string name="button_add">Add</string>
+    <string name="button_add_map_style">Add Map Style</string>
+    <string name="button_create_game">Create Game</string>
+    <string name="button_select_image">Select Image</string>
+    <string name="button_select_date">Select Date</string>
+    <string name="button_select_time">Select Time</string>
+    <string name="button_select_duration">Select Duration</string>
+    <string name="button_select_kml">Select KML</string>
+    <string name="button_create_kml">Create KML</string>
+    <string name="button_join_game">Join Game</string>
+    <string name="button_scan_game_id">Scan Game ID</string>
+    <string name="button_login">Login</string>
+    <string name="button_privacy_policy">Privacy Policy</string>
+    <string name="button_terms_and_conditions">Terms and Conditions</string>
+    <string name="button_create_team">Create Team</string>
+
+
+    <string name="text_account_will_be_created_if_not_exists_nby_downloading_or_using_this_app_the_terms_and_conditions_will_automatically_apply_to_you">Account will be created if not exists.  By downloading or using this app, the terms and conditions will automatically apply to you.</string>
+    <string name="text_beer_shop">Beer-Shop</string>
+    <string name="text_send_messages_more_frequently">Send Messages more frequently.</string>
+    <string name="text_show_heatmap">Show Heatmap</string>
+    <string name="text_remove_ads">Remove Ads</string>
+    <string name="button_send">Send</string>
+
+
+    <string name="text_title">Title:</string>
+    <string name="text_descr">Descr:</string>
+    <string name="text_lat">Lat:</string>
+    <string name="text_long">Long:</string>
+    <string name="text_distance">Distance:</string>
+    <string name="text_own">Own:</string>
+    <string name="text_team">Team:</string>
+    <string name="hint_search_map_style">Search Map Style</string>
+    <string name="button_current_location">Current Location</string>
+    <string name="switch_owned">Owned</string>
+    <string name="button_add_marker">Add Marker</string>
+    <string name="button_assign">Assign</string>
+    <string name="text_type">Type:</string>
+    <string name="text_title">Title:</string>
+    <string name="text_description">Description:</string>
+    <string name="button_assign">Assign</string>
+    <string name="button_apply">Apply</string>
+    <string name="text_type">Type:</string>
+    <string name="text_title">Title:</string>
+    <string name="text_description">Description:</string>
+    <string name="button_goto">Goto</string>
+    <string name="text_team">Team:</string>
+    <string name="text_email">Email:</string>
+    <string name="text_nickname">Nickname:</string>
+    <string name="button_goto">Goto</string>
+    <string name="button_apply">Apply</string>
+    <string name="text_name">Name:</string>
+    <string name="button_load">Load</string>
+    <string name="text_email">Email:</string>
+    <string name="switch_orga">Orga</string>
+    <string name="switch_first">First</string>
+    <string name="switch_second">Second</string>
+    <string name="text_nickname">Nickname:</string>
+    <string name="text_teamname">Teamname:</string>
+    <string name="button_join">Join</string>
+    <string name="button_assign">Assign</string>
+    <string name="button_radio">Radio</string>
+    <string name="text_major_rc">Major RC:</string>
+    <string name="text_minor_rc">Minor RC:</string>
+
 </resources>

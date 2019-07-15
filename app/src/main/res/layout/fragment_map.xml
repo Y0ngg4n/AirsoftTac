@@ -126,7 +126,6 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
         android:background="@drawable/map_rotation_degrees"
-        android:text="Degrees"
         android:textColor="@android:color/white"
         android:visibility="invisible"
         app:layout_constraintEnd_toEndOf="parent"
@@ -146,11 +145,18 @@
             android:id="@+id/setMarker"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
             android:background="@drawable/vertical_image_buttons"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:srcCompat="@drawable/ic_fb_setpin" />
+
+        <ImageButton
+            android:id="@+id/editMarker"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/vertical_image_buttons"
+            app:srcCompat="@drawable/ic_fb_edit" />
 
         <ImageButton
             android:id="@+id/swapFlagMarker"
@@ -158,8 +164,6 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
             android:background="@drawable/vertical_image_buttons"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@id/setMarker"
             app:srcCompat="@drawable/ic_fb_swap_marker" />
 
         <ImageButton
@@ -168,8 +172,6 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="30dp"
             android:background="@drawable/vertical_image_buttons"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@id/swapFlagMarker"
             app:srcCompat="@drawable/ic_fb_remove_marker" />
 
 
@@ -189,10 +191,7 @@
             android:id="@+id/gotoFirstHQ"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
             android:background="@drawable/vertical_image_buttons"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
             app:srcCompat="@drawable/ic_fb_goto_first_hq" />
 
         <ImageButton
@@ -201,8 +200,6 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
             android:background="@drawable/vertical_image_buttons"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="@id/gotoFirstHQ"
             app:srcCompat="@drawable/ic_fb_goto_player" />
 
         <ImageButton
@@ -211,8 +208,6 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
             android:background="@drawable/vertical_image_buttons"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="@id/gotoPlayerSelection"
             app:srcCompat="@drawable/ic_fb_goto_marker" />
 
     </LinearLayout>

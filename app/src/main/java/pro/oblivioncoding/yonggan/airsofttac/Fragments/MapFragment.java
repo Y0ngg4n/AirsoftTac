@@ -86,7 +86,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
     private static GoogleMap googleMap;
     private static MapScaleView scaleView;
     private static ImageButton hitfb, underfirefb, supportfb, missionfb;
-    private static ImageButton setMarkerfb, removeMarkerfb, swapFlagfb;
+    private static ImageButton setMarkerfb, removeMarkerfb, editMarkerfb, swapFlagfb;
     private static TextView rotationDegrees;
     private static ImageButton reloadfb, currentlocationfb, toggleMap, toggleMapRotation;
     private static ImageButton gotoFirstHQSelection, gotoPlayerSelection, gotoMarkerSelection;
@@ -209,9 +209,11 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         missionfb = rootView.findViewById(R.id.missionfb);
 
         reloadfb = rootView.findViewById(R.id.reloadfb);
+
         setMarkerfb = rootView.findViewById(R.id.setMarker);
         removeMarkerfb = rootView.findViewById(R.id.removeMarker);
         swapFlagfb = rootView.findViewById(R.id.swapFlagMarker);
+        editMarkerfb = rootView.findViewById(R.id.editMarker);
 
         gotoFirstHQSelection = rootView.findViewById(R.id.gotoFirstHQ);
         gotoMarkerSelection = rootView.findViewById(R.id.gotoMarkerSelection);
@@ -219,6 +221,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
 
 
         setMarkerfb.setVisibility(View.INVISIBLE);
+        editMarkerfb.setVisibility(View.INVISIBLE);
         removeMarkerfb.setVisibility(View.INVISIBLE);
         swapFlagfb.setVisibility(View.INVISIBLE);
 
@@ -742,16 +745,19 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
 
         googleMap.setOnMarkerClickListener(marker ->
         {
-            Log.d("DDDD", "FFFFFF");
             final float[] distanceResults = new float[1];
             Location.distanceBetween(ownUserData.getPositionLat(), ownUserData.getPositionLong(),
                     marker.getPosition().latitude, marker.getPosition().longitude, distanceResults);
             final String distance = distanceResults[0] + "m";
+            boolean usermarker = false;
             if (userMarkerDataHashMap.containsKey(marker)) {
+                usermarker = true;
                 final UserData userData = userMarkerDataHashMap.get(marker);
                 googleMap.setInfoWindowAdapter(new CustomMarkerTeamInfoWindowAdapter(getContext(),
                         userData.getPositionLat(), userData.getPositionLong(),
                         userData.getEmail(), userData.getNickname(), userData.getTeam(), distance));
+                editMarkerfb.setVisibility(View.INVISIBLE);
+                swapFlagfb.setVisibility(View.INVISIBLE);
             } else if (tacticalMarkerDataHashMap.containsKey(marker)) {
                 final TacticalMarkerData tacticalMarkerData = tacticalMarkerDataHashMap.get(marker);
                 googleMap.setInfoWindowAdapter(new CustomMarkerInfoWindowAdapter(getContext(),
@@ -790,9 +796,9 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                 currentMarker = marker;
             }
             if (FirebaseDB.getGameData().getOwnUserData(FirebaseAuthentication.getFirebaseUser().getEmail()).isOrga()) {
-                Log.d("DDDD", "adas");
-                if (currentMarker != null)
+                if (currentMarker != null && !usermarker) {
                     removeMarkerfb.setVisibility(View.VISIBLE);
+                }
                 else removeMarkerfb.setVisibility(View.INVISIBLE);
             }
             marker.showInfoWindow();
@@ -802,6 +808,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
 
         googleMap.setOnMapClickListener(e -> {
             swapFlagfb.setVisibility(View.INVISIBLE);
+            editMarkerfb.setVisibility(View.INVISIBLE);
             removeMarkerfb.setVisibility(View.INVISIBLE);
         });
 
@@ -822,23 +829,6 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
             scaleView.update(googleMap.getCameraPosition().zoom, googleMap.getCameraPosition().target.latitude);
         });
 
-        FirebaseDB.getGames().whereEqualTo("gameID", FirebaseDB.getGameData().getGameID())
-                .get().addOnCompleteListener(task -> {
-            if (task.isSuccessful()) {
-                if (task.getResult().size() > 0) {
-                    final DocumentReference documentReference = FirebaseDB.getGames()
-                            .document(task.getResult().getDocuments().get(0).getId());
-
-                } else {
-                    Toast.makeText(getContext(), "Couldn´t find Document with GameID!",
-                            Toast.LENGTH_LONG).show();
-                }
-            } else {
-                Toast.makeText(getContext(), "Couldn´t query Database!",
-                        Toast.LENGTH_LONG).show();
-            }
-        });
-
         if (FirebaseDB.getGameData().getOwnUserData(FirebaseAuthentication.getFirebaseUser().getEmail()).isOrga()) {
             setMarkerfb.setVisibility(View.VISIBLE);
             setMarkerfb.setOnClickListener(v -> {
@@ -852,6 +842,11 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                     if (task.getResult().size() > 0) {
                         final DocumentReference documentReference = FirebaseDB.getGames()
                                 .document(task.getResult().getDocuments().get(0).getId());
+
+                        editMarkerfb.setOnClickListener(v -> {
+
+                        });
+
                         removeMarkerfb.setOnClickListener(e -> {
                             if (tacticalMarkerDataHashMap.containsKey(currentMarker)) {
                                 final TacticalMarkerData tacticalMarkerData = tacticalMarkerDataHashMap.get(currentMarker);
@@ -1003,6 +998,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
             });
         } else {
             setMarkerfb.setVisibility(View.INVISIBLE);
+            editMarkerfb.setVisibility(View.INVISIBLE);
             removeMarkerfb.setVisibility(View.INVISIBLE);
             swapFlagfb.setVisibility(View.INVISIBLE);
         }

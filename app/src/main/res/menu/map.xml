@@ -7,17 +7,17 @@
         <item
             android:id="@+id/settings_show_all_player"
             android:orderInCategory="100"
-            android:title="Show all Player"
+            android:title="@string/menu_settings_show_all_player"
             app:showAsAction="never" />
         <item
             android:id="@+id/settings_show_own_team_only"
             android:orderInCategory="100"
-            android:title="Show only own Team"
+            android:title="@string/menu_settings_show_only_own_team"
             app:showAsAction="never" />
         <item
             android:id="@+id/settings_show_not_assigned"
             android:orderInCategory="100"
-            android:title="Show only unassigned"
+            android:title="@string/menu_settings_show_only_unassigned"
             app:showAsAction="never" />
     </group>
     <group
@@ -27,13 +27,13 @@
             android:id="@+id/showKmlLayer"
             android:checked="true"
             android:orderInCategory="100"
-            android:title="Show Ground Overlays"
+            android:title="@string/menu_settings_show_ground_overlays"
             app:showAsAction="never" />
         <item
             android:id="@+id/showHeatMap"
             android:checked="true"
             android:orderInCategory="100"
-            android:title="Show Heatmap"
+            android:title="@string/menu_settings_show_heatmap"
             app:showAsAction="never" />
     </group>
 
@@ -44,14 +44,14 @@
             android:id="@+id/showFirstRadials"
             android:checked="true"
             android:orderInCategory="100"
-            android:title="Show first radial circles"
+            android:title="@string/menu_settings_show_first_radial_circles"
             app:showAsAction="never" />
 
         <item
             android:id="@+id/showSecondRadials"
             android:checked="true"
             android:orderInCategory="100"
-            android:title="Show second radial circles"
+            android:title="@string/menu_settings_show_second_radial_circles"
             app:showAsAction="never" />
     </group>
 

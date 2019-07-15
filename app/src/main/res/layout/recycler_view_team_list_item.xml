@@ -13,7 +13,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="25dp"
         android:layout_marginTop="10dp"
-        android:text="Teamname:"
+        android:text="@string/text_teamname"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -33,7 +33,7 @@
         android:layout_marginStart="25dp"
         android:layout_marginTop="10dp"
         android:layout_marginBottom="10dp"
-        android:text="Join"
+        android:text="@string/button_join"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/majorRCLabel" />
@@ -44,7 +44,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="10dp"
         android:layout_marginEnd="10dp"
-        android:text="Assign"
+        android:text="@string/button_assign"
         app:layout_constraintEnd_toStartOf="@id/radioChannel"
         app:layout_constraintStart_toEndOf="@id/joinLeaveTeam"
         app:layout_constraintTop_toTopOf="@+id/joinLeaveTeam" />
@@ -55,7 +55,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="0dp"
         android:layout_marginEnd="25dp"
-        android:text="Radio"
+        android:text="@string/button_radio"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@+id/teamListAssign" />
 
@@ -64,7 +64,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
-        android:text="Major RC:"
+        android:text="@string/text_major_rc"
         app:layout_constraintStart_toStartOf="@+id/markerTitleLabel"
         app:layout_constraintTop_toBottomOf="@+id/markerTitleLabel" />
 
@@ -81,7 +81,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="10dp"
-        android:text="Minor RC:"
+        android:text="@string/text_minor_rc"
         app:layout_constraintStart_toEndOf="@+id/majorRadioChannelText"
         app:layout_constraintTop_toTopOf="@+id/majorRadioChannelText" />
 

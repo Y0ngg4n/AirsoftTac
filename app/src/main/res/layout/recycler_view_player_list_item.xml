@@ -13,7 +13,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="25dp"
         android:layout_marginTop="25dp"
-        android:text="Email:"
+        android:text="@string/text_email"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -34,7 +34,7 @@
         android:layout_marginStart="25dp"
         android:layout_marginTop="10dp"
         android:layout_marginBottom="10dp"
-        android:text="Orga"
+        android:text="@string/switch_orga"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintTop_toBottomOf="@id/recycler_item_player_list_nickname_label" />
@@ -46,7 +46,7 @@
         android:layout_marginStart="25dp"
         android:layout_marginTop="10dp"
         android:layout_marginBottom="10dp"
-        android:text="First"
+        android:text="@string/switch_first"
         app:layout_constraintStart_toEndOf="@id/playerOrgaSwitch"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintTop_toBottomOf="@id/recycler_item_player_list_nickname_label" />
@@ -59,7 +59,7 @@
         android:layout_marginTop="10dp"
         android:layout_marginEnd="25dp"
         android:layout_marginBottom="10dp"
-        android:text="Second"
+        android:text="@string/switch_second"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@id/playerFirstSwitch"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -71,7 +71,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="25dp"
         android:layout_marginTop="10dp"
-        android:text="Nickname:"
+        android:text="@string/text_nickname"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/recycler_item_player_list_email_label" />
 
