@@ -62,6 +62,7 @@ import pro.oblivioncoding.yonggan.airsofttac.Activitys.MainActivity;
 import pro.oblivioncoding.yonggan.airsofttac.Firebase.FirebaseAuthentication;
 import pro.oblivioncoding.yonggan.airsofttac.Firebase.FirebaseDB;
 import pro.oblivioncoding.yonggan.airsofttac.Firebase.GameCollection.GameData;
+import pro.oblivioncoding.yonggan.airsofttac.Firebase.GameCollection.Marker.MarkerType;
 import pro.oblivioncoding.yonggan.airsofttac.Firebase.GameCollection.Marker.MarkerTypes.FlagMarkerData;
 import pro.oblivioncoding.yonggan.airsofttac.Firebase.GameCollection.Marker.MarkerTypes.HQMarkerData;
 import pro.oblivioncoding.yonggan.airsofttac.Firebase.GameCollection.Marker.MarkerTypes.MissionMarkerData;
@@ -71,6 +72,7 @@ import pro.oblivioncoding.yonggan.airsofttac.Firebase.GameCollection.Teams.TeamD
 import pro.oblivioncoding.yonggan.airsofttac.Firebase.GameCollection.User.UserData;
 import pro.oblivioncoding.yonggan.airsofttac.Firebase.KMLCollection.KMLData;
 import pro.oblivioncoding.yonggan.airsofttac.Firebase.OverlayImageCollection.OverlayImage;
+import pro.oblivioncoding.yonggan.airsofttac.Fragments.Dialog.EditMarkerDialogFragment;
 import pro.oblivioncoding.yonggan.airsofttac.Fragments.Dialog.GotoSearchMarkerSelection;
 import pro.oblivioncoding.yonggan.airsofttac.Fragments.Dialog.GotoSearchPlayerSelection;
 import pro.oblivioncoding.yonggan.airsofttac.Fragments.Dialog.OrgaAddMarkerDialogFragment;
@@ -800,8 +802,12 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
             if (FirebaseDB.getGameData().getOwnUserData(FirebaseAuthentication.getFirebaseUser().getEmail()).isOrga()) {
                 if (currentMarker != null && !usermarker) {
                     removeMarkerfb.setVisibility(View.VISIBLE);
+                    editMarkerfb.setVisibility(View.VISIBLE);
+                } else {
+                    removeMarkerfb.setVisibility(View.INVISIBLE);
+                    swapFlagfb.setVisibility(View.INVISIBLE);
+                    editMarkerfb.setVisibility(View.INVISIBLE);
                 }
-                else removeMarkerfb.setVisibility(View.INVISIBLE);
             }
             marker.showInfoWindow();
 
@@ -846,7 +852,23 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                                 .document(task.getResult().getDocuments().get(0).getId());
 
                         editMarkerfb.setOnClickListener(v -> {
-
+                            EditMarkerDialogFragment editMarkerDialogFragment = new EditMarkerDialogFragment();
+                            MarkerType markerType = null;
+                            if (tacticalMarkerDataHashMap.containsKey(currentMarker)) {
+                                markerType = tacticalMarkerDataHashMap.get(currentMarker);
+                            } else if (respawnMarkerDataHashMap.containsKey(currentMarker)) {
+                                markerType = respawnMarkerDataHashMap.get(currentMarker);
+                            } else if (missionMarkerDataHashMap.containsKey(currentMarker)) {
+                                markerType = respawnMarkerDataHashMap.get(currentMarker);
+                            } else if (hqMarkerDataHashMap.containsKey(currentMarker)) {
+                                markerType = hqMarkerDataHashMap.get(currentMarker);
+                            } else if (flagDataHashMap.containsKey(currentMarker)) {
+                                markerType = flagDataHashMap.get(currentMarker);
+                            }
+                            if (markerType != null) {
+                                EditMarkerDialogFragment edit_marker_dialog_fragment = EditMarkerDialogFragment.newInstance("edit_marker_dialog_fragment", markerType, documentReference);
+                                edit_marker_dialog_fragment.show(getFragmentManager(), "edit_marker_dialog");
+                            }
                         });
 
                         removeMarkerfb.setOnClickListener(e -> {

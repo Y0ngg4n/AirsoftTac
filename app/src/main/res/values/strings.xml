@@ -39,9 +39,8 @@
     <string name="hint_teamname">TeamName</string>
     <string name="hint_write">Write...</string>
     <string name="hint_search_overlay_images">Search Overlay Images</string>
-    <string name="hint_description">Description</string>
     <string name="hint_search_map_style">Search Map Style</string>
-
+    <string name="hint_description">Description</string>
 
     <string name="button_select_kml_file">Select KML File</string>
     <string name="button_select">Select</string>
@@ -69,6 +68,7 @@
     <string name="button_join">Join</string>
     <string name="button_radio">Radio</string>
     <string name="button_load">Load</string>
+    <string name="button_edit">Edit</string>
 
 
     <string name="text_beer_shop">Beer-Shop</string>
@@ -198,5 +198,6 @@
     <string name="placemark_property_respawn" translatable="false">respawn</string>
     <string name="placemark_property_hq" translatable="false">hq</string>
     <string name="placemark_property_flag" translatable="false">flag</string>
+
 
 </resources>

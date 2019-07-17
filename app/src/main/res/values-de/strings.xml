@@ -127,4 +127,5 @@
     <string name="firebase_firestore_could_not_find_document_with_gameid">Dokument mit GameID konnte nicht gefunden werden!</string>
     <string name="firebase_firestore_could_not_find_document_with_this_title">Dokument mit diesem Titel konnte nicht gefunden werden!</string>
     <string name="firebase_firestore_could_not_query_database">Datenbank konnte nicht abgefragt werden!</string>
+    <string name="button_edit">Bearbeiten</string>
 </resources>
