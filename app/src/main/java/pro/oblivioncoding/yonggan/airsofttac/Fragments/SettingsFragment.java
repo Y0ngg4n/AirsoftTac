@@ -40,8 +40,6 @@ import pro.oblivioncoding.yonggan.airsofttac.R;
  * create an instance of this fragment.
  */
 public class SettingsFragment extends Fragment {
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     @Nullable
     private OnFragmentInteractionListener mListener;
     private View rootView;
@@ -58,7 +56,6 @@ public class SettingsFragment extends Fragment {
      *
      * @return A new instance of fragment SettingsFragment.
      */
-    // TODO: Rename and change types and number of parameters
     @NonNull
     public static SettingsFragment newInstance() {
         final SettingsFragment fragment = new SettingsFragment();
@@ -82,11 +79,11 @@ public class SettingsFragment extends Fragment {
                     final List<DocumentSnapshot> documents = task.getResult().getDocuments();
                     setAdapter(documents);
                 } else {
-                    Toast.makeText(getContext(), "Couldn´t find Document with this Title!",
+                    Toast.makeText(getContext(), R.string.code_settings_fragment_could_not_load_map_style_with_this_title,
                             Toast.LENGTH_LONG).show();
                 }
             } else {
-                Toast.makeText(getContext(), "Couldn´t query Database!",
+                Toast.makeText(getContext(), R.string.firebase_firestore_could_not_query_database,
                         Toast.LENGTH_LONG).show();
             }
         });
@@ -99,7 +96,7 @@ public class SettingsFragment extends Fragment {
             @Override
             public void onTextChanged(@NonNull final CharSequence s, final int start, final int before, final int count) {
                 if (!s.toString().isEmpty()) {
-                    FirebaseDB.getMapStyles().whereEqualTo("title", s.toString().toLowerCase()).get().addOnCompleteListener(task -> {
+                    FirebaseDB.getMapStyles().whereEqualTo(getContext().getResources().getString(R.string.firebase_firestore_variable_map_styles_title), s.toString().toLowerCase()).get().addOnCompleteListener(task -> {
                         if (task.isSuccessful()) {
                             if (task.getResult().size() > 0) {
                                 final List<DocumentSnapshot> documents = task.getResult().getDocuments();
@@ -108,7 +105,7 @@ public class SettingsFragment extends Fragment {
                                 setAdapter(new ArrayList<>());
                             }
                         } else {
-                            Toast.makeText(getContext(), "Couldn´t query Database!",
+                            Toast.makeText(getContext(), R.string.firebase_firestore_could_not_query_database,
                                     Toast.LENGTH_LONG).show();
                         }
                     });
@@ -120,7 +117,7 @@ public class SettingsFragment extends Fragment {
                                 setAdapter(documents);
                             }
                         } else {
-                            Toast.makeText(getContext(), "Couldn´t query Database!",
+                            Toast.makeText(getContext(), R.string.firebase_firestore_could_not_query_database,
                                     Toast.LENGTH_LONG).show();
                         }
 

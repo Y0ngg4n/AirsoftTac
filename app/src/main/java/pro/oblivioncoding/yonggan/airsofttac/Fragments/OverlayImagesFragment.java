@@ -79,11 +79,11 @@ public class OverlayImagesFragment extends Fragment {
                     final List<DocumentSnapshot> documents = task.getResult().getDocuments();
                     setAdapter(documents);
                 } else {
-                    Toast.makeText(getContext(), "Couldn´t find Document with this Title!",
+                    Toast.makeText(getContext(), R.string.firebase_firestore_could_not_find_document_with_gameid,
                             Toast.LENGTH_LONG).show();
                 }
             } else {
-                Toast.makeText(getContext(), "Couldn´t query Database!",
+                Toast.makeText(getContext(), R.string.firebase_firestore_could_not_query_database,
                         Toast.LENGTH_LONG).show();
             }
         });
@@ -101,7 +101,7 @@ public class OverlayImagesFragment extends Fragment {
             @Override
             public void onTextChanged(@NonNull final CharSequence s, final int start, final int before, final int count) {
                 if (!s.toString().isEmpty()) {
-                    FirebaseDB.getOverlayImages().whereEqualTo("name", s.toString().toLowerCase()).get().addOnCompleteListener(task -> {
+                    FirebaseDB.getOverlayImages().whereEqualTo(getContext().getResources().getString(R.string.firebase_firestore_variable_overlay_images_name), s.toString().toLowerCase()).get().addOnCompleteListener(task -> {
                         if (task.isSuccessful()) {
                             if (task.getResult().size() > 0) {
                                 final List<DocumentSnapshot> documents = task.getResult().getDocuments();
@@ -110,7 +110,7 @@ public class OverlayImagesFragment extends Fragment {
                                 setAdapter(new ArrayList<>());
                             }
                         } else {
-                            Toast.makeText(getContext(), "Couldn´t query Database!",
+                            Toast.makeText(getContext(), R.string.firebase_firestore_could_not_query_database,
                                     Toast.LENGTH_LONG).show();
                         }
                     });
@@ -122,7 +122,7 @@ public class OverlayImagesFragment extends Fragment {
                                 setAdapter(documents);
                             }
                         } else {
-                            Toast.makeText(getContext(), "Couldn´t query Database!",
+                            Toast.makeText(getContext(), R.string.firebase_firestore_could_not_query_database,
                                     Toast.LENGTH_LONG).show();
                         }
 
@@ -148,7 +148,6 @@ public class OverlayImagesFragment extends Fragment {
         return rootView;
     }
 
-    // TODO: Rename method, update argument and hook method into UI event
     public void onButtonPressed(Uri uri) {
         if (mListener != null) {
             mListener.onFragmentInteraction(uri);

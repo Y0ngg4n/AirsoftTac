@@ -36,6 +36,7 @@ import pro.oblivioncoding.yonggan.airsofttac.Firebase.FirebaseAuthentication;
 import pro.oblivioncoding.yonggan.airsofttac.Firebase.FirebaseDB;
 import pro.oblivioncoding.yonggan.airsofttac.Firebase.GameCollection.User.UserData;
 import pro.oblivioncoding.yonggan.airsofttac.Fragments.MapFragment;
+import pro.oblivioncoding.yonggan.airsofttac.R;
 
 public class GoogleLocationService extends Service implements LocationListener, SensorEventListener {
     private static final int NOTIF_ID = 1;
@@ -88,14 +89,14 @@ public class GoogleLocationService extends Service implements LocationListener, 
     public void onStatusChanged(final String provider, final int status, final Bundle extras) {
         if (ActivityCompat.checkSelfPermission(mainActivity, android.Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED
                 && ActivityCompat.checkSelfPermission(mainActivity, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-            Log.d("LocationService", "Starting request of Location");
+            Log.d(getResources().getString(R.string.code_google_location_service_log_tag), getResources().getString(R.string.code_google_location_service_starting_request_of_location));
             updateLastKnowLocation();
             locationManager.requestLocationUpdates(locationManager.getBestProvider(
                     locationManagerCriteria, true),
                     updateTime, minDistance, locationListener
             );
         } else {
-            Log.d("LocationService", "Requesting Location Permissions");
+            Log.d(getResources().getString(R.string.code_google_location_service_log_tag), getResources().getString(R.string.code_google_location_service_requesting_location_permissions));
             MainActivity.getInstance().requestLocationPermissions();
         }
     }
@@ -104,14 +105,14 @@ public class GoogleLocationService extends Service implements LocationListener, 
     public void onProviderEnabled(final String provider) {
         if (ActivityCompat.checkSelfPermission(mainActivity, android.Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED
                 && ActivityCompat.checkSelfPermission(mainActivity, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-            Log.d("LocationService", "Starting request of Location");
+            Log.d(getResources().getString(R.string.code_google_location_service_log_tag), getResources().getString(R.string.code_google_location_service_starting_request_of_location));
             updateLastKnowLocation();
             locationManager.requestLocationUpdates(locationManager.getBestProvider(
                     locationManagerCriteria, true),
                     updateTime, minDistance, locationListener
             );
         } else {
-            Log.d("LocationService", "Requesting Location Permissions");
+            Log.d(getResources().getString(R.string.code_google_location_service_log_tag), getResources().getString(R.string.code_google_location_service_requesting_location_permissions));
             MainActivity.getInstance().requestLocationPermissions();
 
         }
@@ -121,14 +122,14 @@ public class GoogleLocationService extends Service implements LocationListener, 
     public void onProviderDisabled(final String provider) {
         if (ActivityCompat.checkSelfPermission(mainActivity, android.Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED
                 && ActivityCompat.checkSelfPermission(mainActivity, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-            Log.d("LocationService", "Starting request of Location");
+            Log.d(getResources().getString(R.string.code_google_location_service_log_tag), getResources().getString(R.string.code_google_location_service_starting_request_of_location));
             updateLastKnowLocation();
             locationManager.requestLocationUpdates(locationManager.getBestProvider(
                     locationManagerCriteria, true),
                     updateTime, minDistance, locationListener
             );
         } else {
-            Log.d("LocationService", "Requesting Location Permissions");
+            Log.d(getResources().getString(R.string.code_google_location_service_log_tag), getResources().getString(R.string.code_google_location_service_requesting_location_permissions));
             MainActivity.getInstance().requestLocationPermissions();
 
         }
@@ -153,18 +154,18 @@ public class GoogleLocationService extends Service implements LocationListener, 
             final NotificationManager notificationManager =
                     (NotificationManager) mainActivity.getSystemService(
                             NOTIFICATION_SERVICE);
-            final NotificationChannel channel = new NotificationChannel("airsofttaclocationservice",
+            final NotificationChannel channel = new NotificationChannel(NOTIF_CHANNEL_ID,
                     NOTIF_CHANNEL_ID,
                     NotificationManager.IMPORTANCE_DEFAULT);
-            channel.setDescription("This Notification Channel is for the AirsoftTacLocationService Notification");
+            channel.setDescription(getResources().getString(R.string.code_google_location_service_notification_channel_description));
             notificationManager.createNotificationChannel(channel);
         }
         startForeground(NOTIF_ID, new NotificationCompat.Builder(this,
-                "airsofttaclocationservice") // don't forget create a notification channel first
+                NOTIF_CHANNEL_ID) // don't forget create a notification channel first
                 .setOngoing(true)
                 .setSmallIcon(pro.oblivioncoding.yonggan.airsofttac.R.drawable.ic_pin_drop_black_24dp)
-                .setContentTitle("AirsoftTac")
-                .setContentText("Updating your Position in Background.\nTo stop, kill the App in your Task-Manager.")
+                .setContentTitle(getResources().getString(R.string.code_google_location_service_notification_title))
+                .setContentText(getResources().getString(R.string.code_google_location_service_notification_content_text))
                 .setContentIntent(pendingIntent)
                 .build());
     }
@@ -189,7 +190,7 @@ public class GoogleLocationService extends Service implements LocationListener, 
             setLocationManager();
         if (ActivityCompat.checkSelfPermission(mainActivity, android.Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED
                 && ActivityCompat.checkSelfPermission(mainActivity, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-            Log.d("LocationService", "Starting request of Location");
+            Log.d(getResources().getString(R.string.code_google_location_service_log_tag), getResources().getString(R.string.code_google_location_service_starting_request_of_location));
             updateLastKnowLocation();
             locationManager.requestLocationUpdates(locationManager.getBestProvider(
                     locationManagerCriteria, true),
@@ -199,9 +200,9 @@ public class GoogleLocationService extends Service implements LocationListener, 
             sensorManager = (SensorManager) mainActivity.getSystemService(Context.SENSOR_SERVICE);
             gsensor = sensorManager.getDefaultSensor(Sensor.TYPE_ROTATION_VECTOR);
             startRotation();
-            Log.d("LocationService", "Start Rotation");
+            Log.d(getResources().getString(R.string.code_google_location_service_log_tag), getResources().getString(R.string.code_google_location_service_starting_rotation));
         } else {
-            Log.d("LocationService", "Requesting Location Permissions");
+            Log.d(getResources().getString(R.string.code_google_location_service_log_tag), getResources().getString(R.string.code_google_location_service_requesting_location_permissions));
             MainActivity.getInstance().requestLocationPermissions();
         }
     }
@@ -209,27 +210,26 @@ public class GoogleLocationService extends Service implements LocationListener, 
     private void updateLocationData(final Location location) {
         if (location == null) return;
         final UserData ownUserData = FirebaseDB.getGameData().getOwnUserData(FirebaseAuthentication.getFirebaseUser().getEmail());
-        Log.d("LocationService", "OnLocationChanged");
+        Log.d(getResources().getString(R.string.code_google_location_service_log_tag), getResources().getString(R.string.code_google_location_service_location_changed));
         if (ownUserData != null) {
             ownUserData.setPositionLat(location.getLatitude());
             ownUserData.setPositionLong(location.getLongitude());
         }
         if (gameDocumentReference != null) {
-            Log.d("LocationService", "Updated");
-            FirebaseDB.updateObject(gameDocumentReference, "users",
+            FirebaseDB.updateObject(gameDocumentReference, getResources().getString(R.string.firebase_firestore_variable_games_users),
                     FirebaseDB.getGameData().getUsers());
+            Log.d(getResources().getString(R.string.code_google_location_service_log_tag), getResources().getString(R.string.code_google_location_service_updated_firestore));
         } else {
-            FirebaseDB.getGames().whereEqualTo("gameID", FirebaseDB.getGameData().getGameID())
+            FirebaseDB.getGames().whereEqualTo(getResources().getString(R.string.firebase_firestore_variable_games_gameID), FirebaseDB.getGameData().getGameID())
                     .get().addOnCompleteListener(task -> {
                 if (task.isSuccessful()) {
                     if (task.getResult().size() > 0) {
                         gameDocumentReference = FirebaseDB.getGames().document(task.getResult().getDocuments().get(0).getId());
-                        FirebaseDB.updateObject(gameDocumentReference, "users",
+                        FirebaseDB.updateObject(gameDocumentReference, getResources().getString(R.string.firebase_firestore_variable_games_users),
                                 FirebaseDB.getGameData().getUsers());
                     }
                 } else {
-                    Log.d("LocationService", "GameID not found!");
-                    Toast.makeText(this, "Couldn´t query Database!",
+                    Toast.makeText(this, R.string.firebase_firestore_could_not_query_database,
                             Toast.LENGTH_LONG).show();
                 }
             });

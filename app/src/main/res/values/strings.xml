@@ -1,11 +1,12 @@
 <resources>
     <string name="app_name">AirsoftTac</string>
+
     <string name="nav_menu_map">Map</string>
     <string name="nav_menu_player">Player</string>
     <string name="nav_menu_team">Team</string>
     <string name="nav_menu_chat">Chat</string>
     <string name="nav_menu_settings">Settings</string>
-    <string name="nav_menu_gameid">GameID</string>
+    <string name="nav_menu_gameid">Game ID</string>
     <string name="nav_menu_overlay_images">Overlay Images</string>
 
     <string name="navigation_drawer_open">Open navigation drawer</string>
@@ -20,14 +21,14 @@
     <string name="menu_settings_show_second_radial_circles">Show second radial circles</string>
 
     <string name="hint_title">Title</string>
-    <string name="hint_kml">KML</string>
+    <string name="hint_kml" translatable="false">KML</string>
     <string name="hint_json_map_style">JSON Map Style</string>
     <string name="hint_name">Name</string>
     <string name="hint_latitude">Latitude</string>
     <string name="hint_longitude">Longitude</string>
     <string name="hint_width_in_meters">Width in meters</string>
     <string name="hint_search_custom_map">Search Custom Map</string>
-    <string name="hint_search_marker">Search Marker...</string>
+    <string name="hint_search_marker">Search Marker</string>
     <string name="hint_gameid">GameID</string>
     <string name="hint_date">Date</string>
     <string name="hint_starting_time">Starting Time</string>
@@ -70,7 +71,6 @@
     <string name="button_load">Load</string>
 
 
-    <string name="text_account_will_be_created_if_not_exists_nby_downloading_or_using_this_app_the_terms_and_conditions_will_automatically_apply_to_you">Account will be created if not exists.  By downloading or using this app, the terms and conditions will automatically apply to you.</string>
     <string name="text_beer_shop">Beer-Shop</string>
     <string name="text_send_messages_more_frequently">Send Messages more frequently.</string>
     <string name="text_show_heatmap">Show Heatmap</string>
@@ -90,6 +90,7 @@
     <string name="text_teamname">Teamname:</string>
     <string name="text_major_rc">Major RC:</string>
     <string name="text_minor_rc">Minor RC:</string>
+    <string name="text_account_will_be_created_if_not_exists_nby_downloading_or_using_this_app_the_terms_and_conditions_will_automatically_apply_to_you">Account will be created if not exists.\\nBy downloading or using this app the terms and conditions will automatically apply to you.</string>
 
 
     <string name="switch_orga">Orga</string>
@@ -110,8 +111,8 @@
     <string name="code_create_game_activity_could_not_parse_date">Could not parse Date!</string>
     <string name="code_create_game_activity_trying_to_create_game">Trying to create Game...</string>
 
-    <string name="code_login_activity_privacy_policy">https://airsofttac.oblivioncoding.pro/privacy_policy.html</string>
-    <string name="code_login_activity_terms_and_conditions">https://airsofttac.oblivioncoding.pro/terms_and_conditions.html</string>
+    <string name="code_login_activity_privacy_policy" translatable="false">https://airsofttac.oblivioncoding.pro/privacy_policy.html</string>
+    <string name="code_login_activity_terms_and_conditions" translatable="false">https://airsofttac.oblivioncoding.pro/terms_and_conditions.html</string>
 
     <string name="code_join_game_activity_trying_to_connect_to_game">Trying to connect to Game...</string>
     <string name="code_join_game_activity_password_wrong">Password wrong!</string>
@@ -137,47 +138,65 @@
 
     <string name="code_map_fragment_could_not_load_kml_data">Could not load KML Data!</string>
 
+    <string name="code_settings_fragment_could_not_load_map_style_with_this_title">Couldn´t find Map Style with this Title!</string>
+
+    <string name="code_file_utils_get_real_path_from_exception" translatable="false">getRealPathFromURI Exception : </string>
+    <string name="code_file_utils_log_tag" translatable="false">FileUtils</string>
+
+    <string name="code_google_location_service_log_tag" translatable="false">LocationService</string>
+    <string name="code_google_location_service_starting_request_of_location" translatable="false">Starting request of Location</string>
+    <string name="code_google_location_service_starting_rotation" translatable="false">Starting Rotation</string>
+    <string name="code_google_location_service_location_changed" translatable="false">Location changed</string>
+    <string name="code_google_location_service_updated_firestore" translatable="false">Updated Firestore</string>
+    <string name="code_google_location_service_requesting_location_permissions" translatable="false">Requesting Location Permissions</string>
+    <string name="code_google_location_service_notification_channel_description">This Notification Channel is for the AirsoftTacLocationService Notification</string>
+    <string name="code_google_location_service_notification_title" translatable="false">AirsoftTac</string>
+    <string name="code_google_location_service_notification_content_text">Updating your Position in Background. To stop, kill the App in your Task-Manager.</string>
+
     <string name="marker_markerType_flag">Flag Marker</string>
     <string name="marker_markerType_respawn">Respawn Marker</string>
     <string name="marker_markerType_hq">HQ Marker</string>
     <string name="marker_markerType_mission">Mission Marker</string>
     <string name="marker_markerType_tactical">Tactical Marker</string>
 
-    <string name="firebase_firestore_update_db_tag">UpdateDB</string>
-    <string name="firebase_firestore_current_data_null">Current data: null</string>
-    <string name="firebase_firestore_current_data">Current data: </string>
-    <string name="firebase_firestore_could_not_find_document_with_gameid">Couldn´t find Document with GameID!</string>
+    <string name="firebase_firestore_update_db_tag" translatable="false">UpdateDB</string>
+    <string name="firebase_firestore_current_data_null" translatable="false">Current data: null</string>
+    <string name="firebase_firestore_current_data" translatable="false">Current data: </string>
     <string name="firebase_firestore_could_not_find_document_with_this_title">Couldn´t find Document with this Title!</string>
     <string name="firebase_firestore_could_not_query_database">Couldn´t query Database!</string>
+    <string name="firebase_firestore_could_not_find_document_with_gameid">Couldn´t find Document with GameID!</string>
 
-    <string name="firebase_firestore_variable_games_gameID">gameID</string>
-    <string name="firebase_firestore_variable_games_endTime">endTime</string>
-    <string name="firebase_firestore_variable_games_users">users</string>
-    <string name="firebase_firestore_variable_games_tactical_marker_data">tacticalMarkerData</string>
-    <string name="firebase_firestore_variable_games_mission_marker_data">missionMarkerData</string>
-    <string name="firebase_firestore_variable_games_hq_marker_data">hqMarkerData</string>
-    <string name="firebase_firestore_variable_games_respawn_marker_data">respawnMarkerData</string>
-    <string name="firebase_firestore_variable_games_flag_marker_data">flagMarkerData</string>
-    <string name="firebase_firestore_variable_games_chat_messages">chatMessages</string>
+    <string name="firebase_firestore_variable_games_gameID" translatable="false">gameID</string>
+    <string name="firebase_firestore_variable_games_endTime" translatable="false">endTime</string>
+    <string name="firebase_firestore_variable_games_users" translatable="false">users</string>
+    <string name="firebase_firestore_variable_games_teams" translatable="false">teams</string>
+    <string name="firebase_firestore_variable_games_tactical_marker_data" translatable="false">tacticalMarkerData</string>
+    <string name="firebase_firestore_variable_games_mission_marker_data" translatable="false">missionMarkerData</string>
+    <string name="firebase_firestore_variable_games_hq_marker_data" translatable="false">hqMarkerData</string>
+    <string name="firebase_firestore_variable_games_respawn_marker_data" translatable="false">respawnMarkerData</string>
+    <string name="firebase_firestore_variable_games_flag_marker_data" translatable="false">flagMarkerData</string>
+    <string name="firebase_firestore_variable_games_chat_messages" translatable="false">chatMessages</string>
 
-    <string name="firebase_firestore_variable_overlay_images_name">name</string>
+    <string name="firebase_firestore_variable_overlay_images_name" translatable="false">name</string>
 
-    <string name="firebase_firestore_variable_kml_title">title</string>
+    <string name="firebase_firestore_variable_kml_title" translatable="false">title</string>
+
+    <string name="firebase_firestore_variable_map_styles_title" translatable="false">title</string>
 
 
     <string name="firebase_firebaseauth_password_too_weak">Password is too weak!</string>
-    <string name="firebase_firebaseauth_authentication_failed">Authentication failed.</string>
+    <string name="firebase_firebaseauth_authentication_failed">Authentication failed!</string>
     <string name="firebase_firebaseauth_malformed_email">Malformed Email!</string>
 
-    <string name="placemark_property_name">name</string>
-    <string name="placemark_property_description">name</string>
-    <string name="placemark_property_point">Point</string>
-    <string name="placemark_property_seperator">\|</string>
-    <string name="placemark_property_own">own</string>
-    <string name="placemark_property_tactical">tactical</string>
-    <string name="placemark_property_mission">mission</string>
-    <string name="placemark_property_respawn">respawn</string>
-    <string name="placemark_property_hq">hq</string>
-    <string name="placemark_property_flag">flag</string>
+    <string name="placemark_property_name" translatable="false">name</string>
+    <string name="placemark_property_description" translatable="false">name</string>
+    <string name="placemark_property_point" translatable="false">Point</string>
+    <string name="placemark_property_seperator" translatable="false">\|</string>
+    <string name="placemark_property_own" translatable="false">own</string>
+    <string name="placemark_property_tactical" translatable="false">tactical</string>
+    <string name="placemark_property_mission" translatable="false">mission</string>
+    <string name="placemark_property_respawn" translatable="false">respawn</string>
+    <string name="placemark_property_hq" translatable="false">hq</string>
+    <string name="placemark_property_flag" translatable="false">flag</string>
 
 </resources>

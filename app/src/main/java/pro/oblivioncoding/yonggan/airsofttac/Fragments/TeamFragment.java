@@ -45,15 +45,9 @@ import pro.oblivioncoding.yonggan.airsofttac.R;
 public class TeamFragment extends Fragment {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
+
     @NonNull
     public TeamFragment.ShowSettings showSettings = TeamFragment.ShowSettings.AllPlayer;
-    // TODO: Rename and change types of parameters
-    @Nullable
-    private String mParam1;
-    @Nullable
-    private String mParam2;
     @Nullable
     private OnFragmentInteractionListener mListener;
     private View rootView;
@@ -67,18 +61,12 @@ public class TeamFragment extends Fragment {
      * Use this factory method to create a new instance of
      * this fragment using the provided parameters.
      *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
      * @return A new instance of fragment TeamFragment.
      */
     // TODO: Rename and change types and number of parameters
     @NonNull
-    public static TeamFragment newInstance(final String param1, final String param2) {
+    public static TeamFragment newInstance() {
         final TeamFragment fragment = new TeamFragment();
-        final Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
         return fragment;
     }
 
@@ -149,10 +137,6 @@ public class TeamFragment extends Fragment {
     @Override
     public void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
     }
 
     public void setRecyclerView(@NonNull final ArrayList<TeamData> teamData, final RecyclerView recyclerView) {

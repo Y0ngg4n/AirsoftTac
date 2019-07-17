@@ -6,6 +6,8 @@ import android.net.Uri;
 import android.provider.MediaStore;
 import android.util.Log;
 
+import pro.oblivioncoding.yonggan.airsofttac.R;
+
 public class FileUtils {
 
 
@@ -18,7 +20,7 @@ public class FileUtils {
             cursor.moveToFirst();
             return cursor.getString(column_index);
         } catch (Exception e) {
-            Log.e("ImageLoader", "getRealPathFromURI Exception : " + e.toString());
+            Log.e(context.getResources().getString(R.string.code_file_utils_log_tag), context.getResources().getString(R.string.code_file_utils_get_real_path_from_exception) + e.toString());
             return "";
         } finally {
             if (cursor != null) {
