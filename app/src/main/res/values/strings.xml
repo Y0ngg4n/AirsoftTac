@@ -8,6 +8,9 @@
     <string name="nav_menu_gameid">GameID</string>
     <string name="nav_menu_overlay_images">Overlay Images</string>
 
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
     <string name="menu_settings_show_all_player">Show all Player</string>
     <string name="menu_settings_show_only_own_team">Show only own Team</string>
     <string name="menu_settings_show_only_unassigned">Show only unassigned</string>
@@ -36,6 +39,7 @@
     <string name="hint_write">Write...</string>
     <string name="hint_search_overlay_images">Search Overlay Images</string>
     <string name="hint_description">Description</string>
+    <string name="hint_search_map_style">Search Map Style</string>
 
 
     <string name="button_select_kml_file">Select KML File</string>
@@ -55,6 +59,15 @@
     <string name="button_privacy_policy">Privacy Policy</string>
     <string name="button_terms_and_conditions">Terms and Conditions</string>
     <string name="button_create_team">Create Team</string>
+    <string name="button_send">Send</string>
+    <string name="button_current_location">Current Location</string>
+    <string name="button_assign">Assign</string>
+    <string name="button_apply">Apply</string>
+    <string name="button_goto">Goto</string>
+    <string name="button_add_marker">Add Marker</string>
+    <string name="button_join">Join</string>
+    <string name="button_radio">Radio</string>
+    <string name="button_load">Load</string>
 
 
     <string name="text_account_will_be_created_if_not_exists_nby_downloading_or_using_this_app_the_terms_and_conditions_will_automatically_apply_to_you">Account will be created if not exists.  By downloading or using this app, the terms and conditions will automatically apply to you.</string>
@@ -62,9 +75,6 @@
     <string name="text_send_messages_more_frequently">Send Messages more frequently.</string>
     <string name="text_show_heatmap">Show Heatmap</string>
     <string name="text_remove_ads">Remove Ads</string>
-    <string name="button_send">Send</string>
-
-
     <string name="text_title">Title:</string>
     <string name="text_descr">Descr:</string>
     <string name="text_lat">Lat:</string>
@@ -72,37 +82,102 @@
     <string name="text_distance">Distance:</string>
     <string name="text_own">Own:</string>
     <string name="text_team">Team:</string>
-    <string name="hint_search_map_style">Search Map Style</string>
-    <string name="button_current_location">Current Location</string>
-    <string name="switch_owned">Owned</string>
-    <string name="button_add_marker">Add Marker</string>
-    <string name="button_assign">Assign</string>
-    <string name="text_type">Type:</string>
-    <string name="text_title">Title:</string>
-    <string name="text_description">Description:</string>
-    <string name="button_assign">Assign</string>
-    <string name="button_apply">Apply</string>
-    <string name="text_type">Type:</string>
-    <string name="text_title">Title:</string>
-    <string name="text_description">Description:</string>
-    <string name="button_goto">Goto</string>
-    <string name="text_team">Team:</string>
     <string name="text_email">Email:</string>
-    <string name="text_nickname">Nickname:</string>
-    <string name="button_goto">Goto</string>
-    <string name="button_apply">Apply</string>
     <string name="text_name">Name:</string>
-    <string name="button_load">Load</string>
-    <string name="text_email">Email:</string>
-    <string name="switch_orga">Orga</string>
-    <string name="switch_first">First</string>
-    <string name="switch_second">Second</string>
+    <string name="text_type">Type:</string>
+    <string name="text_description">Description:</string>
     <string name="text_nickname">Nickname:</string>
     <string name="text_teamname">Teamname:</string>
-    <string name="button_join">Join</string>
-    <string name="button_assign">Assign</string>
-    <string name="button_radio">Radio</string>
     <string name="text_major_rc">Major RC:</string>
     <string name="text_minor_rc">Minor RC:</string>
+
+
+    <string name="switch_orga">Orga</string>
+    <string name="switch_owned">Owned</string>
+    <string name="switch_first">First</string>
+    <string name="switch_second">Second</string>
+
+
+    <string name="code_main_activity_start_of_game">End of Game at </string>
+    <string name="code_main_activity_end_of_game">Start of Game at </string>
+    <string name="code_main_activity_at"> at </string>
+    <string name="code_main_activity_please_select_image_first">Please select Image first!</string>
+
+    <string name="code_create_game_activity_couldnt_create_game">Couldn´t create Game!</string>
+    <string name="code_create_game_activity_gameid_allready_existing">GameID allready existing!</string>
+    <string name="code_create_game_activity_please_make_shure_duration_time_is_after_start_time">Please make sure duration Time is after start time!</string>
+    <string name="code_create_game_activity_please_fill_nickname">Please fill Nickname!</string>
+    <string name="code_create_game_activity_could_not_parse_date">Could not parse Date!</string>
+    <string name="code_create_game_activity_trying_to_create_game">Trying to create Game...</string>
+
+    <string name="code_login_activity_privacy_policy">https://airsofttac.oblivioncoding.pro/privacy_policy.html</string>
+    <string name="code_login_activity_terms_and_conditions">https://airsofttac.oblivioncoding.pro/terms_and_conditions.html</string>
+
+    <string name="code_join_game_activity_trying_to_connect_to_game">Trying to connect to Game...</string>
+    <string name="code_join_game_activity_password_wrong">Password wrong!</string>
+    <string name="code_join_game_activity_please_enter_nickname">Please enter Nickname!</string>
+
+    <string name="code_recycler_view_team_list_adapter_join">Join</string>
+    <string name="code_recycler_view_team_list_adapter_leave">Leave</string>
+    <string name="code_recycler_view_team_list_adapter_please_leave_current_team_first">Please leave your current Team First!</string>
+
+    <string name="code_add_custom_map_dialog_fragment_title_already_exists">Title already exists!</string>
+    <string name="code_add_custom_map_dialog_fragment_could_not_load_kml">Could not load KML!</string>
+    <string name="code_add_map_style_dialog_fragment_could_not_load_map_style">Could not load MapStyle!</string>
+
+    <string name="code_add_overlay_image_dialog_fragment_name_already_exists">Name already exists!</string>
+    <string name="code_add_overlay_image_dialog_fragment_please_select_image_first">Please select Image first!</string>
+    <string name="code_add_overlay_image_dialog_fragment_could_not_load_image">Could not load Image!</string>
+
+    <string name="code_create_team_dialog_fragment_team_already_exists">Team already exists!</string>
+
+    <string name="code_orga_add_marker_dialog_fragment_title_already_exists">Title already exists!</string>
+
+    <string name="code_gameid_fragment_could_not_generate_qr_code">Could not generate QR Code!</string>
+
+    <string name="code_map_fragment_could_not_load_kml_data">Could not load KML Data!</string>
+
+    <string name="marker_markerType_flag">Flag Marker</string>
+    <string name="marker_markerType_respawn">Respawn Marker</string>
+    <string name="marker_markerType_hq">HQ Marker</string>
+    <string name="marker_markerType_mission">Mission Marker</string>
+    <string name="marker_markerType_tactical">Tactical Marker</string>
+
+    <string name="firebase_firestore_update_db_tag">UpdateDB</string>
+    <string name="firebase_firestore_current_data_null">Current data: null</string>
+    <string name="firebase_firestore_current_data">Current data: </string>
+    <string name="firebase_firestore_could_not_find_document_with_gameid">Couldn´t find Document with GameID!</string>
+    <string name="firebase_firestore_could_not_find_document_with_this_title">Couldn´t find Document with this Title!</string>
+    <string name="firebase_firestore_could_not_query_database">Couldn´t query Database!</string>
+
+    <string name="firebase_firestore_variable_games_gameID">gameID</string>
+    <string name="firebase_firestore_variable_games_endTime">endTime</string>
+    <string name="firebase_firestore_variable_games_users">users</string>
+    <string name="firebase_firestore_variable_games_tactical_marker_data">tacticalMarkerData</string>
+    <string name="firebase_firestore_variable_games_mission_marker_data">missionMarkerData</string>
+    <string name="firebase_firestore_variable_games_hq_marker_data">hqMarkerData</string>
+    <string name="firebase_firestore_variable_games_respawn_marker_data">respawnMarkerData</string>
+    <string name="firebase_firestore_variable_games_flag_marker_data">flagMarkerData</string>
+    <string name="firebase_firestore_variable_games_chat_messages">chatMessages</string>
+
+    <string name="firebase_firestore_variable_overlay_images_name">name</string>
+
+    <string name="firebase_firestore_variable_kml_title">title</string>
+
+
+    <string name="firebase_firebaseauth_password_too_weak">Password is too weak!</string>
+    <string name="firebase_firebaseauth_authentication_failed">Authentication failed.</string>
+    <string name="firebase_firebaseauth_malformed_email">Malformed Email!</string>
+
+    <string name="placemark_property_name">name</string>
+    <string name="placemark_property_description">name</string>
+    <string name="placemark_property_point">Point</string>
+    <string name="placemark_property_seperator">\|</string>
+    <string name="placemark_property_own">own</string>
+    <string name="placemark_property_tactical">tactical</string>
+    <string name="placemark_property_mission">mission</string>
+    <string name="placemark_property_respawn">respawn</string>
+    <string name="placemark_property_hq">hq</string>
+    <string name="placemark_property_flag">flag</string>
 
 </resources>

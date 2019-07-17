@@ -50,10 +50,10 @@ public class AddOverlayImageDialogFragment extends DialogFragment {
         rootView = inflater.inflate(R.layout.add_overlay_image_dialog, container, false);
         rootView.findViewById(R.id.addOverlayImage).setOnClickListener(v -> {
             final String name = ((EditText) rootView.findViewById(R.id.name)).getText().toString();
-            FirebaseDB.getOverlayImages().whereEqualTo("name", name).get().addOnCompleteListener(task -> {
+            FirebaseDB.getOverlayImages().whereEqualTo(getContext().getResources().getString(R.string.firebase_firestore_variable_overlay_images_name), name).get().addOnCompleteListener(task -> {
                 if (task.isSuccessful()) {
                     if (task.getResult().size() > 0) {
-                        Toast.makeText(getContext(), "Title already exists", Toast.LENGTH_LONG).show();
+                        Toast.makeText(getContext(), R.string.code_add_overlay_image_dialog_fragment_name_already_exists, Toast.LENGTH_LONG).show();
                     } else {
                         if (image != null && !name.isEmpty()) {
                             FirebaseDB.getOverlayImages().add(new OverlayImage(name, image,
@@ -62,11 +62,11 @@ public class AddOverlayImageDialogFragment extends DialogFragment {
                                     Float.valueOf(((EditText) rootView.findViewById(R.id.imageWidth)).getText().toString())));
                             getFragmentManager().beginTransaction().remove(this).commit();
                         } else {
-                            Toast.makeText(getContext(), "Please select Image first!", Toast.LENGTH_LONG).show();
+                            Toast.makeText(getContext(), R.string.code_add_overlay_image_dialog_fragment_please_select_image_first, Toast.LENGTH_LONG).show();
                         }
                     }
                 } else {
-                    Toast.makeText(getContext(), "Couldn´t query Database!",
+                    Toast.makeText(getContext(), R.string.firebase_firestore_could_not_query_database,
                             Toast.LENGTH_LONG).show();
                 }
             });
@@ -101,7 +101,7 @@ public class AddOverlayImageDialogFragment extends DialogFragment {
                                     new File(pro.oblivioncoding.yonggan.airsofttac.Utils.FileUtils.getRealPathFromURI(getContext(), uri))),
                                     android.util.Base64.DEFAULT);
                         } catch (IOException e) {
-                            Toast.makeText(getContext(), "Could not load Image", Toast.LENGTH_LONG).show();
+                            Toast.makeText(getContext(), R.string.code_add_overlay_image_dialog_fragment_could_not_load_image, Toast.LENGTH_LONG).show();
                             Log.i("ImageLoader", e.getMessage());
                         }
                     }

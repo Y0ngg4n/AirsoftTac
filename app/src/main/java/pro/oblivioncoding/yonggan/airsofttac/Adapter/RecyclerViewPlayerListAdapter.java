@@ -82,14 +82,14 @@ public class RecyclerViewPlayerListAdapter extends RecyclerView.Adapter<Recycler
             first = itemView.findViewById(R.id.playerFirstSwitch);
             second = itemView.findViewById(R.id.playerSecondSwitch);
             constraintLayout = itemView.findViewById(R.id.playerListLayout);
-            FirebaseDB.getGames().whereEqualTo("gameID", FirebaseDB.getGameData().getGameID())
+            FirebaseDB.getGames().whereEqualTo(context.getResources().getString(R.string.firebase_firestore_variable_games_gameID), FirebaseDB.getGameData().getGameID())
                     .get().addOnCompleteListener(task -> {
                 if (task.isSuccessful()) {
                     if (task.getResult().size() > 0) {
                         final DocumentSnapshot documentSnapshot = task.getResult().getDocuments().get(0);
                         isOrga.setOnCheckedChangeListener((buttonView, isChecked) -> {
                             FirebaseDB.getGameData().getOwnUserData(email.getText().toString()).setOrga(isOrga.isChecked());
-                            FirebaseDB.updateObject(documentSnapshot, "users",
+                            FirebaseDB.updateObject(documentSnapshot, context.getResources().getString(R.string.firebase_firestore_variable_games_users),
                                     FirebaseDB.getGameData().getUsers());
                             isOrga.setVisibility(View.INVISIBLE);
                             showAfterTime(isOrga, 30000L);
@@ -97,7 +97,7 @@ public class RecyclerViewPlayerListAdapter extends RecyclerView.Adapter<Recycler
 
                         first.setOnCheckedChangeListener((buttonView, isChecked) -> {
                             FirebaseDB.getGameData().getOwnUserData(email.getText().toString()).setFirst(first.isChecked());
-                            FirebaseDB.updateObject(documentSnapshot, "users",
+                            FirebaseDB.updateObject(documentSnapshot, context.getResources().getString(R.string.firebase_firestore_variable_games_users),
                                     FirebaseDB.getGameData().getUsers());
                             first.setVisibility(View.INVISIBLE);
                             showAfterTime(first, 30000L);
@@ -105,7 +105,7 @@ public class RecyclerViewPlayerListAdapter extends RecyclerView.Adapter<Recycler
 
                         second.setOnCheckedChangeListener((buttonView, isChecked) -> {
                             FirebaseDB.getGameData().getOwnUserData(email.getText().toString()).setSecond(second.isChecked());
-                            FirebaseDB.updateObject(documentSnapshot, "users",
+                            FirebaseDB.updateObject(documentSnapshot, context.getResources().getString(R.string.firebase_firestore_variable_games_users),
                                     FirebaseDB.getGameData().getUsers());
                             second.setVisibility(View.INVISIBLE);
                             showAfterTime(second, 30000L);

@@ -53,11 +53,11 @@ public class AssignKMLDialogFragment extends DialogFragment {
                     final List<DocumentSnapshot> documents = task.getResult().getDocuments();
                     setKMLAdapter(documents, createGameActivity);
                 } else {
-                    Toast.makeText(getContext(), "Couldn´t find Document with this Title!",
+                    Toast.makeText(getContext(), R.string.firebase_firestore_could_not_find_document_with_this_title,
                             Toast.LENGTH_LONG).show();
                 }
             } else {
-                Toast.makeText(getContext(), "Couldn´t query Database!",
+                Toast.makeText(getContext(), R.string.firebase_firestore_could_not_query_database,
                         Toast.LENGTH_LONG).show();
             }
         });
@@ -70,17 +70,17 @@ public class AssignKMLDialogFragment extends DialogFragment {
             @Override
             public void onTextChanged(@NonNull final CharSequence s, final int start, final int before, final int count) {
                 if (!s.toString().isEmpty()) {
-                    FirebaseDB.getKml().whereEqualTo("title", s.toString().toLowerCase()).get().addOnCompleteListener(task -> {
+                    FirebaseDB.getKml().whereEqualTo(getContext().getResources().getString(R.string.firebase_firestore_variable_kml_title), s.toString().toLowerCase()).get().addOnCompleteListener(task -> {
                         if (task.isSuccessful()) {
                             if (task.getResult().size() > 0) {
                                 final List<DocumentSnapshot> documents = task.getResult().getDocuments();
                                 setKMLAdapter(documents, createGameActivity);
                             } else {
-                                Toast.makeText(getContext(), "Couldn´t find Document this Title!",
+                                Toast.makeText(getContext(), R.string.firebase_firestore_could_not_find_document_with_this_title,
                                         Toast.LENGTH_LONG).show();
                             }
                         } else {
-                            Toast.makeText(getContext(), "Couldn´t query Database!",
+                            Toast.makeText(getContext(), R.string.firebase_firestore_could_not_query_database,
                                     Toast.LENGTH_LONG).show();
                         }
                     });

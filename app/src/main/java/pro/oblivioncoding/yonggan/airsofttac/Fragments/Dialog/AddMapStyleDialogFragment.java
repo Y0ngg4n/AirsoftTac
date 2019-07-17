@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,6 +22,7 @@ import org.apache.commons.io.FileUtils;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 
 import pro.oblivioncoding.yonggan.airsofttac.Firebase.FirebaseDB;
 import pro.oblivioncoding.yonggan.airsofttac.Firebase.MapStyleCollection.MapStyleData;
@@ -81,11 +81,9 @@ public class AddMapStyleDialogFragment extends DialogFragment {
                     } else {
                         try {
                             ((TextView) rootView.findViewById(R.id.jsonMapStyle)).setText(
-                                    FileUtils.readFileToString(new File(uri.getPath()), "UTF-8"));
-                            Log.i("MapStyle", "Loaded MapStyle");
+                                    FileUtils.readFileToString(new File(uri.getPath()), StandardCharsets.UTF_8));
                         } catch (IOException e) {
-                            Toast.makeText(getContext(), "Could not load MapStyle", Toast.LENGTH_LONG).show();
-                            Log.i("MapStyle", e.getMessage());
+                            Toast.makeText(getContext(), R.string.code_add_map_style_dialog_fragment_could_not_load_map_style, Toast.LENGTH_LONG).show();
                         }
                     }
                 }

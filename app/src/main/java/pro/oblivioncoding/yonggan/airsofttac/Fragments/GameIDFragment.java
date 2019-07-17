@@ -6,7 +6,6 @@ import android.graphics.Color;
 import android.graphics.Point;
 import android.net.Uri;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -81,9 +80,7 @@ public class GameIDFragment extends Fragment {
                 }
                 gameIDQRCode.setImageBitmap(bitmap);
             } catch (final WriterException e) {
-                Log.e("QRCode", "Could not generate QR Code!");
-                Log.e("QRCode", e.getMessage());
-                Toast.makeText(getContext(), "Could not generate QR Code!", Toast.LENGTH_LONG).show();
+                Toast.makeText(getContext(), R.string.code_gameid_fragment_could_not_generate_qr_code, Toast.LENGTH_LONG).show();
             }
         });
         return rootView;

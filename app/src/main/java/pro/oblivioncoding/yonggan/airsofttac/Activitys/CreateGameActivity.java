@@ -4,7 +4,6 @@ import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -78,10 +77,9 @@ public class CreateGameActivity extends AppCompatActivity {
         });
 
         findViewById(R.id.createGame).setOnClickListener(v -> {
-            Log.i("CreateGame", "adasdsa");
             findViewById(R.id.createGame).setClickable(false);
-            Toast.makeText(getApplicationContext(), "Trying to create Game...", Toast.LENGTH_LONG).show();
-            FirebaseDB.getGames().whereEqualTo("gameID", ((TextView) findViewById(R.id.gameID)).getText().toString())
+            Toast.makeText(getApplicationContext(), R.string.code_create_game_activity_trying_to_create_game, Toast.LENGTH_LONG).show();
+            FirebaseDB.getGames().whereEqualTo(this.getResources().getString(R.string.firebase_firestore_variable_games_gameID), ((TextView) findViewById(R.id.gameID)).getText().toString())
                     .get().addOnCompleteListener(task -> {
                 if (task.isSuccessful()) {
                     if (task.getResult() == null || task.getResult().size() <= 0) {
@@ -95,18 +93,18 @@ public class CreateGameActivity extends AppCompatActivity {
                                             CreateGameActivity.this, MainActivity.class));
                                 } else {
                                     findViewById(R.id.createGame).setClickable(true);
-                                    Toast.makeText(getApplicationContext(), "Couldn´t create Game", Toast.LENGTH_LONG).show();
+                                    Toast.makeText(getApplicationContext(), R.string.code_create_game_activity_couldnt_create_game, Toast.LENGTH_LONG).show();
                                 }
                             });
                         } else findViewById(R.id.createGame).setClickable(true);
                     } else {
                         findViewById(R.id.createGame).setClickable(true);
-                        Toast.makeText(getApplicationContext(), "GameID allready existing!",
+                        Toast.makeText(getApplicationContext(), R.string.code_create_game_activity_gameid_allready_existing,
                                 Toast.LENGTH_LONG).show();
                     }
                 } else {
                     findViewById(R.id.createGame).setClickable(true);
-                    Toast.makeText(getApplicationContext(), "Couldn´t query Database!",
+                    Toast.makeText(getApplicationContext(), R.string.firebase_firestore_could_not_query_database,
                             Toast.LENGTH_LONG).show();
                 }
             });
@@ -147,12 +145,12 @@ public class CreateGameActivity extends AppCompatActivity {
                     + " " + ((EditText) findViewById(R.id.duration)).getText().toString());
 
             if (durationDate.compareTo(startTime) <= 0) {
-                Toast.makeText(this, "Please make shure duration Time is after start time!", Toast.LENGTH_LONG).show();
+                Toast.makeText(this, R.string.code_create_game_activity_please_make_shure_duration_time_is_after_start_time, Toast.LENGTH_LONG).show();
                 return null;
             }
 
             if (((EditText) findViewById(R.id.nickNameField)).getText().toString().isEmpty()) {
-                Toast.makeText(this, "Please fill Nickname!", Toast.LENGTH_LONG).show();
+                Toast.makeText(this, R.string.code_create_game_activity_please_fill_nickname, Toast.LENGTH_LONG).show();
                 return null;
             }
 
@@ -170,7 +168,7 @@ public class CreateGameActivity extends AppCompatActivity {
                     userData, BCrypt.withDefaults().hashToString(12, ((EditText) findViewById(R.id.passwordField)).getText().toString().toCharArray()),
                     kmlTitle);
         } catch (@NonNull final ParseException e) {
-            Toast.makeText(getApplicationContext(), "Could not parse Date", Toast.LENGTH_LONG).show();
+            Toast.makeText(getApplicationContext(), R.string.code_create_game_activity_could_not_parse_date, Toast.LENGTH_LONG).show();
         }
         return null;
     }

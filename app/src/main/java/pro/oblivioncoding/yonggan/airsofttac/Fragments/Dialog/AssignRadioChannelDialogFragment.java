@@ -55,7 +55,7 @@ public class AssignRadioChannelDialogFragment extends DialogFragment {
     public void onViewCreated(@NonNull final View view, @Nullable final Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        FirebaseDB.getGames().whereEqualTo("gameID", FirebaseDB.getGameData().getGameID())
+        FirebaseDB.getGames().whereEqualTo(getContext().getResources().getString(R.string.firebase_firestore_variable_games_gameID), FirebaseDB.getGameData().getGameID())
                 .get().addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
                 if (task.getResult().size() > 0) {
@@ -64,20 +64,20 @@ public class AssignRadioChannelDialogFragment extends DialogFragment {
                         view.findViewById(R.id.assignRadioChannelButton).setOnClickListener(v -> {
                             teamData.setMinorRadioChannel(((NumberPicker) view.findViewById(R.id.minorRadioChannel)).getValue());
                             teamData.setMajorRadioChannel(((NumberPicker) view.findViewById(R.id.majorRadioChannel)).getValue());
-                            FirebaseDB.updateObject(documentSnapshot, "teams",
+                            FirebaseDB.updateObject(documentSnapshot, getContext().getResources().getString(R.string.firebase_firestore_variable_games_teams),
                                     FirebaseDB.getGameData().getTeams());
                             teamFragment.setRecyclerView(FirebaseDB.getGameData().getTeams(), recyclerView);
                             getFragmentManager().beginTransaction().remove(this).commit();
                         });
                     } else {
-                        Log.d("UpdateDB", "Current data: null");
+                        Log.d(getContext().getResources().getString(R.string.firebase_firestore_update_db_tag), getContext().getResources().getString(R.string.firebase_firestore_current_data_null));
                     }
                 } else {
-                    Toast.makeText(getContext(), "Couldn´t find Document with GameID!",
+                    Toast.makeText(getContext(), R.string.firebase_firestore_could_not_find_document_with_gameid,
                             Toast.LENGTH_LONG);
                 }
             } else {
-                Toast.makeText(getContext(), "Couldn´t query Database!",
+                Toast.makeText(getContext(), R.string.firebase_firestore_could_not_query_database,
                         Toast.LENGTH_LONG);
             }
 

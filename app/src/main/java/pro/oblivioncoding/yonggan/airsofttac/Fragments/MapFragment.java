@@ -232,7 +232,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                     if (task.getResult().size() > 0) {
                         final DocumentReference documentReference = FirebaseDB.getGames().document(task.getResult().getDocuments().get(0).getId());
                         FirebaseDB.getGameData().getOwnUserData(FirebaseAuthentication.getFirebaseUser().getEmail()).setAlive(!FirebaseDB.getGameData().getOwnUserData(FirebaseAuthentication.getFirebaseUser().getEmail()).isAlive());
-                        FirebaseDB.updateObject(documentReference, "users",
+                        FirebaseDB.updateObject(documentReference, getContext().getResources().getString(R.string.firebase_firestore_variable_games_users),
                                 FirebaseDB.getGameData().getUsers());
                         if (FirebaseDB.getGameData().getOwnUserData(FirebaseAuthentication.getFirebaseUser().getEmail()).isAlive()) {
                             missionfb.setVisibility(View.VISIBLE);
@@ -250,24 +250,24 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                             showAfterTime(hitfb, 3000L);
                         }
                     } else {
-                        Toast.makeText(getContext(), "Couldn´t find Document with GameID!",
+                        Toast.makeText(getContext(), R.string.firebase_firestore_could_not_find_document_with_gameid,
                                 Toast.LENGTH_LONG).show();
                     }
                 } else {
-                    Toast.makeText(getContext(), "Couldn´t query Database!",
+                    Toast.makeText(getContext(), R.string.firebase_firestore_could_not_query_database,
                             Toast.LENGTH_LONG).show();
                 }
             });
         });
 
         underfirefb.setOnClickListener(v -> {
-            FirebaseDB.getGames().whereEqualTo("gameID", FirebaseDB.getGameData().getGameID())
+            FirebaseDB.getGames().whereEqualTo(getContext().getResources().getString(R.string.firebase_firestore_variable_games_gameID), FirebaseDB.getGameData().getGameID())
                     .get().addOnCompleteListener(task -> {
                 if (task.isSuccessful()) {
                     if (task.getResult().size() > 0) {
                         final DocumentReference documentReference = FirebaseDB.getGames().document(task.getResult().getDocuments().get(0).getId());
                         FirebaseDB.getGameData().getOwnUserData(FirebaseAuthentication.getFirebaseUser().getEmail()).setUnderfire(!FirebaseDB.getGameData().getOwnUserData(FirebaseAuthentication.getFirebaseUser().getEmail()).isUnderfire());
-                        FirebaseDB.updateObject(documentReference, "users",
+                        FirebaseDB.updateObject(documentReference, getContext().getResources().getString(R.string.firebase_firestore_variable_games_users),
                                 FirebaseDB.getGameData().getUsers());
                         if (FirebaseDB.getGameData().getOwnUserData(FirebaseAuthentication.getFirebaseUser().getEmail()).isUnderfire()) {
                             missionfb.setVisibility(View.INVISIBLE);
@@ -281,24 +281,24 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                             showAfterTime(underfirefb, 3000L);
                         }
                     } else {
-                        Toast.makeText(getContext(), "Couldn´t find Document with GameID!",
+                        Toast.makeText(getContext(), R.string.firebase_firestore_could_not_find_document_with_gameid,
                                 Toast.LENGTH_LONG).show();
                     }
                 } else {
-                    Toast.makeText(getContext(), "Couldn´t query Database!",
+                    Toast.makeText(getContext(), R.string.firebase_firestore_could_not_query_database,
                             Toast.LENGTH_LONG).show();
                 }
             });
         });
 
         supportfb.setOnClickListener(v -> {
-            FirebaseDB.getGames().whereEqualTo("gameID", FirebaseDB.getGameData().getGameID())
+            FirebaseDB.getGames().whereEqualTo(getContext().getResources().getString(R.string.firebase_firestore_variable_games_gameID), FirebaseDB.getGameData().getGameID())
                     .get().addOnCompleteListener(task -> {
                 if (task.isSuccessful()) {
                     if (task.getResult().size() > 0) {
                         final DocumentReference documentReference = FirebaseDB.getGames().document(task.getResult().getDocuments().get(0).getId());
                         FirebaseDB.getGameData().getOwnUserData(FirebaseAuthentication.getFirebaseUser().getEmail()).setSupport(!FirebaseDB.getGameData().getOwnUserData(FirebaseAuthentication.getFirebaseUser().getEmail()).isSupport());
-                        FirebaseDB.updateObject(documentReference, "users",
+                        FirebaseDB.updateObject(documentReference, getContext().getResources().getString(R.string.firebase_firestore_variable_games_users),
                                 FirebaseDB.getGameData().getUsers());
                         if (FirebaseDB.getGameData().getOwnUserData(FirebaseAuthentication.getFirebaseUser().getEmail()).isSupport()) {
                             missionfb.setVisibility(View.INVISIBLE);
@@ -312,24 +312,24 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                             showAfterTime(supportfb, 3000L);
                         }
                     } else {
-                        Toast.makeText(getContext(), "Couldn´t find Document with GameID!",
+                        Toast.makeText(getContext(), R.string.firebase_firestore_could_not_find_document_with_gameid,
                                 Toast.LENGTH_LONG).show();
                     }
                 } else {
-                    Toast.makeText(getContext(), "Couldn´t query Database!",
+                    Toast.makeText(getContext(), R.string.firebase_firestore_could_not_query_database,
                             Toast.LENGTH_LONG).show();
                 }
             });
         });
 
         missionfb.setOnClickListener(v -> {
-            FirebaseDB.getGames().whereEqualTo("gameID", FirebaseDB.getGameData().getGameID())
+            FirebaseDB.getGames().whereEqualTo(getContext().getResources().getString(R.string.firebase_firestore_variable_games_gameID), FirebaseDB.getGameData().getGameID())
                     .get().addOnCompleteListener(task -> {
                 if (task.isSuccessful()) {
                     if (task.getResult().size() > 0) {
                         final DocumentReference documentReference = FirebaseDB.getGames().document(task.getResult().getDocuments().get(0).getId());
                         FirebaseDB.getGameData().getOwnUserData(FirebaseAuthentication.getFirebaseUser().getEmail()).setMission(!FirebaseDB.getGameData().getOwnUserData(FirebaseAuthentication.getFirebaseUser().getEmail()).isMission());
-                        FirebaseDB.updateObject(documentReference, "users",
+                        FirebaseDB.updateObject(documentReference, getContext().getResources().getString(R.string.firebase_firestore_variable_games_users),
                                 FirebaseDB.getGameData().getUsers());
                         if (FirebaseDB.getGameData().getOwnUserData(FirebaseAuthentication.getFirebaseUser().getEmail()).isMission()) {
                             underfirefb.setVisibility(View.INVISIBLE);
@@ -347,11 +347,11 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                             showAfterTime(missionfb, 3000L);
                         }
                     } else {
-                        Toast.makeText(getContext(), "Couldn´t find Document with GameID!",
+                        Toast.makeText(getContext(), R.string.firebase_firestore_could_not_find_document_with_gameid,
                                 Toast.LENGTH_LONG).show();
                     }
                 } else {
-                    Toast.makeText(getContext(), "Couldn´t query Database!",
+                    Toast.makeText(getContext(), R.string.firebase_firestore_could_not_query_database,
                             Toast.LENGTH_LONG).show();
                 }
             });
@@ -360,7 +360,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         reloadfb.setOnClickListener(v -> {
             MainActivity.getInstance().getGoogleLocationService().requestLocation();
             reloadfb.setVisibility(View.INVISIBLE);
-            FirebaseDB.getGames().whereEqualTo("gameID", FirebaseDB.getGameData().getGameID())
+            FirebaseDB.getGames().whereEqualTo(getContext().getResources().getString(R.string.firebase_firestore_variable_games_gameID), FirebaseDB.getGameData().getGameID())
                     .get().addOnCompleteListener(task -> {
                 if (task.isSuccessful()) {
                     if (task.getResult().size() > 0) {
@@ -369,14 +369,15 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                             MainActivity.getInstance().getGoogleLocationService().updateLastKnowLocation();
                             updateData(documentSnapshot);
                         } else {
-                            Log.d("UpdateDB", "Current data: null");
+                            Log.d(getContext().getResources().getString(R.string.firebase_firestore_update_db_tag),
+                                    getContext().getResources().getString(R.string.firebase_firestore_current_data_null));
                         }
                     } else {
-                        Toast.makeText(getContext(), "Couldn´t find Document with GameID!",
+                        Toast.makeText(getContext(), R.string.firebase_firestore_could_not_find_document_with_gameid,
                                 Toast.LENGTH_LONG).show();
                     }
                 } else {
-                    Toast.makeText(getContext(), "Couldn´t query Database!",
+                    Toast.makeText(getContext(), R.string.firebase_firestore_could_not_query_database,
                             Toast.LENGTH_LONG).show();
                 }
             });
@@ -410,7 +411,8 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
     }
 
     private void updateData(final DocumentSnapshot documentSnapshot) {
-        Log.d("UpdateDB", "Current data: " + documentSnapshot.getData());
+        Log.d(getContext().getResources().getString(R.string.firebase_firestore_update_db_tag),
+                getContext().getResources().getString(R.string.firebase_firestore_current_data) + documentSnapshot.getData());
         FirebaseDB.setGameData(documentSnapshot.toObject(GameData.class));
         this.setMarker();
     }
@@ -836,7 +838,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                 orgaAddMarkerDialogFragment.show(getFragmentManager(), "orga_add_marker_dialog");
             });
 
-            FirebaseDB.getGames().whereEqualTo("gameID", FirebaseDB.getGameData().getGameID())
+            FirebaseDB.getGames().whereEqualTo(getContext().getResources().getString(R.string.firebase_firestore_variable_games_gameID), FirebaseDB.getGameData().getGameID())
                     .get().addOnCompleteListener(task -> {
                 if (task.isSuccessful()) {
                     if (task.getResult().size() > 0) {
@@ -902,7 +904,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                                                 .get(FirebaseDB.getGameData().getFlagMarkerData()
                                                         .indexOf(flagDataHashMap.get(currentMarker)));
                                 flagMarkerData.setOwn(!flagMarkerData.isOwn());
-                                FirebaseDB.updateObject(documentReference, "flagMarkerData",
+                                FirebaseDB.updateObject(documentReference, getContext().getResources().getString(R.string.firebase_firestore_variable_games_flag_marker_data),
                                         FirebaseDB.getGameData().getFlagMarkerData());
                                 currentMarker = null;
                                 swapFlagfb.setVisibility(View.INVISIBLE);
@@ -911,7 +913,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                                         .get(FirebaseDB.getGameData().getRespawnMarkerData()
                                                 .indexOf(respawnMarkerDataHashMap.get(currentMarker)));
                                 respawnMarkerData.setOwn(!respawnMarkerData.isOwn());
-                                FirebaseDB.updateObject(documentReference, "respawnMarkerData",
+                                FirebaseDB.updateObject(documentReference, getContext().getResources().getString(R.string.firebase_firestore_variable_games_respawn_marker_data),
                                         FirebaseDB.getGameData().getRespawnMarkerData());
                                 currentMarker = null;
                                 swapFlagfb.setVisibility(View.INVISIBLE);
@@ -988,11 +990,11 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                             }
                         });
                     } else {
-                        Toast.makeText(getContext(), "Couldn´t find Document with GameID!",
+                        Toast.makeText(getContext(), R.string.firebase_firestore_could_not_find_document_with_gameid,
                                 Toast.LENGTH_LONG).show();
                     }
                 } else {
-                    Toast.makeText(getContext(), "Couldn´t query Database!",
+                    Toast.makeText(getContext(), R.string.firebase_firestore_could_not_query_database,
                             Toast.LENGTH_LONG).show();
                 }
             });
@@ -1006,7 +1008,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
 
     public void addKMLData() {
         if (googleMap != null) {
-            FirebaseDB.getKml().whereEqualTo("title", FirebaseDB.getGameData().getKmlTitle()).get().addOnCompleteListener(task -> {
+            FirebaseDB.getKml().whereEqualTo(getContext().getResources().getString(R.string.firebase_firestore_variable_kml_title), FirebaseDB.getGameData().getKmlTitle()).get().addOnCompleteListener(task -> {
                 if (task.isSuccessful()) {
                     if (task.getResult().size() > 0) {
                         if (kmlLayer == null) {
@@ -1014,7 +1016,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                                 kmlLayer = new KmlLayer(googleMap, new ByteArrayInputStream(task.getResult().toObjects(KMLData.class).get(0).getKml().getBytes(StandardCharsets.UTF_8)),
                                         getActivity().getApplicationContext());
                                 kmlLayer.addLayerToMap();
-                                FirebaseDB.getGames().whereEqualTo("gameID", FirebaseDB.getGameData().getGameID())
+                                FirebaseDB.getGames().whereEqualTo(getContext().getResources().getString(R.string.firebase_firestore_variable_games_gameID), FirebaseDB.getGameData().getGameID())
                                         .get().addOnCompleteListener(task1 -> {
                                     if (task1.isSuccessful()) {
                                         if (task1.getResult().size() > 0) {
@@ -1022,19 +1024,19 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                                             if (documentSnapshot != null && documentSnapshot.exists()) {
                                                 for (KmlPlacemark placemark : kmlLayer.getPlacemarks()) {
                                                     String name = "", description = "";
-                                                    if (placemark.hasProperty("name"))
-                                                        name = placemark.getProperty("name");
-                                                    if (placemark.hasProperty("description"))
-                                                        description = placemark.getProperty("description");
+                                                    if (placemark.hasProperty(getContext().getResources().getString(R.string.placemark_property_name)))
+                                                        name = placemark.getProperty(getContext().getResources().getString(R.string.placemark_property_name));
+                                                    if (placemark.hasProperty(getContext().getResources().getString(R.string.placemark_property_description)))
+                                                        description = placemark.getProperty(getContext().getResources().getString(R.string.placemark_property_description));
 
-                                                    if (placemark.getGeometry().getGeometryType().equals("Point")) {
+                                                    if (placemark.getGeometry().getGeometryType().equals(getContext().getResources().getString(R.string.placemark_property_point))) {
                                                         KmlPoint point = (KmlPoint) placemark.getGeometry();
 
-                                                        String[] options = name.split("\\|");
+                                                        String[] options = name.split(getContext().getResources().getString(R.string.placemark_property_seperator));
                                                         if (options.length == 2) {
                                                             name = options[0];
                                                             boolean exists = false;
-                                                            if (options[1].toLowerCase().contains("tactical")) {
+                                                            if (options[1].toLowerCase().contains(getContext().getResources().getString(R.string.placemark_property_tactical))) {
                                                                 for (TacticalMarkerData tacticalMarkerData : FirebaseDB.getGameData().getTacticalMarkerData()) {
                                                                     if (tacticalMarkerData.getTitle().equals(name)) {
                                                                         exists = true;
@@ -1046,7 +1048,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                                                                                     point.getGeometryObject().latitude,
                                                                                     point.getGeometryObject().longitude,
                                                                                     name, description));
-                                                            } else if (options[1].toLowerCase().contains("mission")) {
+                                                            } else if (options[1].toLowerCase().contains(getContext().getResources().getString(R.string.placemark_property_mission))) {
                                                                 for (MissionMarkerData missionMarkerData : FirebaseDB.getGameData().getMissionMarkerData()) {
                                                                     if (missionMarkerData.getTitle().equals(name))
                                                                         exists = true;
@@ -1063,9 +1065,9 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                                                             name = options[0];
                                                             boolean exists = false;
                                                             boolean own = false;
-                                                            if (options[2].toLowerCase().contains("own"))
+                                                            if (options[2].toLowerCase().contains(getContext().getResources().getString(R.string.placemark_property_own)))
                                                                 own = true;
-                                                            if (options[1].toLowerCase().contains("respawn")) {
+                                                            if (options[1].toLowerCase().contains(getContext().getResources().getString(R.string.placemark_property_respawn))) {
                                                                 for (RespawnMarkerData respawnMarkerData : FirebaseDB.getGameData().getRespawnMarkerData()) {
                                                                     if (respawnMarkerData.getTitle().equals(name))
                                                                         exists = true;
@@ -1077,7 +1079,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                                                                                     point.getGeometryObject().longitude,
                                                                                     name, description, own
                                                                             ));
-                                                            } else if (options[1].toLowerCase().contains("hq")) {
+                                                            } else if (options[1].toLowerCase().contains(getContext().getResources().getString(R.string.placemark_property_hq))) {
                                                                 for (HQMarkerData hqMarkerData : FirebaseDB.getGameData().getHqMarkerData()) {
                                                                     if (hqMarkerData.getTitle().equals(name))
                                                                         exists = true;
@@ -1089,7 +1091,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                                                                                     point.getGeometryObject().longitude,
                                                                                     name, description, own
                                                                             ));
-                                                            } else if (options[1].toLowerCase().contains("flag")) {
+                                                            } else if (options[1].toLowerCase().contains(getContext().getResources().getString(R.string.placemark_property_flag))) {
                                                                 for (FlagMarkerData flagMarkerData : FirebaseDB.getGameData().getFlagMarkerData()) {
                                                                     if (flagMarkerData.getTitle().equals(name))
                                                                         exists = true;
@@ -1113,7 +1115,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                                     }
                                 });
                             } catch (XmlPullParserException | IOException e) {
-                                Toast.makeText(getContext(), "Could not load KML Data", Toast.LENGTH_LONG).show();
+                                Toast.makeText(getContext(), getContext().getResources().getString(R.string.code_map_fragment_could_not_load_kml_data), Toast.LENGTH_LONG).show();
                             }
                         }
                     }

@@ -53,7 +53,12 @@ public class OrgaAddMarkerDialogFragment extends DialogFragment {
     public void onViewCreated(@NonNull final View view, @Nullable final Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         final Spinner spinner = getView().findViewById(R.id.orgaaddmarkerdialogtype);
-        final ArrayList<String> spinnerItems = new ArrayList<String>(Arrays.asList("Tactical Marker", "Mission Marker", "Respawn Marker", "HQ Marker", "Flag Marker"));
+        final ArrayList<String> spinnerItems = new ArrayList<String>(Arrays.asList(
+                getContext().getResources().getString(R.string.marker_markerType_tactical),
+                getContext().getResources().getString(R.string.marker_markerType_mission),
+                getContext().getResources().getString(R.string.marker_markerType_mission),
+                getContext().getResources().getString(R.string.marker_markerType_respawn),
+                getContext().getResources().getString(R.string.marker_markerType_flag)));
         final ArrayAdapter<CharSequence> adapter = new ArrayAdapter(getContext(), android.R.layout.simple_spinner_item, spinnerItems);
 
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -85,7 +90,7 @@ public class OrgaAddMarkerDialogFragment extends DialogFragment {
             longitudeTextView.setText(String.valueOf(FirebaseDB.getGameData().getOwnUserData(FirebaseAuthentication.getFirebaseUser().getEmail()).getPositionLong()));
         });
 
-        FirebaseDB.getGames().whereEqualTo("gameID", FirebaseDB.getGameData().getGameID())
+        FirebaseDB.getGames().whereEqualTo(getContext().getResources().getString(R.string.firebase_firestore_variable_games_gameID), FirebaseDB.getGameData().getGameID())
                 .get().addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
                 if (task.getResult().size() > 0) {
@@ -102,72 +107,72 @@ public class OrgaAddMarkerDialogFragment extends DialogFragment {
                                 case 0:
                                     for (final TacticalMarkerData tacticalMarkerData : FirebaseDB.getGameData().getTacticalMarkerData()) {
                                         if (tacticalMarkerData.getTitle().equals(title)) {
-                                            Toast.makeText(getContext(), "Title allready exists!", Toast.LENGTH_LONG).show();
+                                            Toast.makeText(getContext(), R.string.code_orga_add_marker_dialog_fragment_title_already_exists, Toast.LENGTH_LONG).show();
                                             return;
                                         }
                                     }
                                     FirebaseDB.getGameData().getTacticalMarkerData().add(new TacticalMarkerData(latitude, longitude, title, description));
-                                    FirebaseDB.updateObject(documentSnapshot, "tacticalMarkerData", FirebaseDB.getGameData().getTacticalMarkerData());
+                                    FirebaseDB.updateObject(documentSnapshot, getContext().getResources().getString(R.string.firebase_firestore_variable_games_tactical_marker_data), FirebaseDB.getGameData().getTacticalMarkerData());
                                     break;
                                 case 1:
                                     for (final MissionMarkerData missionMarkerData : FirebaseDB.getGameData().getMissionMarkerData()) {
                                         if (missionMarkerData.getTitle().equals(title)) {
-                                            Toast.makeText(getContext(), "Title allready exists!", Toast.LENGTH_LONG).show();
+                                            Toast.makeText(getContext(), R.string.code_orga_add_marker_dialog_fragment_title_already_exists, Toast.LENGTH_LONG).show();
                                             return;
                                         }
                                     }
                                     FirebaseDB.getGameData().getMissionMarkerData().add(new MissionMarkerData(
                                             latitude, longitude, title, description));
-                                    FirebaseDB.updateObject(documentSnapshot, "missionMarkerData", FirebaseDB.getGameData().getMissionMarkerData());
+                                    FirebaseDB.updateObject(documentSnapshot, getContext().getResources().getString(R.string.firebase_firestore_variable_games_mission_marker_data), FirebaseDB.getGameData().getMissionMarkerData());
                                     break;
                                 case 2:
                                     for (final RespawnMarkerData respawnMarkerData : FirebaseDB.getGameData().getRespawnMarkerData()) {
                                         if (respawnMarkerData.getTitle().equals(title)) {
-                                            Toast.makeText(getContext(), "Title allready exists!", Toast.LENGTH_LONG).show();
+                                            Toast.makeText(getContext(), R.string.code_orga_add_marker_dialog_fragment_title_already_exists, Toast.LENGTH_LONG).show();
                                             return;
                                         }
                                     }
                                     FirebaseDB.getGameData().getRespawnMarkerData().add(new RespawnMarkerData(
                                             latitude, longitude, title, description, own
                                     ));
-                                    FirebaseDB.updateObject(documentSnapshot, "respawnMarkerData", FirebaseDB.getGameData().getRespawnMarkerData());
+                                    FirebaseDB.updateObject(documentSnapshot, getContext().getResources().getString(R.string.firebase_firestore_variable_games_respawn_marker_data), FirebaseDB.getGameData().getRespawnMarkerData());
                                     break;
                                 case 3:
                                     for (final HQMarkerData hqMarkerData : FirebaseDB.getGameData().getHqMarkerData()) {
                                         if (hqMarkerData.getTitle().equals(title)) {
-                                            Toast.makeText(getContext(), "Title allready exists!", Toast.LENGTH_LONG).show();
+                                            Toast.makeText(getContext(), R.string.code_orga_add_marker_dialog_fragment_title_already_exists, Toast.LENGTH_LONG).show();
                                             return;
                                         }
                                     }
                                     FirebaseDB.getGameData().getHqMarkerData().add(new HQMarkerData(
                                             latitude, longitude, title, description, own
                                     ));
-                                    FirebaseDB.updateObject(documentSnapshot, "hqMarkerData", FirebaseDB.getGameData().getHqMarkerData());
+                                    FirebaseDB.updateObject(documentSnapshot, getContext().getResources().getString(R.string.firebase_firestore_variable_games_hq_marker_data), FirebaseDB.getGameData().getHqMarkerData());
                                     break;
                                 case 4:
                                     for (final FlagMarkerData flagMarkerData : FirebaseDB.getGameData().getFlagMarkerData()) {
                                         if (flagMarkerData.getTitle().equals(title)) {
-                                            Toast.makeText(getContext(), "Title allready exists!", Toast.LENGTH_LONG).show();
+                                            Toast.makeText(getContext(), R.string.code_orga_add_marker_dialog_fragment_title_already_exists, Toast.LENGTH_LONG).show();
                                             return;
                                         }
                                     }
                                     FirebaseDB.getGameData().getFlagMarkerData().add(new FlagMarkerData(
                                             latitude, longitude, title, description, own
                                     ));
-                                    FirebaseDB.updateObject(documentSnapshot, "flagMarkerData", FirebaseDB.getGameData().getFlagMarkerData());
+                                    FirebaseDB.updateObject(documentSnapshot, getContext().getResources().getString(R.string.firebase_firestore_variable_games_flag_marker_data), FirebaseDB.getGameData().getFlagMarkerData());
                                     break;
                             }
                             getFragmentManager().beginTransaction().remove(this).commit();
                         });
                     } else {
-                        Log.d("UpdateDB", "Current data: null");
+                        Log.d(getContext().getResources().getString(R.string.firebase_firestore_update_db_tag), getContext().getResources().getString(R.string.firebase_firestore_current_data_null));
                     }
                 } else {
-                    Toast.makeText(getContext(), "Couldn´t find Document with GameID!",
+                    Toast.makeText(getContext(), R.string.firebase_firestore_could_not_find_document_with_gameid,
                             Toast.LENGTH_LONG);
                 }
             } else {
-                Toast.makeText(getContext(), "Couldn´t query Database!",
+                Toast.makeText(getContext(), R.string.firebase_firestore_could_not_query_database,
                         Toast.LENGTH_LONG);
             }
 

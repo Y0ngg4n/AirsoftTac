@@ -125,13 +125,13 @@ public class MainActivity extends AppCompatActivity
                 if (currentTime.before(startDate)) {
                     calendar.setTime(startDate);
                     runOnUiThread(() -> {
-                        timeView.setText("Start of Game at " + calendar.get(Calendar.DATE) + "." + (calendar.get(Calendar.MONTH) + 1) + " at " +
+                        timeView.setText(R.string.code_main_activity_start_of_game + calendar.get(Calendar.DATE) + "." + (calendar.get(Calendar.MONTH) + 1) + R.string.code_main_activity_at +
                                 calendar.get(Calendar.HOUR_OF_DAY) + ":" + calendar.get(Calendar.MINUTE));
                     });
                 } else {
                     calendar.setTime(endDate);
                     runOnUiThread(() -> {
-                        timeView.setText("End of Game at " + calendar.get(Calendar.DATE) + "." + (calendar.get(Calendar.MONTH) + 1) + " at " +
+                        timeView.setText(R.string.code_main_activity_end_of_game + calendar.get(Calendar.DATE) + "." + (calendar.get(Calendar.MONTH) + 1) + R.string.code_main_activity_at +
                                 calendar.get(Calendar.HOUR_OF_DAY) + ":" + calendar.get(Calendar.MINUTE));
                     });
                 }
@@ -206,7 +206,7 @@ public class MainActivity extends AppCompatActivity
     }
 
     public void queryUpdateData() {
-        FirebaseDB.getGames().whereEqualTo("gameID", FirebaseDB.getGameData().getGameID())
+        FirebaseDB.getGames().whereEqualTo(this.getResources().getString(R.string.firebase_firestore_variable_games_gameID), FirebaseDB.getGameData().getGameID())
                 .get().addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
                 if (task.getResult().size() > 0) {
@@ -214,21 +214,22 @@ public class MainActivity extends AppCompatActivity
                     if (documentSnapshot != null && documentSnapshot.exists()) {
                         updateData(documentSnapshot);
                     } else {
-                        Log.d("UpdateDB", "Current data: null");
+                        Log.d(this.getResources().getString(R.string.firebase_firestore_update_db_tag),
+                                this.getResources().getString(R.string.firebase_firestore_current_data_null));
                     }
                 } else {
-                    Toast.makeText(getApplicationContext(), "Couldn´t find Document with GameID!",
+                    Toast.makeText(getApplicationContext(), R.string.firebase_firestore_could_not_find_document_with_gameid,
                             Toast.LENGTH_LONG).show();
                 }
             } else {
-                Toast.makeText(getApplicationContext(), "Couldn´t query Database!",
+                Toast.makeText(getApplicationContext(), R.string.firebase_firestore_could_not_query_database,
                         Toast.LENGTH_LONG).show();
             }
         });
     }
 
     public void addSnapshotListener() {
-        FirebaseDB.getGames().whereEqualTo("gameID", FirebaseDB.getGameData().getGameID())
+        FirebaseDB.getGames().whereEqualTo(this.getResources().getString(R.string.firebase_firestore_variable_games_gameID), FirebaseDB.getGameData().getGameID())
                 .get().addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
                 if (task.getResult().size() > 0) {
@@ -239,14 +240,15 @@ public class MainActivity extends AppCompatActivity
                             updateData(documentSnapshot1);
                         });
                     } else {
-                        Log.d("UpdateDB", "Current data: null");
+                        Log.d(this.getResources().getString(R.string.firebase_firestore_update_db_tag),
+                                this.getResources().getString(R.string.firebase_firestore_current_data_null));
                     }
                 } else {
-                    Toast.makeText(getApplicationContext(), "Couldn´t find Document with GameID!",
+                    Toast.makeText(getApplicationContext(), R.string.firebase_firestore_could_not_find_document_with_gameid,
                             Toast.LENGTH_LONG).show();
                 }
             } else {
-                Toast.makeText(getApplicationContext(), "Couldn´t query Database!",
+                Toast.makeText(getApplicationContext(), R.string.firebase_firestore_could_not_query_database,
                         Toast.LENGTH_LONG).show();
             }
         });
@@ -275,14 +277,14 @@ public class MainActivity extends AppCompatActivity
             }
         }
         if (MapFragment.getOverlayImageTitle() != null)
-            FirebaseDB.getOverlayImages().whereEqualTo("name", MapFragment.getOverlayImageTitle()).get().addOnCompleteListener(task -> {
+            FirebaseDB.getOverlayImages().whereEqualTo(this.getResources().getString(R.string.firebase_firestore_variable_overlay_images_name), MapFragment.getOverlayImageTitle()).get().addOnCompleteListener(task -> {
                 if (task.isSuccessful()) {
                     if (task.getResult().size() > 0) {
                         final DocumentSnapshot documentSnapshot1 = task.getResult().getDocuments().get(0);
                         MapFragment.setOverlayImage(documentSnapshot1.toObject(OverlayImage.class));
                     }
                 } else {
-                    Toast.makeText(this, "Please select Image first!", Toast.LENGTH_LONG).show();
+                    Toast.makeText(this, R.string.code_main_activity_please_select_image_first, Toast.LENGTH_LONG).show();
                 }
             });
 

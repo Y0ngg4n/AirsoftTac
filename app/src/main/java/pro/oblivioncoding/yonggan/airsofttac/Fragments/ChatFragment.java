@@ -81,7 +81,7 @@ public class ChatFragment extends Fragment {
         //TODO: Add creation of Chat channel
         setRecyclerView(FirebaseDB.getGameData().getChatMessages());
         final View sendMessage = rootView.findViewById(R.id.chatSendMessage);
-        FirebaseDB.getGames().whereEqualTo("gameID", FirebaseDB.getGameData().getGameID())
+        FirebaseDB.getGames().whereEqualTo(getContext().getResources().getString(R.string.firebase_firestore_variable_games_gameID), FirebaseDB.getGameData().getGameID())
                 .get().addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
                 if (task.getResult().size() > 0) {
@@ -93,7 +93,7 @@ public class ChatFragment extends Fragment {
                                     FirebaseAuthentication.getFirebaseUser().getEmail()).getNickname(),
                                     FirebaseAuthentication.getFirebaseUser().getEmail(),
                                     writeMessage.getText().toString()));
-                            FirebaseDB.updateObject(documentReference, "chatMessages",
+                            FirebaseDB.updateObject(documentReference, getContext().getResources().getString(R.string.firebase_firestore_variable_games_chat_messages),
                                     FirebaseDB.getGameData().getChatMessages());
                             setRecyclerView(FirebaseDB.getGameData().getChatMessages());
                             sendMessage.setVisibility(View.INVISIBLE);

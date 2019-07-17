@@ -79,14 +79,14 @@ public class LoginActivity extends AppCompatActivity {
                                             } else {
                                                 // If sign in fails, display a message to the user.
                                                 Log.w("FirebaseLogin", "signInWithEmail:failure", task1.getException());
-                                                Toast.makeText(getApplicationContext(), "Authentication failed.",
+                                                Toast.makeText(getApplicationContext(), R.string.firebase_firebaseauth_authentication_failed,
                                                         Toast.LENGTH_SHORT).show();
                                             }
                                         });
                             } catch (final FirebaseAuthWeakPasswordException weakPassword) {
-                                Toast.makeText(getApplicationContext(), "Password is too weak!", Toast.LENGTH_LONG).show();
+                                Toast.makeText(getApplicationContext(), R.string.firebase_firebaseauth_password_too_weak, Toast.LENGTH_LONG).show();
                             } catch (final FirebaseAuthInvalidCredentialsException malformedEmail) {
-                                Toast.makeText(getApplicationContext(), "Malformed Email!", Toast.LENGTH_LONG).show();
+                                Toast.makeText(getApplicationContext(), R.string.firebase_firebaseauth_malformed_email, Toast.LENGTH_LONG).show();
                             } catch (final Exception e) {
                                 Log.e("Login", e.getMessage());
                             }
@@ -95,14 +95,14 @@ public class LoginActivity extends AppCompatActivity {
         });
 
         findViewById(R.id.privacyPolicy).setOnClickListener(v -> {
-            startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://airsofttac.oblivioncoding.pro/privacy_policy.html")));
+            startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(this.getResources().getString(R.string.code_login_activity_privacy_policy))));
         });
 
         findViewById(R.id.termsandConditions).setOnClickListener(v -> {
-            startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://airsofttac.oblivioncoding.pro/terms_and_conditions.html")));
+            startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(this.getResources().getString(R.string.code_login_activity_terms_and_conditions))));
         });
 
-        FirebaseDB.getGames().whereLessThanOrEqualTo("endTime", Timestamp.now()).get().addOnCompleteListener(task -> {
+        FirebaseDB.getGames().whereLessThanOrEqualTo(this.getResources().getString(R.string.firebase_firestore_variable_games_endTime), Timestamp.now()).get().addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
                 if (task.getResult().size() > 0) {
                     for (final DocumentSnapshot documentSnapshot : task.getResult().getDocuments()) {

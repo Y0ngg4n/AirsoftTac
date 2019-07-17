@@ -69,8 +69,8 @@ public class JoinGameActivity extends AppCompatActivity implements ZXingScannerV
 
         findViewById(R.id.joinGame).setOnClickListener(v -> {
             findViewById(R.id.joinGame).setClickable(false);
-            Toast.makeText(this, "Trying to connect to Game...", Toast.LENGTH_LONG).show();
-            FirebaseDB.getGames().whereEqualTo("gameID", joinGameID.getText().toString())
+            Toast.makeText(this, R.string.code_join_game_activity_trying_to_connect_to_game, Toast.LENGTH_LONG).show();
+            FirebaseDB.getGames().whereEqualTo(this.getResources().getString(R.string.firebase_firestore_variable_games_gameID), joinGameID.getText().toString())
                     .get().addOnCompleteListener(task -> {
                 if (task.isSuccessful()) {
                     if (task.getResult().size() > 0) {
@@ -97,28 +97,28 @@ public class JoinGameActivity extends AppCompatActivity implements ZXingScannerV
                                     editor.putString(gameIDPref, joinGameID.getText().toString());
                                     editor.commit();
 
-                                    FirebaseDB.updateObject(documentSnapshot, "users",
+                                    FirebaseDB.updateObject(documentSnapshot, this.getResources().getString(R.string.firebase_firestore_variable_games_users),
                                             FirebaseDB.getGameData().getUsers());
                                     JoinGameActivity.this.startActivity(new Intent(JoinGameActivity.this,
                                             MainActivity.class));
                                 } else {
                                     findViewById(R.id.joinGame).setClickable(true);
-                                    Toast.makeText(getApplicationContext(), "Password wrong!", Toast.LENGTH_LONG).show();
+                                    Toast.makeText(getApplicationContext(), R.string.code_join_game_activity_password_wrong, Toast.LENGTH_LONG).show();
                                 }
                             }
                         } else {
                             findViewById(R.id.joinGame).setClickable(true);
-                            Toast.makeText(getApplicationContext(), "Please enter Nickname!",
+                            Toast.makeText(getApplicationContext(), R.string.code_join_game_activity_please_enter_nickname,
                                     Toast.LENGTH_LONG).show();
                         }
                     } else {
                         findViewById(R.id.joinGame).setClickable(true);
-                        Toast.makeText(getApplicationContext(), "Couldn´t find Document with GameID!",
+                        Toast.makeText(getApplicationContext(), R.string.firebase_firestore_could_not_find_document_with_gameid,
                                 Toast.LENGTH_LONG).show();
                     }
                 } else {
                     findViewById(R.id.joinGame).setClickable(true);
-                    Toast.makeText(getApplicationContext(), "Couldn´t query Database!",
+                    Toast.makeText(getApplicationContext(), R.string.firebase_firestore_could_not_query_database,
                             Toast.LENGTH_LONG).show();
                 }
             });

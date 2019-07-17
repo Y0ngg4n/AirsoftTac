@@ -65,9 +65,9 @@ public class RecyclerViewTeamListAdapter extends RecyclerView.Adapter<RecyclerVi
 
     private void setButtonJointLeave(@NonNull final Button button, final UserData ownUserdata, @NonNull final String teamName) {
         if (ownUserdata.getTeam() == null || !teamName.equals(teamName)) {
-            button.setText("Join");
+            button.setText(R.string.code_recycler_view_team_list_adapter_join);
         } else {
-            button.setText("Leave");
+            button.setText(R.string.code_recycler_view_team_list_adapter_leave);
         }
     }
 
@@ -128,7 +128,7 @@ public class RecyclerViewTeamListAdapter extends RecyclerView.Adapter<RecyclerVi
             constraintLayout = itemView.findViewById(R.id.playerListLayout);
             minorRadioChannel = itemView.findViewById(R.id.minorRadioChannelText);
             majorRadioChannel = itemView.findViewById(R.id.majorRadioChannelText);
-            FirebaseDB.getGames().whereEqualTo("gameID", FirebaseDB.getGameData().getGameID())
+            FirebaseDB.getGames().whereEqualTo(context.getResources().getString(R.string.firebase_firestore_variable_games_gameID), FirebaseDB.getGameData().getGameID())
                     .get().addOnCompleteListener(task -> {
                 if (task.isSuccessful()) {
                     if (task.getResult().size() > 0) {
@@ -162,14 +162,14 @@ public class RecyclerViewTeamListAdapter extends RecyclerView.Adapter<RecyclerVi
                                         teamData.getUsers().remove(ownUserData.getEmail());
                                         ownUserData.setTeam(null);
                                     } else {
-                                        Toast.makeText(context, "Please leave your current Team First!", Toast.LENGTH_LONG).show();
+                                        Toast.makeText(context, R.string.code_recycler_view_team_list_adapter_please_leave_current_team_first, Toast.LENGTH_LONG).show();
                                         return;
                                     }
                                 }
                                 setButtonJointLeave(joinLeaveTeam, ownUserData, teamData.getTeamName());
                                 toggleRadioAssignButton(assignRadioChannel, teamName, teamData);
-                                FirebaseDB.updateObject(documentSnapshot.getReference(), "users", FirebaseDB.getGameData().getUsers());
-                                FirebaseDB.updateObject(documentSnapshot.getReference(), "teams", FirebaseDB.getGameData().getTeams());
+                                FirebaseDB.updateObject(documentSnapshot.getReference(), context.getResources().getString(R.string.firebase_firestore_variable_games_users), FirebaseDB.getGameData().getUsers());
+                                FirebaseDB.updateObject(documentSnapshot.getReference(), context.getResources().getString(R.string.firebase_firestore_variable_games_teams), FirebaseDB.getGameData().getTeams());
                                 joinLeaveTeam.setVisibility(View.INVISIBLE);
                                 showAfterTime(joinLeaveTeam, 10000L);
                             }

@@ -55,25 +55,25 @@ public class RecyclerViewMarkerAssignListAdapter extends RecyclerView.Adapter<Re
         if (teamDataMarker instanceof FlagMarkerData) {
             viewHolder.markerTitle.setText(teamDataMarker.getTitle());
             viewHolder.markerDescription.setText(teamDataMarker.getDescription());
-            viewHolder.markerType.setText("FlagMarkerData");
+            viewHolder.markerType.setText(R.string.marker_markerType_flag);
         } else if (teamDataMarker instanceof HQMarkerData) {
             viewHolder.markerTitle.setText(teamDataMarker.getTitle());
             viewHolder.markerDescription.setText(teamDataMarker.getDescription());
-            viewHolder.markerType.setText("HQMarkerData");
+            viewHolder.markerType.setText(R.string.marker_markerType_hq);
         } else if (teamDataMarker instanceof MissionMarkerData) {
             viewHolder.markerTitle.setText(teamDataMarker.getTitle());
             viewHolder.markerDescription.setText(teamDataMarker.getDescription());
-            viewHolder.markerType.setText("MissionMarkerData");
+            viewHolder.markerType.setText(R.string.marker_markerType_mission);
         } else if (teamDataMarker instanceof RespawnMarkerData) {
             viewHolder.markerTitle.setText(teamDataMarker.getTitle());
             viewHolder.markerDescription.setText(teamDataMarker.getDescription());
-            viewHolder.markerType.setText("RespawnMarkerData");
+            viewHolder.markerType.setText(R.string.marker_markerType_respawn);
         } else if (teamDataMarker instanceof TacticalMarkerData) {
             viewHolder.markerTitle.setText(teamDataMarker.getTitle());
             viewHolder.markerDescription.setText(teamDataMarker.getDescription());
-            viewHolder.markerType.setText("TacticalMarkerData");
+            viewHolder.markerType.setText(R.string.marker_markerType_tactical);
         }
-        FirebaseDB.getGames().whereEqualTo("gameID", FirebaseDB.getGameData().getGameID())
+        FirebaseDB.getGames().whereEqualTo(context.getResources().getString(R.string.firebase_firestore_variable_games_gameID), FirebaseDB.getGameData().getGameID())
                 .get().addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
                 if (task.getResult().size() > 0) {

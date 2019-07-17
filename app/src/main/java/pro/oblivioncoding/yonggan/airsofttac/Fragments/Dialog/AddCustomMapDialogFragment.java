@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,6 +22,7 @@ import org.apache.commons.io.FileUtils;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 
 import pro.oblivioncoding.yonggan.airsofttac.Firebase.FirebaseDB;
 import pro.oblivioncoding.yonggan.airsofttac.Firebase.KMLCollection.KMLData;
@@ -50,17 +50,17 @@ public class AddCustomMapDialogFragment extends DialogFragment {
         rootView = inflater.inflate(R.layout.add_custom_map_dialog, container, false);
         rootView.findViewById(R.id.addCustomMapButton).setOnClickListener(v -> {
             final String title = ((EditText) rootView.findViewById(R.id.customMapTitletext)).getText().toString();
-            FirebaseDB.getKml().whereEqualTo("title", title).get().addOnCompleteListener(task -> {
+            FirebaseDB.getKml().whereEqualTo(getContext().getResources().getString(R.string.firebase_firestore_variable_kml_title), title).get().addOnCompleteListener(task -> {
                 if (task.isSuccessful()) {
                     if (task.getResult().size() > 0) {
-                        Toast.makeText(getContext(), "Title already exists", Toast.LENGTH_LONG).show();
+                        Toast.makeText(getContext(), R.string.code_add_custom_map_dialog_fragment_title_already_exists, Toast.LENGTH_LONG).show();
                     } else {
                         FirebaseDB.getKml().add(new KMLData(title,
                                 ((EditText) rootView.findViewById(R.id.customMap)).getText().toString()));
                         getFragmentManager().beginTransaction().remove(this).commit();
                     }
                 } else {
-                    Toast.makeText(getContext(), "Couldn´t query Database!",
+                    Toast.makeText(getContext(), R.string.firebase_firestore_could_not_query_database,
                             Toast.LENGTH_LONG).show();
                 }
             });
@@ -92,11 +92,9 @@ public class AddCustomMapDialogFragment extends DialogFragment {
                     } else {
                         try {
                             ((TextView) rootView.findViewById(R.id.customMap)).setText(
-                                    FileUtils.readFileToString(new File(uri.getPath()), "UTF-8"));
-                            Log.i("KMLLoader", "Loaded KML");
+                                    FileUtils.readFileToString(new File(uri.getPath()), StandardCharsets.UTF_8));
                         } catch (IOException e) {
-                            Toast.makeText(getContext(), "Could not load KML", Toast.LENGTH_LONG).show();
-                            Log.i("KMLLoader", e.getMessage());
+                            Toast.makeText(getContext(), R.string.code_add_custom_map_dialog_fragment_could_not_load_kml, Toast.LENGTH_LONG).show();
                         }
                     }
                 }

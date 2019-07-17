@@ -55,23 +55,23 @@ public class RecyclerViewGotoMarkerListAdapter extends RecyclerView.Adapter<Recy
         if (gotoMarkerData instanceof FlagMarkerData) {
             viewHolder.markerTitle.setText(gotoMarkerData.getTitle());
             viewHolder.markerDescription.setText(gotoMarkerData.getDescription());
-            viewHolder.markerType.setText("FlagMarkerData");
+            viewHolder.markerType.setText(R.string.marker_markerType_flag);
         } else if (gotoMarkerData instanceof HQMarkerData) {
             viewHolder.markerTitle.setText(gotoMarkerData.getTitle());
             viewHolder.markerDescription.setText(gotoMarkerData.getDescription());
-            viewHolder.markerType.setText("HQMarkerData");
+            viewHolder.markerType.setText(R.string.marker_markerType_hq);
         } else if (gotoMarkerData instanceof MissionMarkerData) {
             viewHolder.markerTitle.setText(gotoMarkerData.getTitle());
             viewHolder.markerDescription.setText(gotoMarkerData.getDescription());
-            viewHolder.markerType.setText("MissionMarkerData");
+            viewHolder.markerType.setText(R.string.marker_markerType_mission);
         } else if (gotoMarkerData instanceof RespawnMarkerData) {
             viewHolder.markerTitle.setText(gotoMarkerData.getTitle());
             viewHolder.markerDescription.setText(gotoMarkerData.getDescription());
-            viewHolder.markerType.setText("RespawnMarkerData");
+            viewHolder.markerType.setText(R.string.marker_markerType_respawn);
         } else if (gotoMarkerData instanceof TacticalMarkerData) {
             viewHolder.markerTitle.setText(gotoMarkerData.getTitle());
             viewHolder.markerDescription.setText(gotoMarkerData.getDescription());
-            viewHolder.markerType.setText("TacticalMarkerData");
+            viewHolder.markerType.setText(R.string.marker_markerType_tactical);
         }
 
         viewHolder.gotoMarker.setOnClickListener(v -> {
