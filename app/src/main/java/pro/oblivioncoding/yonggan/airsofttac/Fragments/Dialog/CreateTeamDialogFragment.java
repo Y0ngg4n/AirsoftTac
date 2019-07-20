@@ -49,7 +49,7 @@ public class CreateTeamDialogFragment extends DialogFragment {
 
         //Current Lcoation Button
 
-        FirebaseDB.getGames().whereEqualTo(getContext().getResources().getString(R.string.firebase_firestore_could_not_find_document_with_gameid), FirebaseDB.getGameData().getGameID())
+        FirebaseDB.getGames().whereEqualTo(getContext().getResources().getString(R.string.firebase_firestore_variable_games_gameID), FirebaseDB.getGameData().getGameID())
                 .get().addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
                 if (task.getResult().size() > 0) {

@@ -191,7 +191,7 @@
     <string name="placemark_property_name" translatable="false">name</string>
     <string name="placemark_property_description" translatable="false">name</string>
     <string name="placemark_property_point" translatable="false">Point</string>
-    <string name="placemark_property_seperator" translatable="false">\|</string>
+    <string name="placemark_property_seperator" translatable="false">\\|</string>
     <string name="placemark_property_own" translatable="false">own</string>
     <string name="placemark_property_tactical" translatable="false">tactical</string>
     <string name="placemark_property_mission" translatable="false">mission</string>

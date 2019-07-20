@@ -16,16 +16,12 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.google.android.gms.ads.AdListener;
-import com.google.android.gms.ads.AdRequest;
-import com.google.android.gms.ads.InterstitialAd;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import pro.oblivioncoding.yonggan.airsofttac.AdMob.AdMobIds;
 import pro.oblivioncoding.yonggan.airsofttac.Adapter.RecyclerViewTeamListAdapter;
 import pro.oblivioncoding.yonggan.airsofttac.Firebase.FirebaseAuthentication;
 import pro.oblivioncoding.yonggan.airsofttac.Firebase.FirebaseDB;
@@ -120,16 +116,16 @@ public class TeamFragment extends Fragment {
         });
         setRecyclerView(FirebaseDB.getGameData().getTeams(), recyclerView);
 
-        final InterstitialAd interstitialAd = new InterstitialAd(getContext());
-        interstitialAd.setAdUnitId(AdMobIds.InterstialAll15Min);
-        interstitialAd.setAdListener(new AdListener() {
-            @Override
-            public void onAdLoaded() {
-                interstitialAd.show();
-            }
-
-        });
-        interstitialAd.loadAd(new AdRequest.Builder().build());
+//        final InterstitialAd interstitialAd = new InterstitialAd(getContext());
+//        interstitialAd.setAdUnitId(AdMobIds.InterstialAll15Min);
+//        interstitialAd.setAdListener(new AdListener() {
+//            @Override
+//            public void onAdLoaded() {
+//                interstitialAd.show();
+//            }
+//
+//        });
+//        interstitialAd.loadAd(new AdRequest.Builder().build());
 
         return rootView;
     }

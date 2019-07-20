@@ -12,7 +12,6 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
-import com.google.android.gms.ads.MobileAds;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.Timestamp;
 import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
@@ -20,7 +19,6 @@ import com.google.firebase.auth.FirebaseAuthUserCollisionException;
 import com.google.firebase.auth.FirebaseAuthWeakPasswordException;
 import com.google.firebase.firestore.DocumentSnapshot;
 
-import pro.oblivioncoding.yonggan.airsofttac.AdMob.AdMobIds;
 import pro.oblivioncoding.yonggan.airsofttac.Firebase.FirebaseAuthentication;
 import pro.oblivioncoding.yonggan.airsofttac.Firebase.FirebaseDB;
 import pro.oblivioncoding.yonggan.airsofttac.R;
@@ -38,7 +36,7 @@ public class LoginActivity extends AppCompatActivity {
         final Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         FirebaseApp.initializeApp(getApplicationContext());
-        MobileAds.initialize(getApplicationContext(), AdMobIds.AdmobAppID);
+//        MobileAds.initialize(getApplicationContext(), AdMobIds.AdmobAppID);
 
 
         final EditText emailField = findViewById(R.id.email);

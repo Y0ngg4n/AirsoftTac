@@ -23,9 +23,6 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
-import com.google.android.gms.ads.AdListener;
-import com.google.android.gms.ads.AdRequest;
-import com.google.android.gms.ads.InterstitialAd;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -36,7 +33,6 @@ import java.util.Date;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import pro.oblivioncoding.yonggan.airsofttac.AdMob.AdMobIds;
 import pro.oblivioncoding.yonggan.airsofttac.Firebase.FirebaseAuthentication;
 import pro.oblivioncoding.yonggan.airsofttac.Firebase.FirebaseDB;
 import pro.oblivioncoding.yonggan.airsofttac.Firebase.GameCollection.Chat.ChatMessage;
@@ -188,16 +184,16 @@ public class MainActivity extends AppCompatActivity
 
         startService(new Intent(getApplicationContext(), googleLocationService.getClass()));
 
-        final InterstitialAd interstitialAd = new InterstitialAd(getApplicationContext());
-        interstitialAd.setAdUnitId(AdMobIds.InterstialAll15Min);
-        interstitialAd.setAdListener(new AdListener() {
-            @Override
-            public void onAdLoaded() {
-                interstitialAd.show();
-            }
-
-        });
-        interstitialAd.loadAd(new AdRequest.Builder().build());
+//        final InterstitialAd interstitialAd = new InterstitialAd(this);
+//        interstitialAd.setAdUnitId(AdMobIds.InterstialAll15Min);
+//        interstitialAd.setAdListener(new AdListener() {
+//            @Override
+//            public void onAdLoaded() {
+//                interstitialAd.show();
+//            }
+//
+//        });
+//        interstitialAd.loadAd(new AdRequest.Builder().build());
     }
 
     @Override

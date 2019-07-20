@@ -12,9 +12,6 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
-import com.google.android.gms.ads.AdListener;
-import com.google.android.gms.ads.AdRequest;
-import com.google.android.gms.ads.InterstitialAd;
 import com.google.firebase.Timestamp;
 
 import java.text.ParseException;
@@ -24,7 +21,6 @@ import java.util.Calendar;
 import java.util.Date;
 
 import at.favre.lib.crypto.bcrypt.BCrypt;
-import pro.oblivioncoding.yonggan.airsofttac.AdMob.AdMobIds;
 import pro.oblivioncoding.yonggan.airsofttac.Firebase.FirebaseAuthentication;
 import pro.oblivioncoding.yonggan.airsofttac.Firebase.FirebaseDB;
 import pro.oblivioncoding.yonggan.airsofttac.Firebase.GameCollection.GameData;
@@ -121,16 +117,16 @@ public class CreateGameActivity extends AppCompatActivity {
         });
 
 
-        final InterstitialAd interstitialAd = new InterstitialAd(this);
-        interstitialAd.setAdUnitId(AdMobIds.InterstialAll);
-        interstitialAd.setAdListener(new AdListener() {
-            @Override
-            public void onAdLoaded() {
-                interstitialAd.show();
-            }
-
-        });
-        interstitialAd.loadAd(new AdRequest.Builder().build());
+//        final InterstitialAd interstitialAd = new InterstitialAd(this);
+//        interstitialAd.setAdUnitId(AdMobIds.InterstialAll);
+//        interstitialAd.setAdListener(new AdListener() {
+//            @Override
+//            public void onAdLoaded() {
+//                interstitialAd.show();
+//            }
+//
+//        });
+//        interstitialAd.loadAd(new AdRequest.Builder().build());
 
     }
 
