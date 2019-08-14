@@ -56,8 +56,8 @@ public class OrgaAddMarkerDialogFragment extends DialogFragment {
         final ArrayList<String> spinnerItems = new ArrayList<String>(Arrays.asList(
                 getContext().getResources().getString(R.string.marker_markerType_tactical),
                 getContext().getResources().getString(R.string.marker_markerType_mission),
-                getContext().getResources().getString(R.string.marker_markerType_mission),
                 getContext().getResources().getString(R.string.marker_markerType_respawn),
+                getContext().getResources().getString(R.string.marker_markerType_hq),
                 getContext().getResources().getString(R.string.marker_markerType_flag)));
         final ArrayAdapter<CharSequence> adapter = new ArrayAdapter(getContext(), android.R.layout.simple_spinner_item, spinnerItems);
 
