@@ -945,12 +945,10 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                         googleMap.setOnMarkerDragListener(new GoogleMap.OnMarkerDragListener() {
                             @Override
                             public void onMarkerDragStart(@NonNull final Marker marker) {
-                                marker.hideInfoWindow();
                             }
 
                             @Override
                             public void onMarkerDrag(@NonNull final Marker marker) {
-                                marker.hideInfoWindow();
                             }
 
                             @Override
